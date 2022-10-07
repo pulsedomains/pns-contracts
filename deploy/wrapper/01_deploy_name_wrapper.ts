@@ -2,6 +2,7 @@ import { Interface } from 'ethers/lib/utils'
 import { ethers } from 'hardhat'
 import { DeployFunction } from 'hardhat-deploy/types'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
+import namehash from 'eth-ens-namehash'
 
 const { makeInterfaceId } = require('@openzeppelin/test-helpers')
 
@@ -17,6 +18,15 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployer, owner } = await getNamedAccounts()
 
   const registry = await ethers.getContract('ENSRegistry', owner)
+
+  const deployArgs0 = {
+    from: deployer,
+    args: [registry.address, namehash.hash('pls')],
+    log: true,
+  };
+
+  const bri = await deploy('BaseRegistrarImplementation', deployArgs0)
+
   const registrar = await ethers.getContract(
     'BaseRegistrarImplementation',
     owner,
