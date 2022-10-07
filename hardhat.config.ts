@@ -154,6 +154,15 @@ const config: HardhatUserConfig = {
       chainId: 1,
       accounts: real_accounts,
     },
+    pulsechain: {
+      url: 'https://rpc.v2b.testnet.pulsechain.com',
+      chainId: 941,
+      accounts: {
+        mnemonic: "unaware pencil chalk please aspect image soccer rally carry jealous kangaroo round"
+      },
+      gasPrice:4000000000,
+      gas: 27000000,
+    }
   },
   mocha: {},
   solidity: {

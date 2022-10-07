@@ -42,21 +42,21 @@ async function main(a) {
     const BaseRegistrar = await (await ethers.getContractFactory("BaseRegistrarImplementation")).attach(registrarAddress)
     const NameWrapper = await (await ethers.getContractFactory("NameWrapper")).attach(wrapperAddress)
     const Resolver = await (await ethers.getContractFactory("PublicResolver")).attach(resolverAddress)
-    const domain = `${name}.eth`
+    const domain = `${name}.pls`
     const namehashedname = namehash(domain)
     
     await (await BaseRegistrar.setApprovalForAll(NameWrapper.address, true)).wait()
     await (await EnsRegistry.setApprovalForAll(NameWrapper.address, true)).wait()
     await (await NameWrapper.wrapETH2LD(name, firstAddress, CAN_DO_EVERYTHING)).wait()
     console.log(`Wrapped NFT for ${domain} is available at ${getOpenSeaUrl(NameWrapper.address, namehashedname)}`)
-    await (await NameWrapper.setSubnodeOwnerAndWrap(namehash(`${name}.eth`), 'sub1', firstAddress, CAN_DO_EVERYTHING)).wait()
-    await (await NameWrapper.setSubnodeOwnerAndWrap(namehash(`${name}.eth`), 'sub2', firstAddress, CAN_DO_EVERYTHING)).wait()
-    await (await NameWrapper.setResolver(namehash(`sub2.${name}.eth`), resolverAddress)).wait()
-    await (await Resolver.setText(namehash(`sub2.${name}.eth`), 'domains.ens.nft.image', 'https://i.imgur.com/JcZESMp.png')).wait()
-    console.log(`Wrapped NFT for sub2.${name}.eth is available at ${getOpenSeaUrl(NameWrapper.address, namehash(`sub2.${name}.eth`))}`)
-    await (await NameWrapper.burnFuses(namehash(`sub2.${name}.eth`),CANNOT_UNWRAP)).wait()
-    await (await NameWrapper.burnFuses(namehash(`sub2.${name}.eth`),CANNOT_SET_RESOLVER)).wait()
-    await (await NameWrapper.unwrap(namehash(`${name}.eth`), labelhash('sub1'), firstAddress)).wait()
+    await (await NameWrapper.setSubnodeOwnerAndWrap(namehash(`${name}.pls`), 'sub1', firstAddress, CAN_DO_EVERYTHING)).wait()
+    await (await NameWrapper.setSubnodeOwnerAndWrap(namehash(`${name}.pls`), 'sub2', firstAddress, CAN_DO_EVERYTHING)).wait()
+    await (await NameWrapper.setResolver(namehash(`sub2.${name}.pls`), resolverAddress)).wait()
+    await (await Resolver.setText(namehash(`sub2.${name}.pls`), 'domains.ens.nft.image', 'https://i.imgur.com/JcZESMp.png')).wait()
+    console.log(`Wrapped NFT for sub2.${name}.pls is available at ${getOpenSeaUrl(NameWrapper.address, namehash(`sub2.${name}.pls`))}`)
+    await (await NameWrapper.burnFuses(namehash(`sub2.${name}.pls`),CANNOT_UNWRAP)).wait()
+    await (await NameWrapper.burnFuses(namehash(`sub2.${name}.pls`),CANNOT_SET_RESOLVER)).wait()
+    await (await NameWrapper.unwrap(namehash(`${name}.pls`), labelhash('sub1'), firstAddress)).wait()
   }
   
   main()
