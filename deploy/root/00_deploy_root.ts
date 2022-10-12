@@ -20,7 +20,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     from: deployer,
     args: [registry.address],
     log: true,
-  })
+  }) 
 
   const root = await ethers.getContract('Root')
 
