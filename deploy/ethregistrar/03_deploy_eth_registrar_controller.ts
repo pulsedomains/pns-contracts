@@ -39,7 +39,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     ],
     log: true,
   }
-  const controller = await deploy('ETHRegistrarController', deployArgs)
+  const controller = await ethers.getContract('ETHRegistrarController', deployer)
+  // await deploy('ETHRegistrarController', deployArgs)
   if (!controller.newlyDeployed) return
 
   if (owner !== deployer) {
@@ -52,7 +53,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   }
 
   // Only attempt to make controller etc changes directly on testnets
-  if (network.name === 'mainnet') return
+  if (network.name === 'pulsechain') return
 
   console.log(
     'WRAPPER OWNER',

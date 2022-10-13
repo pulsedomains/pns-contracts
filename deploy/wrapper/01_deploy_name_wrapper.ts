@@ -25,8 +25,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     log: true,
   };
 
-  const bri = await deploy('BaseRegistrarImplementation', deployArgs0)
-
   const registrar = await ethers.getContract(
     'BaseRegistrarImplementation',
     owner,

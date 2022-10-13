@@ -22,7 +22,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     ],
     log: true,
   }
-  const publicResolver = await deploy('PublicResolver', deployArgs)
+  const publicResolver = await ethers.getContract('PublicResolver')
+  // await deploy('PublicResolver', deployArgs)
   if (!publicResolver.newlyDeployed) return
 
   const tx = await reverseRegistrar.setDefaultResolver(publicResolver.address)
