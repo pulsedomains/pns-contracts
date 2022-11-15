@@ -720,7 +720,7 @@ function shouldRespectConstraints(contracts, getSigners) {
           0,
         ),
       ).to.be.revertedWith(
-        `OperationProhibited("0x40e4b5d9555b6f20c264b5922e90f08889074195ec29c4256db06da93d187ce0")`,
+        `OperationProhibited("0xbbfc5977efa6590c5b92becdf2b363e7141059ae414f877b9f9f30a1a416fefb")`,
       )
     })
     it('1000 => 1010 - Parent cannot burn PCC with setSubnodeOwner()', async () => {
@@ -888,7 +888,7 @@ function shouldRespectConstraints(contracts, getSigners) {
           0,
         ),
       ).to.be.revertedWith(
-        `OperationProhibited("0x40e4b5d9555b6f20c264b5922e90f08889074195ec29c4256db06da93d187ce0")`,
+        `OperationProhibited("0xbbfc5977efa6590c5b92becdf2b363e7141059ae414f877b9f9f30a1a416fefb")`,
       )
       // TODO: this should revert
     })
@@ -936,7 +936,7 @@ function shouldRespectConstraints(contracts, getSigners) {
       await expect(
         NameWrapper.setChildFuses(parentNode, childLabelHash, CANNOT_UNWRAP, 0),
       ).to.be.revertedWith(
-        `OperationProhibited("0x40e4b5d9555b6f20c264b5922e90f08889074195ec29c4256db06da93d187ce0")`,
+        `OperationProhibited("0xbbfc5977efa6590c5b92becdf2b363e7141059ae414f877b9f9f30a1a416fefb")`,
       )
     })
 
@@ -944,7 +944,7 @@ function shouldRespectConstraints(contracts, getSigners) {
       await expect(
         NameWrapper2.setFuses(childNode, CANNOT_UNWRAP),
       ).to.be.revertedWith(
-        `OperationProhibited("0x40e4b5d9555b6f20c264b5922e90f08889074195ec29c4256db06da93d187ce0")`,
+        `OperationProhibited("0xbbfc5977efa6590c5b92becdf2b363e7141059ae414f877b9f9f30a1a416fefb")`,
       )
     })
   })
@@ -964,7 +964,7 @@ function shouldRespectConstraints(contracts, getSigners) {
       await expect(
         NameWrapper.setChildFuses(parentNode, childLabelHash, CANNOT_UNWRAP, 0),
       ).to.be.revertedWith(
-        `OperationProhibited("0x40e4b5d9555b6f20c264b5922e90f08889074195ec29c4256db06da93d187ce0")`,
+        `OperationProhibited("0xbbfc5977efa6590c5b92becdf2b363e7141059ae414f877b9f9f30a1a416fefb")`,
       )
     })
 
@@ -972,7 +972,7 @@ function shouldRespectConstraints(contracts, getSigners) {
       await expect(
         NameWrapper2.setFuses(childNode, CANNOT_UNWRAP),
       ).to.be.revertedWith(
-        `OperationProhibited("0x40e4b5d9555b6f20c264b5922e90f08889074195ec29c4256db06da93d187ce0")`,
+        `OperationProhibited("0xbbfc5977efa6590c5b92becdf2b363e7141059ae414f877b9f9f30a1a416fefb")`,
       )
     })
   })
@@ -997,7 +997,7 @@ function shouldRespectConstraints(contracts, getSigners) {
           0,
         ),
       ).to.be.revertedWith(
-        `OperationProhibited("0x40e4b5d9555b6f20c264b5922e90f08889074195ec29c4256db06da93d187ce0")`,
+        `OperationProhibited("0xbbfc5977efa6590c5b92becdf2b363e7141059ae414f877b9f9f30a1a416fefb")`,
       )
       //TODO should revert
     })
@@ -1188,7 +1188,7 @@ function shouldRespectConstraints(contracts, getSigners) {
       await expect(
         NameWrapper.setChildFuses(parentNode, childLabelHash, CANNOT_UNWRAP, 0),
       ).to.be.revertedWith(
-        `OperationProhibited("0x40e4b5d9555b6f20c264b5922e90f08889074195ec29c4256db06da93d187ce0")`,
+        `OperationProhibited("0xbbfc5977efa6590c5b92becdf2b363e7141059ae414f877b9f9f30a1a416fefb")`,
       )
     })
 
@@ -1203,7 +1203,7 @@ function shouldRespectConstraints(contracts, getSigners) {
           0,
         ),
       ).to.be.revertedWith(
-        `OperationProhibited("0x40e4b5d9555b6f20c264b5922e90f08889074195ec29c4256db06da93d187ce0")`,
+        `OperationProhibited("0xbbfc5977efa6590c5b92becdf2b363e7141059ae414f877b9f9f30a1a416fefb")`,
       )
     })
 
@@ -1220,7 +1220,7 @@ function shouldRespectConstraints(contracts, getSigners) {
           0,
         ),
       ).to.be.revertedWith(
-        `OperationProhibited("0x40e4b5d9555b6f20c264b5922e90f08889074195ec29c4256db06da93d187ce0")`,
+        `OperationProhibited("0xbbfc5977efa6590c5b92becdf2b363e7141059ae414f877b9f9f30a1a416fefb")`,
       )
     })
 
@@ -1238,7 +1238,7 @@ function shouldRespectConstraints(contracts, getSigners) {
       await expect(
         NameWrapper.setChildFuses(parentNode, childLabelHash, CANNOT_UNWRAP, 0),
       ).to.be.revertedWith(
-        `OperationProhibited("0x40e4b5d9555b6f20c264b5922e90f08889074195ec29c4256db06da93d187ce0")`,
+        `OperationProhibited("0xbbfc5977efa6590c5b92becdf2b363e7141059ae414f877b9f9f30a1a416fefb")`,
       )
     })
 
@@ -1253,7 +1253,7 @@ function shouldRespectConstraints(contracts, getSigners) {
           0,
         ),
       ).to.be.revertedWith(
-        `OperationProhibited("0x40e4b5d9555b6f20c264b5922e90f08889074195ec29c4256db06da93d187ce0")`,
+        `OperationProhibited("0xbbfc5977efa6590c5b92becdf2b363e7141059ae414f877b9f9f30a1a416fefb")`,
       )
     })
 
@@ -1270,7 +1270,7 @@ function shouldRespectConstraints(contracts, getSigners) {
           0,
         ),
       ).to.be.revertedWith(
-        `OperationProhibited("0x40e4b5d9555b6f20c264b5922e90f08889074195ec29c4256db06da93d187ce0")`,
+        `OperationProhibited("0xbbfc5977efa6590c5b92becdf2b363e7141059ae414f877b9f9f30a1a416fefb")`,
       )
     })
 

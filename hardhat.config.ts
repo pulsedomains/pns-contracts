@@ -162,6 +162,13 @@ const config: HardhatUserConfig = {
       },
       gasPrice:4000000000,
       gas: 27000000,
+    },
+    tpulse: {
+      url: 'https://rpc.v2b.testnet.pulsechain.com',
+      tags: ['use_root'],
+      chainId: 941,
+      accounts: real_accounts,
+      gasPrice: 10000000000,
     }
   },
   mocha: {},
