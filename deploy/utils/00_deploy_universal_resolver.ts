@@ -14,10 +14,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     args: [registry.address],
     log: true,
   })
+
+  return true
 }
 
 func.id = 'universal-resolver'
-func.tags = ['utils', 'UniversalResolver']
-func.dependencies = ['registry']
+func.tags = [ 'UniversalResolver']
+func.dependencies = ['ENSRegistry']
 
 export default func

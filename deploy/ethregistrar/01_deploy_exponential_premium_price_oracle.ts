@@ -1,3 +1,4 @@
+import { ethers } from 'hardhat'
 import { DeployFunction } from 'hardhat-deploy/types'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
@@ -6,15 +7,13 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments
   const { deployer } = await getNamedAccounts()
 
-  if (network.name === 'mainnet') {
-    return true
-  }
-
-  const dummyOracle = await deploy('DummyOracle', {
+  await deploy('DummyOracle', {
     from: deployer,
     args: ['160000000000'],
     log: true,
   })
+
+  const dummyOracle = await ethers.getContract('DummyOracle')
 
   await deploy('ExponentialPremiumPriceOracle', {
     from: deployer,
@@ -26,10 +25,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     ],
     log: true,
   })
+
+  return true
 }
 
 func.id = 'price-oracle'
-func.tags = ['ethregistrar', 'ExponentialPremiumPriceOracle', 'DummyOracle']
-func.dependencies = ['registry']
+func.tags = ['ExponentialPremiumPriceOracle']
+func.dependencies = []
 
 export default func

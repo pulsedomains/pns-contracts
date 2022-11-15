@@ -110,9 +110,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     `Waiting on ${transactions.length} transactions setting DNSSEC parameters`,
   )
   await Promise.all(transactions.map((tx) => tx.wait()))
+
+  return true
 }
 
-func.tags = ['dnssec-oracle']
-func.dependencies = ['dnssec-algorithms', 'dnssec-digests']
+func.id = 'dnssec-oracle'
+func.tags = ['DNSSecOracle']
+func.dependencies = ['DNSSecAlgorithm', 'DNSSecDigest']
 
 export default func

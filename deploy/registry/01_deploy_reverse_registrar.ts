@@ -10,28 +10,21 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployer, owner } = await getNamedAccounts()
 
   const registry = await ethers.getContract('ENSRegistry')
+  const root = await ethers.getContract('Root')
 
-  const deployArgs = {
+  await deploy('ReverseRegistrar', {
     from: deployer,
     args: [registry.address],
     log: true,
-  }
-  const reverseRegistrar = await deploy('ReverseRegistrar', deployArgs)
-  if (!reverseRegistrar.newlyDeployed) return
+  })
+
+  const reverseRegistrar = await ethers.getContract('ReverseRegistrar')
 
   if (owner !== deployer) {
-    const r = await ethers.getContract('ReverseRegistrar', deployer)
-    const tx = await r.transferOwnership(owner)
-    console.log(
-      `Transferring ownership of ReverseRegistrar to ${owner} (tx: ${tx.hash})...`,
-    )
+    const tx = await reverseRegistrar.transferOwnership(owner)
+    console.log(`Transferring ownership of ReverseRegistrar to ${owner} (tx: ${tx.hash})...`)
     await tx.wait()
   }
-
-  // Only attempt to make controller etc changes directly on testnets
-  if (network.name === 'pulsechain') return
-
-  const root = await ethers.getContract('Root')
 
   const tx1 = await root
     .connect(await ethers.getSigner(owner))
@@ -41,19 +34,15 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const tx2 = await registry
     .connect(await ethers.getSigner(owner))
-    .setSubnodeOwner(
-      namehash('reverse'),
-      '0x' + keccak256('addr'),
-      reverseRegistrar.address,
-    )
-  console.log(
-    `Setting owner of .addr.reverse to ReverseRegistrar on registry (tx: ${tx2.hash})...`,
-  )
+    .setSubnodeOwner(namehash('reverse'), '0x' + keccak256('addr'), reverseRegistrar.address)
+  console.log(`Setting owner of .addr.reverse to ReverseRegistrar on registry (tx: ${tx2.hash})...`)
   await tx2.wait()
+
+  return true
 }
 
 func.id = 'reverse-registrar'
 func.tags = ['ReverseRegistrar']
-func.dependencies = ['root']
+func.dependencies = ['ENSRegistry', 'Root']
 
 export default func

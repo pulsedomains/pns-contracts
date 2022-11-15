@@ -22,41 +22,21 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     ],
     log: true,
   }
+  await deploy('PublicResolver', deployArgs)
+
   const publicResolver = await ethers.getContract('PublicResolver')
-  // await deploy('PublicResolver', deployArgs)
-  if (!publicResolver.newlyDeployed) return
 
   const tx = await reverseRegistrar.setDefaultResolver(publicResolver.address)
-  console.log(
-    `Setting default resolver on ReverseRegistrar to PublicResolver (tx: ${tx.hash})...`,
-  )
+  console.log(`Setting default resolver on ReverseRegistrar to PublicResolver (tx: ${tx.hash})...`)
   await tx.wait()
 
-  if ((await registry.owner(ethers.utils.namehash('resolver.pls'))) === owner) {
-    const pr = await ethers.getContract('PublicResolver')
-    const resolverHash = ethers.utils.namehash('resolver.pls')
-    const tx2 = await registry.setResolver(resolverHash, pr.address)
-    console.log(
-      `Setting resolver for resolver.pls to PublicResolver (tx: ${tx2.hash})...`,
-    )
-    await tx2.wait()
-
-    const tx3 = await pr['setAddr(bytes32,address)'](resolverHash, pr.address)
-    console.log(
-      `Setting address for resolver.pls to PublicResolver (tx: ${tx3.hash})...`,
-    )
-    await tx3.wait()
-  } else {
-    console.log(
-      'resolver.pls is not owned by the owner address, not setting resolver',
-    )
-  }
+  return true
 }
 
 func.id = 'resolver'
-func.tags = ['resolvers', 'PublicResolver']
+func.tags = ['PublicResolver']
 func.dependencies = [
-  'registry',
+  'ENSRegistry',
   'ETHRegistrarController',
   'NameWrapper',
   'ReverseRegistrar',
