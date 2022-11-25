@@ -1,5 +1,5 @@
 import { namehash } from 'ethers/lib/utils'
-import { ethers } from 'hardhat'
+import { ethers, network } from 'hardhat'
 import { DeployFunction } from 'hardhat-deploy/types'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { keccak256 } from 'js-sha3'
@@ -23,7 +23,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const ownerOfResolver = await registry.owner(namehash('resolver'))
   if (ownerOfResolver == ZERO_ADDRESS) {
-    const tx = await registry.setSubnodeOwner(namehash('pls'), '0x' + keccak256('resolver'), resolver.address)
+    const tx = await root.setSubnodeOwner('0x' + keccak256('resolver'), owner)
     console.log(`Setting owner of resolver.pls to owner on registry (tx: ${tx.hash})...`)
     await tx.wait()
   } else if (ownerOfResolver != owner) {
@@ -40,8 +40,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   await tx3.wait()
 
   const providerWithEns = new ethers.providers.StaticJsonRpcProvider(
-    'https://rpc.v2b.testnet.pulsechain.com',
-    { chainId: 941, name: 'tpulse', ensAddress: registry.address },
+    network.name === 'mainnet' ? 'https://rpc.mainnet.pulsechain.com' : 'https://rpc.v2b.testnet.pulsechain.com',
+    { chainId: network.name === 'mainnet' ? 369 : 941, name: 'pulse', ensAddress: registry.address },
   )
 
   const resolverAddr = await providerWithEns.getResolver('pls')

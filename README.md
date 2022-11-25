@@ -169,3 +169,19 @@ yarn pub
 ### Release flow
 
 Smart contract development tends to take a long release cycle. To prevent unnecesarily dependency conflicts, please create a feature branch (`features/$BRNACH_NAME`) and raise a PR against the feature branch. The feature branch must be merged into master only after the smart contracts are deployed to the Ethereum mainnet.
+
+### Deploy
+```bash
+./node_modules/.bin/hardhat deploy --network testnet --tags ENSRegistry
+./node_modules/.bin/hardhat deploy --network testnet --tags Root
+./node_modules/.bin/hardhat deploy --network testnet --tags StaticMetadataService
+./node_modules/.bin/hardhat deploy --network testnet --tags BaseRegistrarImplementation
+./node_modules/.bin/hardhat deploy --network testnet --tags NameWrapper
+./node_modules/.bin/hardhat deploy --network testnet --tags ReverseRegistrar
+./node_modules/.bin/hardhat deploy --network testnet --tags UniversalResolver
+./node_modules/.bin/hardhat deploy --network testnet --tags ExponentialPremiumPriceOracle
+./node_modules/.bin/hardhat deploy --network testnet --tags ETHRegistrarController
+./node_modules/.bin/hardhat deploy --network testnet --tags PublicResolver
+./node_modules/.bin/hardhat deploy --network testnet --tags BulkRenewal
+./node_modules/.bin/hardhat deploy --network testnet --tags FinalSetup
+```

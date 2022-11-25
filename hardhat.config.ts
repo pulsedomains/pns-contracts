@@ -136,34 +136,13 @@ const config: HardhatUserConfig = {
       saveDeployments: false,
       tags: ['test', 'legacy', 'use_root'],
     },
-    ropsten: {
-      url: `https://ropsten.infura.io/v3/${process.env.INFURA_ID}`,
-      tags: ['test', 'legacy', 'use_root'],
-      chainId: 3,
-      accounts: real_accounts,
-    },
-    goerli: {
-      url: `https://goerli.infura.io/v3/${process.env.INFURA_ID}`,
-      tags: ['test', 'legacy', 'use_root'],
-      chainId: 5,
-      accounts: real_accounts,
-    },
     mainnet: {
-      url: `https://mainnet.infura.io/v3/${process.env.INFURA_ID}`,
-      tags: ['legacy', 'use_root'],
-      chainId: 1,
+      url: 'https://rpc.mainnet.pulsechain.com',
+      chainId: 369,
       accounts: real_accounts,
+      gasPrice: 10000000000,
     },
-    pulsechain: {
-      url: 'https://rpc.v2b.testnet.pulsechain.com',
-      chainId: 941,
-      accounts: {
-        mnemonic: "unaware pencil chalk please aspect image soccer rally carry jealous kangaroo round"
-      },
-      gasPrice:4000000000,
-      gas: 27000000,
-    },
-    tpulse: {
+    testnet: {
       url: 'https://rpc.v2b.testnet.pulsechain.com',
       tags: ['use_root'],
       chainId: 941,
@@ -207,7 +186,7 @@ const config: HardhatUserConfig = {
       default: 0,
     },
     owner: {
-      default: 1,
+      default: 0,
     },
   },
   external: {
