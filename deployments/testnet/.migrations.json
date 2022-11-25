@@ -10,5 +10,10 @@
   "eth-registrar": 1669369370,
   "resolver": 1669369402,
   "final-setup": 1669369664,
-  "bulk-renewal": 1669369718
+  "bulk-renewal": 1669369718,
+  "dnssec-algorithms": 1669380290,
+  "dnssec-digests": 1669380305,
+  "dnssec-oracle": 1669380335,
+  "dns-registrar": 1669380361,
+  "set-dns-registrar": 1669380386
 }

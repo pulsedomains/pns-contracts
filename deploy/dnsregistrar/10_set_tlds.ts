@@ -4,10 +4,8 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { ZERO_HASH } from '../constants'
 
 const tld_map = {
-  mainnet: ['xyz'],
-  ropsten: ['xyz'],
-  localhost: ['xyz'],
-  tpulse: ['xyz']
+  mainnet: ['fyi'],
+  testnet: ['fyi']
 }
 
 async function setTLDsOnRoot(
