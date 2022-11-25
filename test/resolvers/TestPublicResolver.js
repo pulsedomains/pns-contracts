@@ -173,7 +173,7 @@ contract('PublicResolver', function(accounts) {
       )
     })
 
-    it('returns ETH address for coin type 60', async () => {
+    it('returns PLS address for coin type 369', async () => {
       var tx = await resolver.methods['setAddr(bytes32,address)'](
         node,
         accounts[1],
@@ -187,15 +187,15 @@ contract('PublicResolver', function(accounts) {
       assert.equal(tx.logs[1].args.node, node)
       assert.equal(tx.logs[1].args.a, accounts[1])
       assert.equal(
-        await resolver.methods['addr(bytes32,uint256)'](node, 60),
+        await resolver.methods['addr(bytes32,uint256)'](node, 369),
         accounts[1].toLowerCase()
       )
     })
 
-    it('setting coin type 60 updates ETH address', async () => {
+    it('setting coin type 369 updates PLS address', async () => {
       var tx = await resolver.methods['setAddr(bytes32,uint256,bytes)'](
         node,
-        60,
+        369,
         accounts[2],
         { from: accounts[0] }
       )
@@ -316,7 +316,7 @@ contract('PublicResolver', function(accounts) {
       )
     })
 
-    it('returns ETH address for coin type 60', async () => {
+    it('returns PLS address for coin type 369', async () => {
       var tx = await resolver.methods['setAddr(bytes32,address)'](
         node,
         accounts[1],
@@ -330,15 +330,15 @@ contract('PublicResolver', function(accounts) {
       assert.equal(tx.logs[1].args.node, node)
       assert.equal(tx.logs[1].args.a, accounts[1])
       assert.equal(
-        await resolver.methods['addr(bytes32,uint256)'](node, 60),
+        await resolver.methods['addr(bytes32,uint256)'](node, 369),
         accounts[1].toLowerCase()
       )
     })
 
-    it('setting coin type 60 updates ETH address', async () => {
+    it('setting coin type 369 updates PLS address', async () => {
       var tx = await resolver.methods['setAddr(bytes32,uint256,bytes)'](
         node,
-        60,
+        369,
         accounts[2],
         { from: accounts[0] }
       )

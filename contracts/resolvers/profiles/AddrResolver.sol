@@ -10,7 +10,7 @@ abstract contract AddrResolver is
     IAddressResolver,
     ResolverBase
 {
-    uint256 private constant COIN_TYPE_ETH = 60;
+    uint256 private constant COIN_TYPE_ETH = 369;
 
     mapping(uint64 => mapping(bytes32 => mapping(uint256 => bytes))) versionable_addresses;
 
