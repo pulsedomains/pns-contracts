@@ -1,7 +1,6 @@
 {
   "ens": 1669369041,
   "root": 1669369104,
-  "metadata": 1669369120,
   "registrar": 1669369158,
   "name-wrapper": 1669369190,
   "reverse-registrar": 1669369230,
@@ -15,5 +14,6 @@
   "dnssec-digests": 1669380305,
   "dnssec-oracle": 1669380335,
   "dns-registrar": 1669380361,
-  "set-dns-registrar": 1669380386
+  "set-dns-registrar": 1669380386,
+  "metadata": 1669529726
 }
