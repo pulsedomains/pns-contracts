@@ -31,7 +31,7 @@ contract('PublicResolver', function(accounts) {
   describe('fallback function', async () => {
     it('forbids calls to the fallback function with 0 value', async () => {
       await exceptions.expectFailure(
-        web3.pls.sendTransaction({
+        web3.eth.sendTransaction({
           from: accounts[0],
           to: resolver.address,
           gas: 3000000,
@@ -41,7 +41,7 @@ contract('PublicResolver', function(accounts) {
 
     it('forbids calls to the fallback function with 1 value', async () => {
       await exceptions.expectFailure(
-        web3.pls.sendTransaction({
+        web3.eth.sendTransaction({
           from: accounts[0],
           to: resolver.address,
           gas: 3000000,
@@ -173,7 +173,7 @@ contract('PublicResolver', function(accounts) {
       )
     })
 
-    it('returns ETH address for coin type 60', async () => {
+    it('returns PLS address for coin type 369', async () => {
       var tx = await resolver.methods['setAddr(bytes32,address)'](
         node,
         accounts[1],
@@ -187,15 +187,15 @@ contract('PublicResolver', function(accounts) {
       assert.equal(tx.logs[1].args.node, node)
       assert.equal(tx.logs[1].args.a, accounts[1])
       assert.equal(
-        await resolver.methods['addr(bytes32,uint256)'](node, 60),
+        await resolver.methods['addr(bytes32,uint256)'](node, 369),
         accounts[1].toLowerCase()
       )
     })
 
-    it('setting coin type 60 updates ETH address', async () => {
+    it('setting coin type 369 updates PLS address', async () => {
       var tx = await resolver.methods['setAddr(bytes32,uint256,bytes)'](
         node,
-        60,
+        369,
         accounts[2],
         { from: accounts[0] }
       )
@@ -211,7 +211,7 @@ contract('PublicResolver', function(accounts) {
 
     it('forbids calls to the fallback function with 1 value', async () => {
       await exceptions.expectFailure(
-        web3.pls.sendTransaction({
+        web3.eth.sendTransaction({
           from: accounts[0],
           to: resolver.address,
           gas: 3000000,
@@ -316,7 +316,7 @@ contract('PublicResolver', function(accounts) {
       )
     })
 
-    it('returns ETH address for coin type 60', async () => {
+    it('returns PLS address for coin type 369', async () => {
       var tx = await resolver.methods['setAddr(bytes32,address)'](
         node,
         accounts[1],
@@ -330,15 +330,15 @@ contract('PublicResolver', function(accounts) {
       assert.equal(tx.logs[1].args.node, node)
       assert.equal(tx.logs[1].args.a, accounts[1])
       assert.equal(
-        await resolver.methods['addr(bytes32,uint256)'](node, 60),
+        await resolver.methods['addr(bytes32,uint256)'](node, 369),
         accounts[1].toLowerCase()
       )
     })
 
-    it('setting coin type 60 updates ETH address', async () => {
+    it('setting coin type 369 updates PLS address', async () => {
       var tx = await resolver.methods['setAddr(bytes32,uint256,bytes)'](
         node,
-        60,
+        369,
         accounts[2],
         { from: accounts[0] }
       )
@@ -711,7 +711,7 @@ contract('PublicResolver', function(accounts) {
       const b1rec = '016203657468000001000100000e10000402030405'
       // b.pls. 3600 IN A 3.4.5.6
       const b2rec = '016203657468000001000100000e10000403040506'
-      // eth. 86400 IN SOA ns1.ethdns.xyz. hostmaster.test.pls. 2018061501 15620 1800 1814400 14400
+      // pls. 86400 IN SOA ns1.plsdns.xyz. hostmaster.test.pls. 2018061501 15620 1800 1814400 14400
       const soarec =
         '03657468000006000100015180003a036e733106657468646e730378797a000a686f73746d6173746572057465737431036574680078492cbd00003d0400000708001baf8000003840'
       const rec = '0x' + arec + b1rec + b2rec + soarec
@@ -727,7 +727,7 @@ contract('PublicResolver', function(accounts) {
         '0x016203657468000001000100000e10000402030405016203657468000001000100000e10000403040506'
       )
       assert.equal(
-        await resolver.dnsRecord(node, sha3(dnsName('eth.')), 6),
+        await resolver.dnsRecord(node, sha3(dnsName('pls.')), 6),
         '0x03657468000006000100015180003a036e733106657468646e730378797a000a686f73746d6173746572057465737431036574680078492cbd00003d0400000708001baf8000003840'
       )
     }
@@ -736,7 +736,7 @@ contract('PublicResolver', function(accounts) {
     it('should update existing records', async () => {
       // a.pls. 3600 IN A 4.5.6.7
       const arec = '016103657468000001000100000e10000404050607'
-      // eth. 86400 IN SOA ns1.ethdns.xyz. hostmaster.test.pls. 2018061502 15620 1800 1814400 14400
+      // pls. 86400 IN SOA ns1.plsdns.xyz. hostmaster.test.pls. 2018061502 15620 1800 1814400 14400
       const soarec =
         '03657468000006000100015180003a036e733106657468646e730378797a000a686f73746d6173746572057465737431036574680078492cbe00003d0400000708001baf8000003840'
       const rec = '0x' + arec + soarec
@@ -748,7 +748,7 @@ contract('PublicResolver', function(accounts) {
         '0x016103657468000001000100000e10000404050607'
       )
       assert.equal(
-        await resolver.dnsRecord(node, sha3(dnsName('eth.')), 6),
+        await resolver.dnsRecord(node, sha3(dnsName('pls.')), 6),
         '0x03657468000006000100015180003a036e733106657468646e730378797a000a686f73746d6173746572057465737431036574680078492cbe00003d0400000708001baf8000003840'
       )
     })
@@ -957,7 +957,7 @@ contract('PublicResolver', function(accounts) {
         null,
       )
       assert.equal(
-        await resolver.dnsRecord(node, sha3(dnsName('eth.')), 6),
+        await resolver.dnsRecord(node, sha3(dnsName('pls.')), 6),
         null,
       )
     })
@@ -1209,11 +1209,11 @@ contract('PublicResolver', function(accounts) {
         resolver.contract.methods.text(node, 'url').encodeABI(),
       ])
       assert.equal(
-        web3.pls.abi.decodeParameters(['address'], results[0])[0],
+        web3.eth.abi.decodeParameters(['address'], results[0])[0],
         accounts[1]
       )
       assert.equal(
-        web3.pls.abi.decodeParameters(['string'], results[1])[0],
+        web3.eth.abi.decodeParameters(['string'], results[1])[0],
         'https://ethereum.org/'
       )
     })

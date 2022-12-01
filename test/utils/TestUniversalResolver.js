@@ -24,7 +24,7 @@ contract("UniversalResolver", function(accounts) {
     reverseNode;
 
   beforeEach(async () => {
-    node = namehash.hash("eth");
+    node = namehash.hash("pls");
     ens = await ENS.new();
     nameWrapper = await NameWrapper.new();
     publicResolver = await PublicResolver.new(
@@ -38,10 +38,10 @@ contract("UniversalResolver", function(accounts) {
     reverseRegistrar = await ReverseRegistrar.new(ens.address);
     reverseNode = accounts[0].toLowerCase().substring(2) + ".addr.reverse";
 
-    await ens.setSubnodeOwner("0x0", sha3("eth"), accounts[0], {
+    await ens.setSubnodeOwner("0x0", sha3("pls"), accounts[0], {
       from: accounts[0],
     });
-    await ens.setSubnodeOwner(namehash.hash("eth"), sha3("test"), accounts[0], {
+    await ens.setSubnodeOwner(namehash.hash("pls"), sha3("test"), accounts[0], {
       from: accounts[0],
     });
     await ens.setSubnodeOwner("0x0", sha3("reverse"), accounts[0], {
@@ -139,7 +139,7 @@ contract("UniversalResolver", function(accounts) {
       it("should resolve a record if `supportsInterface` throws", async () => {
         const legacyResolver = await LegacyResolver.new();
         await ens.setSubnodeOwner(
-          namehash.hash("eth"),
+          namehash.hash("pls"),
           sha3("test2"),
           accounts[0],
           { from: accounts[0] }

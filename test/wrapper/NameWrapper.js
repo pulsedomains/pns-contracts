@@ -984,7 +984,7 @@ describe('Name Wrapper', () => {
           EMPTY_ADDRESS,
         ),
       ).to.be.revertedWith(
-        'OperationProhibited("0x4885e5302c58efc26e2ce26224bd40fc957256543bf9a751c04f331811bed222")',
+        'OperationProhibited("0x11066868930b5d2ad473fd3a4a70d78ed7104bd5a8aa8610ec7716c8153f87d1")',
       )
     })
 
@@ -1201,7 +1201,7 @@ describe('Name Wrapper', () => {
       await expect(
         NameWrapper.unwrapETH2LD(labelHash, account, account),
       ).to.be.revertedWith(
-        'OperationProhibited("0xbb7d787fe3173f5ee43d9616afca7cbd40c9824f2be1d61def0bbbad110261f7")',
+        'OperationProhibited("0x786468884dd987695d9965de44f973a79253de1da6ee7dc48081f2f044c5ebe5")',
       )
     })
     it('Unwrapping a previously wrapped unexpired name retains PCC and expiry', async () => {
@@ -2041,7 +2041,7 @@ describe('Name Wrapper', () => {
           CANNOT_UNWRAP | CANNOT_TRANSFER,
         ),
       ).to.be.revertedWith(
-        `OperationProhibited("0x5f1471f6276eafe687a7aceabaea0bce02fafaf1dfbeb787b3725234022ee294")`,
+        `OperationProhibited("0x227ab743709550f33d6cb7559e459aa75b799b0f441d950fac5b12a7907d0b19")`,
       )
     })
 
@@ -2067,7 +2067,7 @@ describe('Name Wrapper', () => {
       await expect(
         NameWrapper.setFuses(namehash('sub.abc.pls'), CANNOT_TRANSFER),
       ).to.be.revertedWith(
-        `OperationProhibited("0x5f1471f6276eafe687a7aceabaea0bce02fafaf1dfbeb787b3725234022ee294")`,
+        `OperationProhibited("0x227ab743709550f33d6cb7559e459aa75b799b0f441d950fac5b12a7907d0b19")`,
       )
     })
 
@@ -4694,7 +4694,7 @@ describe('Name Wrapper', () => {
       // the hacker forge a fake root node
       const sub3Label = 'pls'
       const sub3LabelHash = labelhash(sub3Label)
-      const sub3Domain = sub3Label + '.' + sub2Domain // eth.sub2.sub1.base.pls
+      const sub3Domain = sub3Label + '.' + sub2Domain // pls.sub2.sub1.base.pls
       const wrappedSub3TokenId = namehash(sub3Domain)
       await NameWrapperH.setSubnodeOwner(
         wrappedSub2TokenId,

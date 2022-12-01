@@ -196,7 +196,7 @@ contract('ETHRegistrarController', function () {
 
   it('should permit new registrations', async () => {
     const name = 'newname'
-    const balanceBefore = await web3.pls.getBalance(controller.address)
+    const balanceBefore = await web3.eth.getBalance(controller.address)
     const tx = await registerName(name)
     const block = await provider.getBlock(tx.blockNumber)
     await expect(tx)
@@ -211,7 +211,7 @@ contract('ETHRegistrarController', function () {
       )
 
     expect(
-      (await web3.pls.getBalance(controller.address)) - balanceBefore,
+      (await web3.eth.getBalance(controller.address)) - balanceBefore,
     ).to.equal(REGISTRATION_TIME)
   })
 
@@ -241,11 +241,11 @@ contract('ETHRegistrarController', function () {
     )
     var tx = await controller2.commit(commitment)
     expect(await controller2.commitments(commitment)).to.equal(
-      (await web3.pls.getBlock(tx.blockNumber)).timestamp,
+      (await web3.eth.getBlock(tx.blockNumber)).timestamp,
     )
 
     await evm.advanceTime((await controller2.minCommitmentAge()).toNumber())
-    var balanceBefore = await web3.pls.getBalance(controller.address)
+    var balanceBefore = await web3.eth.getBalance(controller.address)
     var tx = await controller2.register(
       'newconfigname',
       registrantAccount,
@@ -273,7 +273,7 @@ contract('ETHRegistrarController', function () {
       )
 
     expect(
-      (await web3.pls.getBalance(controller.address)) - balanceBefore,
+      (await web3.eth.getBalance(controller.address)) - balanceBefore,
     ).to.equal(REGISTRATION_TIME)
 
     var nodehash = namehash('newconfigname.pls')
@@ -320,7 +320,7 @@ contract('ETHRegistrarController', function () {
 
     const tx = await controller.commit(commitment)
     expect(await controller.commitments(commitment)).to.equal(
-      (await web3.pls.getBlock(tx.blockNumber)).timestamp,
+      (await web3.eth.getBlock(tx.blockNumber)).timestamp,
     )
 
     await evm.advanceTime((await controller.minCommitmentAge()).toNumber())
@@ -355,7 +355,7 @@ contract('ETHRegistrarController', function () {
 
     const tx = await controller.commit(commitment)
     expect(await controller.commitments(commitment)).to.equal(
-      (await web3.pls.getBlock(tx.blockNumber)).timestamp,
+      (await web3.eth.getBlock(tx.blockNumber)).timestamp,
     )
 
     await evm.advanceTime((await controller.minCommitmentAge()).toNumber())
@@ -396,7 +396,7 @@ contract('ETHRegistrarController', function () {
     )
     const tx = await controller2.commit(commitment)
     expect(await controller2.commitments(commitment)).to.equal(
-      (await web3.pls.getBlock(tx.blockNumber)).timestamp,
+      (await web3.eth.getBlock(tx.blockNumber)).timestamp,
     )
 
     await evm.advanceTime((await controller2.minCommitmentAge()).toNumber())
@@ -445,7 +445,7 @@ contract('ETHRegistrarController', function () {
     )
     const tx = await controller2.commit(commitment)
     expect(await controller2.commitments(commitment)).to.equal(
-      (await web3.pls.getBlock(tx.blockNumber)).timestamp,
+      (await web3.eth.getBlock(tx.blockNumber)).timestamp,
     )
 
     await evm.advanceTime((await controller2.minCommitmentAge()).toNumber())
@@ -489,11 +489,11 @@ contract('ETHRegistrarController', function () {
     )
     let tx = await controller.commit(commitment)
     expect(await controller.commitments(commitment)).to.equal(
-      (await web3.pls.getBlock(tx.blockNumber)).timestamp,
+      (await web3.eth.getBlock(tx.blockNumber)).timestamp,
     )
 
     await evm.advanceTime((await controller.minCommitmentAge()).toNumber())
-    const balanceBefore = await web3.pls.getBalance(controller.address)
+    const balanceBefore = await web3.eth.getBalance(controller.address)
     let tx2 = await controller.register(
       'newconfigname2',
       registrantAccount,
@@ -524,7 +524,7 @@ contract('ETHRegistrarController', function () {
     expect(await ens.resolver(nodehash)).to.equal(resolver.address)
     expect(await resolver['addr(bytes32)'](nodehash)).to.equal(NULL_ADDRESS)
     expect(
-      (await web3.pls.getBalance(controller.address)) - balanceBefore,
+      (await web3.eth.getBalance(controller.address)) - balanceBefore,
     ).to.equal(REGISTRATION_TIME)
   })
 
@@ -636,7 +636,7 @@ contract('ETHRegistrarController', function () {
     var nodehash = namehash('newname.pls')
     var fuseExpiry = (await nameWrapper.getData(nodehash))[2]
     var expires = await baseRegistrar.nameExpires(sha3('newname'))
-    var balanceBefore = await web3.pls.getBalance(controller.address)
+    var balanceBefore = await web3.eth.getBalance(controller.address)
     const duration = 86400
     const [price] = await controller.rentPrice(sha3('newname'), duration)
     await controller.renew('newname', duration, { value: price })
@@ -646,7 +646,7 @@ contract('ETHRegistrarController', function () {
     expect(newFuseExpiry.toNumber() - fuseExpiry.toNumber()).to.equal(0)
 
     expect(
-      (await web3.pls.getBalance(controller.address)) - balanceBefore,
+      (await web3.eth.getBalance(controller.address)) - balanceBefore,
     ).to.equal(86400)
   })
 
@@ -659,7 +659,7 @@ contract('ETHRegistrarController', function () {
     const [, fuses, fuseExpiry] = await nameWrapper.getData(nodehash)
 
     var expires = await baseRegistrar.nameExpires(sha3('newname'))
-    var balanceBefore = await web3.pls.getBalance(controller.address)
+    var balanceBefore = await web3.eth.getBalance(controller.address)
     const duration = 86400
     const [price] = await controller.rentPrice(sha3('newname'), duration)
     await controller2.renewWithFuses(
@@ -675,7 +675,7 @@ contract('ETHRegistrarController', function () {
     expect(newFuseExpiry.toNumber() - fuseExpiry.toNumber()).to.equal(duration)
     expect(newFuses).to.not.equal(fuses)
     expect(
-      (await web3.pls.getBalance(controller.address)) - balanceBefore,
+      (await web3.eth.getBalance(controller.address)) - balanceBefore,
     ).to.equal(86400)
   })
 
@@ -728,7 +728,7 @@ contract('ETHRegistrarController', function () {
 
   it('should allow anyone to withdraw funds and transfer to the registrar owner', async () => {
     await controller.withdraw({ from: ownerAccount })
-    expect(parseInt(await web3.pls.getBalance(controller.address))).to.equal(0)
+    expect(parseInt(await web3.eth.getBalance(controller.address))).to.equal(0)
   })
 
   it('should set the reverse record of the account', async () => {
@@ -990,7 +990,7 @@ contract('ETHRegistrarController', function () {
     )
     var tx = await controller.commit(commitment)
     expect(await controller.commitments(commitment)).to.equal(
-      (await web3.pls.getBlock(tx.blockNumber)).timestamp,
+      (await web3.eth.getBlock(tx.blockNumber)).timestamp,
     )
     await evm.advanceTime((await controller.minCommitmentAge()).toNumber())
     await expect(

@@ -1,15 +1,12 @@
 import { ethers } from 'hardhat'
 import { DeployFunction } from 'hardhat-deploy/types'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
+import { ZERO_HASH } from '../constants'
 
 const tld_map = {
-  mainnet: ['xyz'],
-  ropsten: ['xyz'],
-  localhost: ['xyz'],
+  mainnet: ['fyi'],
+  testnet: ['fyi']
 }
-
-const ZERO_HASH =
-  '0x0000000000000000000000000000000000000000000000000000000000000000'
 
 async function setTLDsOnRoot(
   owner: string,
@@ -104,9 +101,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     )
     await Promise.all(transactions.map((tx) => tx.wait()))
   }
+
+  return true
 }
 
-func.tags = ['dnsregistrar']
-func.dependencies = ['registry', 'root', 'dnssec-oracle']
+func.id = 'set-dns-registrar'
+func.tags = ['SetDNSRegistrar']
+func.dependencies = ['ENSRegistry', 'Root', 'DNSSecOracle']
 
 export default func

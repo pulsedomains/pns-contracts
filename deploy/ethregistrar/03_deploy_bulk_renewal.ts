@@ -9,7 +9,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const registry = await ethers.getContract('ENSRegistry')
 
-  await deploy('UniversalResolver', {
+  await deploy('BulkRenewal', {
     from: deployer,
     args: [registry.address],
     log: true,
@@ -18,8 +18,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   return true
 }
 
-func.id = 'universal-resolver'
-func.tags = [ 'UniversalResolver']
+func.id = 'bulk-renewal'
+func.tags = ['BulkRenewal']
 func.dependencies = ['ENSRegistry']
 
 export default func
