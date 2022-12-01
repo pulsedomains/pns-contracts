@@ -13,7 +13,7 @@
   "dnssec-algorithms": 1669380290,
   "dnssec-digests": 1669380305,
   "dnssec-oracle": 1669380335,
-  "dns-registrar": 1669380361,
-  "set-dns-registrar": 1669380386,
-  "metadata": 1669529726
+  "metadata": 1669529726,
+  "dns-registrar": 1669652443,
+  "set-dns-registrar": 1669823918
 }

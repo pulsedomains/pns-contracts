@@ -5,7 +5,7 @@ import { ZERO_HASH } from '../constants'
 
 const tld_map = {
   mainnet: ['fyi'],
-  testnet: ['fyi']
+  testnet: ['fyi', 'com']
 }
 
 async function setTLDsOnRoot(

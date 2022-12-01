@@ -19,10 +19,10 @@ library DNSClaimChecker {
         pure
         returns (address, bool)
     {
-        // Add "_ens." to the front of the name.
+        // Add "_pns." to the front of the name.
         Buffer.buffer memory buf;
         buf.init(name.length + 5);
-        buf.append("\x04_ens");
+        buf.append("\x04_pns");
         buf.append(name);
 
         for (
