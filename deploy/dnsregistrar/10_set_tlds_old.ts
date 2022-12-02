@@ -5,7 +5,7 @@ import { ZERO_HASH } from '../constants'
 
 const tld_map = {
   mainnet: ['fyi'],
-  testnet: ['fyi', 'com']
+  testnet: ['fyi', 'com', 'domains']
 }
 
 async function setTLDsOnRoot(
@@ -71,7 +71,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { getNamedAccounts, network } = hre
   const { owner } = await getNamedAccounts()
 
-  const registrar = await ethers.getContract('DNSRegistrar')
+  const registrar = await ethers.getContract('DNSRegistrar_Old')
   const signer = await ethers.getSigner(owner)
 
   let transactions: any[] = []
@@ -103,8 +103,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   }
 }
 
-func.id = 'set-dns-registrar'
-func.tags = ['SetDNSRegistrar']
+func.id = 'set-dns-registrar-old'
+func.tags = ['SetDNSRegistrarOld']
 func.dependencies = ['ENSRegistry', 'Root']
 
 export default func

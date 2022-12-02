@@ -15,8 +15,6 @@
   "dnssec-oracle": 1669380335,
   "metadata": 1669529726,
   "dns-registrar": 1669652443,
-  "set-dns-registrar": 1669823918,
   "dnssec-oracle-old": 1669910687,
-  "dns-registrar-old": 1669910847,
-  "set-dns-registrar-old": 1669911385
+  "dns-registrar-old": 1669910847
 }
