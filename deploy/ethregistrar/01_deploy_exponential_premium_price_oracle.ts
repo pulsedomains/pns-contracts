@@ -7,17 +7,19 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments
   const { deployer } = await getNamedAccounts()
 
-  if (network.name === 'mainnet') {
-    return true
+  let oracleAddr;
+  if (network.name !== 'mainnet') {
+    await deploy('DummyOracle', {
+      from: deployer,
+      args: ['16000000000'],
+      log: true,
+    })
+
+    const dummyOracle = await ethers.getContract('DummyOracle')
+    oracleAddr = dummyOracle.address
+  } else {
+    oracleAddr = ''
   }
-
-  await deploy('DummyOracle', {
-    from: deployer,
-    args: ['160000000000'],
-    log: true,
-  })
-
-  const dummyOracle = await ethers.getContract('DummyOracle')
 
   /**
    * 3 characters: $555/year
@@ -27,7 +29,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   await deploy('ExponentialPremiumPriceOracle', {
     from: deployer,
     args: [
-      dummyOracle.address,
+      oracleAddr,
       [0, 0, '17598934550989', '5358954845256', '158548959919'],
       '100000000000000000000000000',
       21,

@@ -23,6 +23,7 @@ error InsufficientValue();
 error Unauthorised(bytes32 node);
 error MaxCommitmentAgeTooLow();
 error MaxCommitmentAgeTooHigh();
+error IncorrectPricesFeed();
 
 /**
  * @dev A registrar controller for registering and renewing names at fixed cost.
@@ -41,7 +42,7 @@ contract ETHRegistrarController is
         0x55fb31aa6f23709345f51ac8d7e4ed79336defe55be2733bc226ed0f1f62f3c8;
     uint64 private constant MAX_EXPIRY = type(uint64).max;
     BaseRegistrarImplementation immutable base;
-    IPriceOracle public immutable prices;
+    IPriceOracle public prices;
     uint256 public immutable minCommitmentAge;
     uint256 public immutable maxCommitmentAge;
     ReverseRegistrar public immutable reverseRegistrar;
@@ -86,6 +87,14 @@ contract ETHRegistrarController is
         maxCommitmentAge = _maxCommitmentAge;
         reverseRegistrar = _reverseRegistrar;
         nameWrapper = _nameWrapper;
+    }
+
+    function changePricesFeed(IPriceOracle _newPrices) external onlyOwner {
+        if (address(_newPrices) == address(0)) {
+            revert IncorrectPricesFeed();
+        }
+
+        prices = _newPrices;
     }
 
     function rentPrice(string memory name, uint256 duration)
