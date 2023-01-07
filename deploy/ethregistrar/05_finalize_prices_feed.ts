@@ -23,6 +23,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const priceFeeds = await ExponentialPremiumPriceOracle.deploy(
     oracleAddr,
     [0, 0, '17598934550989', '5358954845256', '158548959919'],
+    // [0, 0, 0, 0, 0],
     '100000000000000000000000000',
     21
   )
