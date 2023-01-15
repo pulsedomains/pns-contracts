@@ -681,7 +681,7 @@ describe('Name Wrapper', () => {
 
     it('Can re-wrap a name that was wrapped has already expired on the .pls registrar', async () => {
       const DAY = 60 * 60 * 24
-      const GRACE_PERIOD = 90
+      const GRACE_PERIOD = 30
       await BaseRegistrar.register(labelHash, account, DAY)
       await BaseRegistrar.setApprovalForAll(NameWrapper.address, true)
       await NameWrapper.wrapETH2LD(
@@ -740,7 +740,7 @@ describe('Name Wrapper', () => {
 
     it('Can re-wrap a name that was wrapped has already expired even if CANNOT_TRANSFER was burned', async () => {
       const DAY = 60 * 60 * 24
-      const GRACE_PERIOD = 90
+      const GRACE_PERIOD = 30
       await BaseRegistrar.register(labelHash, account, DAY)
       await BaseRegistrar.setApprovalForAll(NameWrapper.address, true)
       await NameWrapper.wrapETH2LD(
@@ -796,7 +796,7 @@ describe('Name Wrapper', () => {
 
       // Register the name
       const DAY = 60 * 60 * 24
-      const GRACE_PERIOD = 90
+      const GRACE_PERIOD = 30
       await BaseRegistrar.register(labelHash, account, DAY)
 
       // Wrap it
