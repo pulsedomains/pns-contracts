@@ -8,7 +8,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployer, owner } = await getNamedAccounts()
 
   const registry = await ethers.getContract('ENSRegistry', owner)
-  const registrar = await ethers.getContract('BaseRegistrarImplementation', owner)
+  const registrar = await ethers.getContract(
+    'BaseRegistrarImplementation',
+    owner,
+  )
   const metadata = await ethers.getContract('StaticMetadataService', owner)
 
   await deploy('NameWrapper', {
@@ -21,12 +24,16 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   if (owner !== deployer) {
     const tx = await nameWrapper.transferOwnership(owner)
-    console.log(`Transferring ownership of NameWrapper to ${owner} (tx: ${tx.hash})...`)
+    console.log(
+      `Transferring ownership of NameWrapper to ${owner} (tx: ${tx.hash})...`,
+    )
     await tx.wait()
   }
 
   const tx2 = await registrar.addController(nameWrapper.address)
-  console.log(`Adding NameWrapper as controller on registrar (tx: ${tx2.hash})...`)
+  console.log(
+    `Adding NameWrapper as controller on registrar (tx: ${tx2.hash})...`,
+  )
   await tx2.wait()
 
   return true

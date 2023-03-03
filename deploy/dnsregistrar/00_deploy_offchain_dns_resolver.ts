@@ -10,25 +10,20 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const registry = await ethers.getContract('ENSRegistry')
   const dnssec = await ethers.getContract('DNSSECImpl')
 
-  await deploy('TLDPublicSuffixList', {
+  const tx = await deploy('OffchainDNSResolver', {
     from: deployer,
-    args: [],
+    args: [
+      registry.address,
+      dnssec.address,
+      'https://dnssec-oracle.pulse.domains/',
+    ],
     log: true,
   })
-
-  const publicSuffixList = await ethers.getContract('TLDPublicSuffixList')
-
-  await deploy('DNSRegistrar', {
-    from: deployer,
-    args: [dnssec.address, publicSuffixList.address, registry.address],
-    log: true,
-  })
-
-  return true
+  console.log(`Deployed OffchainDNSResolver to ${tx.address}`)
 }
 
-func.id = 'dns-registrar'
-func.tags = ['DNSRegistrar']
+func.id = 'offchain-dns-resolver'
+func.tags = ['OffchainDNSResolver']
 func.dependencies = ['ENSRegistry', 'DNSSecOracle']
 
 export default func

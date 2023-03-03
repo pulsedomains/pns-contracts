@@ -26,11 +26,17 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const registrar = await ethers.getContract('BaseRegistrarImplementation')
 
   const tx1 = await registrar.transferOwnership(owner, { from: deployer })
-  console.log(`Transferring ownership of registrar to owner (tx: ${tx1.hash})...`)
+  console.log(
+    `Transferring ownership of registrar to owner (tx: ${tx1.hash})...`,
+  )
   await tx1.wait()
 
-  const tx2 = await root.connect(await ethers.getSigner(owner)).setSubnodeOwner('0x' + keccak256('pls'), registrar.address)
-  console.log(`Setting owner of pls node to registrar on root (tx: ${tx2.hash})...`)
+  const tx2 = await root
+    .connect(await ethers.getSigner(owner))
+    .setSubnodeOwner('0x' + keccak256('pls'), registrar.address)
+  console.log(
+    `Setting owner of pls node to registrar on root (tx: ${tx2.hash})...`,
+  )
   await tx2.wait()
 
   return true

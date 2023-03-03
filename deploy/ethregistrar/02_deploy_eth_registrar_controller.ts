@@ -7,8 +7,14 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments
   const { deployer, owner } = await getNamedAccounts()
 
-  const registrar = await ethers.getContract('BaseRegistrarImplementation', owner)
-  const priceOracle = await ethers.getContract('ExponentialPremiumPriceOracle', owner)
+  const registrar = await ethers.getContract(
+    'BaseRegistrarImplementation',
+    owner,
+  )
+  const priceOracle = await ethers.getContract(
+    'ExponentialPremiumPriceOracle',
+    owner,
+  )
   const reverseRegistrar = await ethers.getContract('ReverseRegistrar', owner)
   const nameWrapper = await ethers.getContract('NameWrapper', owner)
 
@@ -30,22 +36,34 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   if (owner !== deployer) {
     const tx = await controller.transferOwnership(owner)
-    console.log(`Transferring ownership of ETHRegistrarController to ${owner} (tx: ${tx.hash})...`)
+    console.log(
+      `Transferring ownership of ETHRegistrarController to ${owner} (tx: ${tx.hash})...`,
+    )
     await tx.wait()
   }
 
-  console.log('WRAPPER OWNER', await nameWrapper.owner(), await nameWrapper.signer.getAddress())
+  console.log(
+    'WRAPPER OWNER',
+    await nameWrapper.owner(),
+    await nameWrapper.signer.getAddress(),
+  )
 
   const tx1 = await nameWrapper.setController(controller.address, true)
-  console.log(`Adding ETHRegistrarController as a controller of NameWrapper (tx: ${tx1.hash})...`)
+  console.log(
+    `Adding ETHRegistrarController as a controller of NameWrapper (tx: ${tx1.hash})...`,
+  )
   await tx1.wait()
 
   const tx2 = await reverseRegistrar.setController(controller.address, true)
-  console.log(`Adding ETHRegistrarController as a controller of ReverseRegistrar (tx: ${tx2.hash})...`)
+  console.log(
+    `Adding ETHRegistrarController as a controller of ReverseRegistrar (tx: ${tx2.hash})...`,
+  )
   await tx2.wait()
 
   const tx3 = await registrar.addController(controller.address)
-  console.log(`Adding controller as controller on registrar (tx: ${tx3.hash})...`)
+  console.log(
+    `Adding controller as controller on registrar (tx: ${tx3.hash})...`,
+  )
   await tx3.wait()
 
   return true

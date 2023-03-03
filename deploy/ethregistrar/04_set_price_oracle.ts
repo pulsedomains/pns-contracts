@@ -6,8 +6,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { getNamedAccounts, deployments } = hre
   const { owner } = await getNamedAccounts()
 
-  const priceOracle = await ethers.getContract('DummyOracle', owner);
-  const tx = await priceOracle.set(10000000); // 1 PLS = 0.1 USD
+  const priceOracle = await ethers.getContract('DummyOracle', owner)
+  const tx = await priceOracle.set(10000000) // 1 PLS = 0.1 USD
   await tx.wait()
 }
 
