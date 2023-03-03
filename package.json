@@ -1,15 +1,17 @@
 {
   "name": "@pnsdomains/pulse-contracts",
   "version": "1.0.0",
-  "description": "ENS contracts",
+  "description": "PNS contracts",
   "scripts": {
     "test": "hardhat test",
     "test:local": "hardhat --network localhost test",
     "lint": "hardhat check",
-    "deploy": "npx hardhat deploy --network pulsechain",
+    "deploy": "npx hardhat deploy --network mainnet",
     "build": "rm -rf ./build/deploy ./build/hardhat.config.js && hardhat compile && tsc",
+    "format": "prettier --write .",
     "prepublishOnly": "yarn build",
-    "pub": "yarn publish --access public"
+    "pub": "yarn publish --access public",
+    "prepare": "husky install"
   },
   "files": [
     "build",
@@ -33,12 +35,15 @@
     "chai": "^4.3.4",
     "dotenv": "^10.0.0",
     "elliptic-solidity": "^1.0.0",
+    "envfile": "^6.17.0",
     "ethereum-waffle": "^3.3.0",
     "ethers": "^5.6.1",
     "hardhat": "^2.9.9",
     "hardhat-abi-exporter": "^2.9.0",
+    "hardhat-contract-sizer": "^2.6.1",
     "hardhat-deploy": "^0.11.10",
     "hardhat-gas-reporter": "^1.0.4",
+    "husky": "^8.0.0",
     "prettier": "^2.6.2",
     "prettier-plugin-solidity": "^1.0.0-beta.24",
     "rfc4648": "^1.5.0",
@@ -60,12 +65,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ensdomains/ens-contracts.git"
+    "url": "git+https://github.com/pulsedomains/pns-contracts.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ensdomains/ens-contracts/issues"
+    "url": "https://github.com/pulsedomains/pns-contracts/issues"
   },
-  "homepage": "https://github.com/ensdomains/ens-contracts#readme"
+  "homepage": "https://github.com/pulsedomains/pns-contracts#readme"
 }

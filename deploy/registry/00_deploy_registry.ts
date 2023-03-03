@@ -20,13 +20,17 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     switch (rootOwner) {
       case deployer:
         const tx = await registry.setOwner(ZERO_HASH, owner, { from: deployer })
-        console.log('Setting final owner of root node on registry (tx:${tx.hash})...')
+        console.log(
+          `Setting final owner of root node on registry (tx:${tx.hash})...`,
+        )
         await tx.wait()
         break
       case owner:
         break
       default:
-        console.log(`WARNING: ENS registry root is owned by ${rootOwner}; cannot transfer to owner`)
+        console.log(
+          `WARNING: PNS registry root is owned by ${rootOwner}; cannot transfer to owner`,
+        )
     }
   }
 
