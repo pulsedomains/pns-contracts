@@ -1,5 +1,5 @@
 {
-  "name": "@pnsdomains/pulse-contracts",
+  "name": "@pnsdomains/pns-contracts",
   "version": "1.0.0",
   "description": "ENS contracts",
   "scripts": {
