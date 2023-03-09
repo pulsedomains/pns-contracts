@@ -5,13 +5,13 @@ import "./ENS.sol";
 import "./ENSRegistry.sol";
 
 /**
- * The ENS registry contract.
+ * The PNS registry contract.
  */
 contract ENSRegistryWithFallback is ENSRegistry {
     ENS public old;
 
     /**
-     * @dev Constructs a new ENS registrar.
+     * @dev Constructs a new PNS registrar.
      */
     constructor(ENS _old) public ENSRegistry() {
         old = _old;

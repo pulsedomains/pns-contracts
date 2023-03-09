@@ -1038,7 +1038,7 @@ contract('PublicResolver', function (accounts) {
     })
 
     it('returns 0 on fallback when target contract does not support implementsInterface', async () => {
-      // Set addr to the ENS registry, which doesn't implement supportsInterface.
+      // Set addr to the PNS registry, which doesn't implement supportsInterface.
       await resolver.methods['setAddr(bytes32,address)'](node, ens.address, {
         from: accounts[0],
       })

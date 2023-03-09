@@ -10,7 +10,7 @@ contract('ERC20Recoverable', function (accounts) {
     ERC20Token = await deploy(
       'MockERC20',
       'PulseChain Name Service Token',
-      'ENS',
+      'PNS',
       [],
     )
   })

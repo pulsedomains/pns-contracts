@@ -1,8 +1,8 @@
 # PNS
 
-[![Build Status](https://travis-ci.org/ensdomains/ens-contracts.svg?branch=master)](https://travis-ci.org/ensdomains/ens-contracts)
+[![Build Status](https://travis-ci.org/pnsdomains/pns-contracts.svg?branch=master)](https://travis-ci.org/pnsdomains/pns-contracts)
 
-For documentation of the PNS system, see [docs.ens.domains](https://docs.ens.domains/).
+For documentation of the PNS system, see [docs.pulse.domains](https://docs.pulse.domains/).
 
 ## npm package
 
@@ -25,34 +25,34 @@ import {
   ReverseRegistrar,
   StablePriceOracle,
   TestRegistrar,
-} from '@ensdomains/ens-contracts'
+} from '@pnsdomains/pns-contracts'
 ```
 
 ## Importing from solidity
 
 ```
 // Registry
-import '@ensdomains/ens-contracts/contracts/registry/ENS.sol';
-import '@ensdomains/ens-contracts/contracts/registry/ENSRegistry.sol';
-import '@ensdomains/ens-contracts/contracts/registry/ENSRegistryWithFallback.sol';
-import '@ensdomains/ens-contracts/contracts/registry/ReverseRegistrar.sol';
-import '@ensdomains/ens-contracts/contracts/registry/TestRegistrar.sol';
+import '@pnsdomains/pns-contracts/contracts/registry/ENS.sol';
+import '@pnsdomains/pns-contracts/contracts/registry/ENSRegistry.sol';
+import '@pnsdomains/pns-contracts/contracts/registry/ENSRegistryWithFallback.sol';
+import '@pnsdomains/pns-contracts/contracts/registry/ReverseRegistrar.sol';
+import '@pnsdomains/pns-contracts/contracts/registry/TestRegistrar.sol';
 // EthRegistrar
-import '@ensdomains/ens-contracts/contracts/ethregistrar/BaseRegistrar.sol';
-import '@ensdomains/ens-contracts/contracts/ethregistrar/BaseRegistrarImplementation.sol';
-import '@ensdomains/ens-contracts/contracts/ethregistrar/BulkRenewal.sol';
-import '@ensdomains/ens-contracts/contracts/ethregistrar/ETHRegistrarController.sol';
-import '@ensdomains/ens-contracts/contracts/ethregistrar/LinearPremiumPriceOracle.sol';
-import '@ensdomains/ens-contracts/contracts/ethregistrar/PriceOracle.sol';
-import '@ensdomains/ens-contracts/contracts/ethregistrar/StablePriceOracle.sol';
+import '@pnsdomains/pns-contracts/contracts/ethregistrar/BaseRegistrar.sol';
+import '@pnsdomains/pns-contracts/contracts/ethregistrar/BaseRegistrarImplementation.sol';
+import '@pnsdomains/pns-contracts/contracts/ethregistrar/BulkRenewal.sol';
+import '@pnsdomains/pns-contracts/contracts/ethregistrar/ETHRegistrarController.sol';
+import '@pnsdomains/pns-contracts/contracts/ethregistrar/LinearPremiumPriceOracle.sol';
+import '@pnsdomains/pns-contracts/contracts/ethregistrar/PriceOracle.sol';
+import '@pnsdomains/pns-contracts/contracts/ethregistrar/StablePriceOracle.sol';
 // Resolvers
-import '@ensdomains/ens-contracts/contracts/resolvers/PublicResolver.sol';
-import '@ensdomains/ens-contracts/contracts/resolvers/Resolver.sol';
+import '@pnsdomains/pns-contracts/contracts/resolvers/PublicResolver.sol';
+import '@pnsdomains/pns-contracts/contracts/resolvers/Resolver.sol';
 ```
 
 ## Accessing to binary file.
 
-If your environment does not have compiler, you can access to the raw hardhat artifacts files at `node_modules/@ensdomains/ens-contracts/artifacts/contracts/${modName}/${contractName}.sol/${contractName}.json`
+If your environment does not have compiler, you can access to the raw hardhat artifacts files at `node_modules/@pnsdomains/pns-contracts/artifacts/contracts/${modName}/${contractName}.sol/${contractName}.json`
 
 ## Contracts
 
@@ -70,7 +70,7 @@ Implementation of the PNS Registry, the central contract used to look up resolve
 
 ### ENSRegistryWithFallback
 
-The new implementation of the PNS Registry after [the 2020 PNS Registry Migration](https://docs.ens.domains/ens-migration-february-2020/technical-description#new-ens-deployment).
+The new implementation of the PNS Registry after [the 2020 PNS Registry Migration](https://docs.pulse.domains/ens-migration-february-2020/technical-description#new-ens-deployment).
 
 ### FIFSRegistrar
 
@@ -86,7 +86,7 @@ Implementation of the `.test` registrar facilitates easy testing of PNS on the P
 
 ## EthRegistrar
 
-Implements an [PNS](https://ens.domains/) registrar intended for the .pls TLD.
+Implements an [PNS](https://pulse.domains/) registrar intended for the .pls TLD.
 
 These contracts were audited by ConsenSys Diligence; the audit report is available [here](https://github.com/ConsenSys/ens-audit-report-2019-02).
 
@@ -150,8 +150,8 @@ This repo runs a husky precommit to prettify all contract files to keep them con
 ### How to setup
 
 ```
-git clone https://github.com/ensdomains/ens-contracts
-cd ens-contracts
+git clone https://github.com/pnsdomains/pns-contracts
+cd pns-contracts
 yarn
 ```
 

@@ -14,7 +14,7 @@ function getOpenSeaUrl(ethers: any, contract: string, namehashedname: string) {
 }
 
 task('seed', 'Creates test subbdomains and wraps them with Namewrapper')
-  .addPositionalParam('name', 'The ENS label to seed subdomains')
+  .addPositionalParam('name', 'The PNS label to seed subdomains')
   .setAction(async ({ name }, hre) => {
     let parsedFile
     try {

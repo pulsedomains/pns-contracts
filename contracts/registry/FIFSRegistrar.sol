@@ -20,7 +20,7 @@ contract FIFSRegistrar {
 
     /**
      * Constructor.
-     * @param ensAddr The address of the ENS registry.
+     * @param ensAddr The address of the PNS registry.
      * @param node The node that this registrar administers.
      */
     constructor(ENS ensAddr, bytes32 node) public {

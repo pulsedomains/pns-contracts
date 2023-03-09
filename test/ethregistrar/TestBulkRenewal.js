@@ -97,10 +97,13 @@ contract('BulkRenewal', function (accounts) {
   })
 
   it('should return the cost of a bulk renewal', async () => {
-    assert.equal(
-      await bulkRenewal.rentPrice(['test1', 'test2'], 86400),
-      86400 * 2,
-    )
+    const rentPrice1 = await controller.rentPrice('test1', 86400)
+    console.log('rentPrice1', rentPrice1)
+    const rentPrice2 = await controller.rentPrice('test2', 86400)
+    console.log('rentPrice2', rentPrice2)
+    const total = await bulkRenewal.rentPrice(['test1', 'test2'], 86400)
+    console.log('total', total)
+    assert.equal(total, 86400 * 2)
   })
 
   it('should raise an error trying to renew a nonexistent name', async () => {
