@@ -566,8 +566,8 @@ contract('PublicResolver', function (accounts) {
   })
 
   describe('text', async () => {
-    var url = 'https://ethereum.org'
-    var url2 = 'https://github.com/ethereum'
+    var url = 'https://pulsechain.org'
+    var url2 = 'https://github.com/pulsechain'
 
     const basicSetText = async () => {
       await resolver.setText(node, 'url', url, { from: accounts[0] })
@@ -1038,7 +1038,7 @@ contract('PublicResolver', function (accounts) {
     })
 
     it('returns 0 on fallback when target contract does not support implementsInterface', async () => {
-      // Set addr to the ENS registry, which doesn't implement supportsInterface.
+      // Set addr to the PNS registry, which doesn't implement supportsInterface.
       await resolver.methods['setAddr(bytes32,address)'](node, ens.address, {
         from: accounts[0],
       })
@@ -1264,7 +1264,7 @@ contract('PublicResolver', function (accounts) {
         accounts[1],
       ).encodeABI()
       var textSet = resolver.contract.methods
-        .setText(node, 'url', 'https://ethereum.org/')
+        .setText(node, 'url', 'https://pulsechain.org/')
         .encodeABI()
       var tx = await resolver.multicall([addrSet, textSet], {
         from: accounts[0],
@@ -1282,14 +1282,14 @@ contract('PublicResolver', function (accounts) {
       assert.equal(tx.logs[2].args.key, 'url')
 
       assert.equal(await resolver.methods['addr(bytes32)'](node), accounts[1])
-      assert.equal(await resolver.text(node, 'url'), 'https://ethereum.org/')
+      assert.equal(await resolver.text(node, 'url'), 'https://pulsechain.org/')
     })
 
     it('allows reading multiple fields', async () => {
       await resolver.methods['setAddr(bytes32,address)'](node, accounts[1], {
         from: accounts[0],
       })
-      await resolver.setText(node, 'url', 'https://ethereum.org/', {
+      await resolver.setText(node, 'url', 'https://pulsechain.org/', {
         from: accounts[0],
       })
       var results = await resolver.multicall.call([
@@ -1302,7 +1302,7 @@ contract('PublicResolver', function (accounts) {
       )
       assert.equal(
         web3.eth.abi.decodeParameters(['string'], results[1])[0],
-        'https://ethereum.org/',
+        'https://pulsechain.org/',
       )
     })
   })

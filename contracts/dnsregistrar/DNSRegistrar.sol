@@ -1,5 +1,4 @@
-//SPDX-License-Identifier: MIT
-
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/utils/introspection/IERC165.sol";
@@ -68,7 +67,7 @@ contract DNSRegistrar is IDNSRegistrar, IERC165 {
     }
 
     /**
-     * @dev This contract's owner-only functions can be invoked by the owner of the ENS root.
+     * @dev This contract's owner-only functions can be invoked by the owner of the PNS root.
      */
     modifier onlyOwner() {
         Root root = Root(ens.owner(bytes32(0)));

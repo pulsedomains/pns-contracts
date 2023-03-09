@@ -77,7 +77,7 @@ contract('DNSRegistrar', function (accounts) {
     await root.setController(registrar.address, true)
   })
 
-  it('allows anyone to claim on behalf of the owner of an ENS name', async function () {
+  it('allows anyone to claim on behalf of the owner of an PNS name', async function () {
     assert.equal(await registrar.oracle(), dnssec.address)
     assert.equal(await registrar.ens(), ens.address)
 

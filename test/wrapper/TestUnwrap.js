@@ -56,7 +56,7 @@ describe('TestUnwrap', () => {
 
     MetaDataservice = await deploy(
       'StaticMetadataService',
-      'https://ens.domains',
+      'https://pulse.domains',
     )
 
     NameWrapper = await deploy(

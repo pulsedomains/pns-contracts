@@ -1,8 +1,9 @@
 {
-  "name": "@pnsdomains/pulse-contracts",
+  "name": "@pnsdomains/pns-contracts",
   "version": "1.0.0",
   "description": "PNS contracts",
   "scripts": {
+    "compile": "hardhat compile",
     "test": "hardhat test",
     "test:local": "hardhat --network localhost test",
     "lint": "hardhat check",

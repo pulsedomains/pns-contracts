@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.4;
 
 import "../registry/ENS.sol";
@@ -8,7 +9,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract BaseRegistrarImplementation is ERC721, IBaseRegistrar, Ownable {
     // A map of expiry times
     mapping(uint256 => uint256) expiries;
-    // The ENS registry
+    // The PNS registry
     ENS public ens;
     // The namehash of the TLD this registrar owns (eg, .pls)
     bytes32 public baseNode;
@@ -177,7 +178,7 @@ contract BaseRegistrarImplementation is ERC721, IBaseRegistrar, Ownable {
     }
 
     /**
-     * @dev Reclaim ownership of a name in ENS, if you own it in the registrar.
+     * @dev Reclaim ownership of a name in PNS, if you own it in the registrar.
      */
     function reclaim(uint256 id, address owner) external override live {
         require(_isApprovedOrOwner(msg.sender, id));

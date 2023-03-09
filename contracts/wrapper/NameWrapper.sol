@@ -1,4 +1,4 @@
-//SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: MIT
 pragma solidity ~0.8.17;
 
 import {ERC1155Fuse, IERC165, IERC1155MetadataURI} from "./ERC1155Fuse.sol";
@@ -257,7 +257,7 @@ contract NameWrapper is
      * @param label The label to register (Eg, 'foo' for 'foo.pls').
      * @param wrappedOwner The owner of the wrapped name.
      * @param duration The duration, in seconds, to register the name for.
-     * @param resolver The resolver address to set on the ENS registry (optional).
+     * @param resolver The resolver address to set on the PNS registry (optional).
      * @param ownerControlledFuses Initial owner-controlled fuses to set
      * @return registrarExpiry The expiry date of the new name on the .pls registrar, in seconds since the Unix epoch.
      */
@@ -629,7 +629,7 @@ contract NameWrapper is
     }
 
     /**
-     * @notice Sets records for the name in the ENS Registry
+     * @notice Sets records for the name in the PNS Registry
      * @param node Namehash of the name to set a record for
      * @param owner New owner in the registry
      * @param resolver Resolver contract

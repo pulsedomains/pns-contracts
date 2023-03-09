@@ -18,7 +18,7 @@ web3.currentProvider.send = util.promisify(web3.currentProvider.send)
 
 const test_rrset_timestamp = 1552658805
 
-// When the real test start failing due to ttl expiration, you can generate the new test dataset at https://dnssec.ens.domains/?domain=ethlab.xyz&mode=advanced
+// When the real test start failing due to ttl expiration, you can generate the new test dataset at https://dnssec.pulse.domains/?domain=ethlab.xyz&mode=advanced
 const test_rrsets = [
   // .	55430	IN	RRSIG	DNSKEY 8 0 172800 20190402000000 20190312000000 20326 . A76nZ8WVsD+pLAKJh9ujKxxRDWfJf8SxayOkq3Gq9TX4BStpQM1e/KuX8am4FrVRCGQvLlhiYFNqm+PtevGGJAO0lTFLSiIuavknlkSiI3HMkrMDqSV+YlIQPk1C720khNpWy70WjjNvkq4sBU1GTkVPeFkM3gQI53pCHW+VobCPXZz70J+PnSOq7SmjrwXgU8E9iSXkI3yfhGIup2c54Sf9w0Bw10opvxXMT+1ALgWY1TnV1/gRixIUZp1K86iR8VeX9K/4UTqEa5bYux+aeIcQ2/4Qqyo3Ocb2RrbUvDNzU2lB4b1r/oHqsd6C0SiGmdo0A8R44djKMHVaD/JmLg==
   // .	55430	IN	DNSKEY	256 3 8 AwEAAcH+axCdUOsTc9o+jmyVq5rsGTh1EcatSumPqEfsPBT+whyj0/UhD7cWeixV9Wqzj/cnqs8iWELqhdzGX41ZtaNQUfWNfOriASnWmX2D9m/EunplHu8nMSlDnDcT7+llE9tjk5HI1Sr7d9N16ZTIrbVALf65VB2ABbBG39dyAb7tz21PICJbSp2cd77UF7NFqEVkqohl/LkDw+7Apalmp0qAQT1Mgwi2cVxZMKUiciA6EqS+KNajf0A6olO2oEhZnGGY6b1LTg34/YfHdiIIZQqAfqbieruCGHRiSscC2ZE7iNreL/76f4JyIEUNkt6bQA29JsegxorLzQkpF7NKqZc=

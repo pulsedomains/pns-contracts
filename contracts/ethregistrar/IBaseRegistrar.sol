@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.4;
+
 import "../registry/ENS.sol";
 import "./IBaseRegistrar.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
@@ -44,7 +47,7 @@ interface IBaseRegistrar is IERC721 {
     function renew(uint256 id, uint256 duration) external returns (uint256);
 
     /**
-     * @dev Reclaim ownership of a name in ENS, if you own it in the registrar.
+     * @dev Reclaim ownership of a name in PNS, if you own it in the registrar.
      */
     function reclaim(uint256 id, address owner) external;
 }
