@@ -1,40 +1,33 @@
-//SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: MIT
 pragma solidity ~0.8.17;
 
 import "./IPriceOracle.sol";
 
 interface IETHRegistrarController {
+    struct Registration {
+        string  name;
+        address owner;
+        uint256 duration;
+        bytes32 secret;
+        address resolver;
+        bytes[] data;
+        bool    reverseRecord;
+        uint32  fuses;
+        uint64  wrapperExpiry;
+        address referrer;
+    }
+
     function rentPrice(string memory, uint256)
         external
         returns (IPriceOracle.Price memory);
 
     function available(string memory) external returns (bool);
 
-    function makeCommitment(
-        string memory,
-        address,
-        uint256,
-        bytes32,
-        address,
-        bytes[] calldata,
-        bool,
-        uint32,
-        uint64
-    ) external returns (bytes32);
+    function makeCommitment(Registration calldata) external returns (bytes32);
 
     function commit(bytes32) external;
 
-    function register(
-        string calldata,
-        address,
-        uint256,
-        bytes32,
-        address,
-        bytes[] calldata,
-        bool,
-        uint32,
-        uint64
-    ) external payable;
+    function register(Registration calldata) external payable;
 
     function renew(string calldata, uint256) external payable;
 }

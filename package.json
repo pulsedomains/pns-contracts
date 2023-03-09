@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "ENS contracts",
   "scripts": {
+    "compile": "hardhat compile",
     "test": "hardhat test",
     "test:local": "hardhat --network localhost test",
     "lint": "hardhat check",

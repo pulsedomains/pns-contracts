@@ -1,4 +1,4 @@
-//SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: MIT
 pragma solidity ~0.8.17;
 
 import {BaseRegistrarImplementation} from "./BaseRegistrarImplementation.sol";
@@ -24,6 +24,7 @@ error Unauthorised(bytes32 node);
 error MaxCommitmentAgeTooLow();
 error MaxCommitmentAgeTooHigh();
 error IncorrectPricesFeed();
+error MaximumBasisPoints();
 
 /**
  * @dev A registrar controller for registering and renewing names at fixed cost.
@@ -41,6 +42,8 @@ contract ETHRegistrarController is
     bytes32 private constant ETH_NODE =
         0x55fb31aa6f23709345f51ac8d7e4ed79336defe55be2733bc226ed0f1f62f3c8;
     uint64 private constant MAX_EXPIRY = type(uint64).max;
+    uint256 private constant TOTAL_REFERRAL_BASIS_POINTS = 10000;
+
     BaseRegistrarImplementation immutable base;
     IPriceOracle public prices;
     uint256 public immutable minCommitmentAge;
@@ -49,6 +52,8 @@ contract ETHRegistrarController is
     INameWrapper public immutable nameWrapper;
 
     mapping(bytes32 => uint256) public commitments;
+
+    uint256 public referralFeeBasisPoints;
 
     event NameRegistered(
         string name,
@@ -87,6 +92,16 @@ contract ETHRegistrarController is
         maxCommitmentAge = _maxCommitmentAge;
         reverseRegistrar = _reverseRegistrar;
         nameWrapper = _nameWrapper;
+
+        referralFeeBasisPoints = 1000;
+    }
+
+    function changeReferralBasisPoints(uint256 _newBasisPoints) external onlyOwner {
+        if (_newBasisPoints > TOTAL_REFERRAL_BASIS_POINTS) {
+            revert MaximumBasisPoints();
+        }
+
+        referralFeeBasisPoints = _newBasisPoints;
     }
 
     function changePricesFeed(IPriceOracle _newPrices) external onlyOwner {
@@ -116,33 +131,23 @@ contract ETHRegistrarController is
         return valid(name) && base.available(uint256(label));
     }
 
-    function makeCommitment(
-        string memory name,
-        address owner,
-        uint256 duration,
-        bytes32 secret,
-        address resolver,
-        bytes[] calldata data,
-        bool reverseRecord,
-        uint32 fuses,
-        uint64 wrapperExpiry
-    ) public pure override returns (bytes32) {
-        bytes32 label = keccak256(bytes(name));
-        if (data.length > 0 && resolver == address(0)) {
+    function makeCommitment(Registration calldata params) public pure override returns (bytes32) {
+        bytes32 label = keccak256(bytes(params.name));
+        if (params.data.length > 0 && params.resolver == address(0)) {
             revert ResolverRequiredWhenDataSupplied();
         }
         return
             keccak256(
                 abi.encode(
                     label,
-                    owner,
-                    duration,
-                    resolver,
-                    data,
-                    secret,
-                    reverseRecord,
-                    fuses,
-                    wrapperExpiry
+                    params.owner,
+                    params.duration,
+                    params.resolver,
+                    params.data,
+                    params.secret,
+                    params.reverseRecord,
+                    params.fuses,
+                    params.wrapperExpiry
                 )
             );
     }
@@ -154,59 +159,36 @@ contract ETHRegistrarController is
         commitments[commitment] = block.timestamp;
     }
 
-    function register(
-        string calldata name,
-        address owner,
-        uint256 duration,
-        bytes32 secret,
-        address resolver,
-        bytes[] calldata data,
-        bool reverseRecord,
-        uint32 fuses,
-        uint64 wrapperExpiry
-    ) public payable override {
-        IPriceOracle.Price memory price = rentPrice(name, duration);
+    function register(Registration calldata params) public payable override {
+        IPriceOracle.Price memory price = rentPrice(params.name, params.duration);
         if (msg.value < price.base + price.premium) {
             revert InsufficientValue();
         }
 
-        _consumeCommitment(
-            name,
-            duration,
-            makeCommitment(
-                name,
-                owner,
-                duration,
-                secret,
-                resolver,
-                data,
-                reverseRecord,
-                fuses,
-                wrapperExpiry
-            )
-        );
+        bytes32 commitment = makeCommitment(params);
+        _consumeCommitment(params.name, params.duration, commitment);
 
         uint256 expires = nameWrapper.registerAndWrapETH2LD(
-            name,
-            owner,
-            duration,
-            resolver,
-            fuses,
-            wrapperExpiry
+            params.name,
+            params.owner,
+            params.duration,
+            params.resolver,
+            params.fuses,
+            params.wrapperExpiry
         );
 
-        if (data.length > 0) {
-            _setRecords(resolver, keccak256(bytes(name)), data);
+        if (params.data.length > 0) {
+            _setRecords(params.resolver, keccak256(bytes(params.name)), params.data);
         }
 
-        if (reverseRecord) {
-            _setReverseRecord(name, resolver, msg.sender);
+        if (params.reverseRecord) {
+            _setReverseRecord(params.name, params.resolver, msg.sender);
         }
 
         emit NameRegistered(
-            name,
-            keccak256(bytes(name)),
-            owner,
+            params.name,
+            keccak256(bytes(params.name)),
+            params.owner,
             price.base,
             price.premium,
             expires
@@ -216,6 +198,17 @@ contract ETHRegistrarController is
             payable(msg.sender).transfer(
                 msg.value - (price.base + price.premium)
             );
+        }
+
+        uint256 referralFee = (price.base + price.premium) * referralFeeBasisPoints / TOTAL_REFERRAL_BASIS_POINTS;
+        /**
+         * Will not apply referral in cases of:
+         * - referral address is 0x0
+         * - users refer themselves
+         * - referral fee is zero
+         */
+        if (params.referrer != address(0) && params.referrer != params.owner && referralFee > 0) {
+            _referral(params.referrer, referralFee);
         }
     }
 
@@ -326,5 +319,12 @@ contract ETHRegistrarController is
             resolver,
             string.concat(name, ".pls")
         );
+    }
+
+    function _referral(
+        address referrer,
+        uint256 referralFee
+    ) internal {
+        payable(referrer).transfer(referralFee);
     }
 }
