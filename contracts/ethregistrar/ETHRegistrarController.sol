@@ -96,7 +96,9 @@ contract ETHRegistrarController is
         referralFeeBasisPoints = 1000;
     }
 
-    function changeReferralBasisPoints(uint256 _newBasisPoints) external onlyOwner {
+    function changeReferralBasisPoints(
+        uint256 _newBasisPoints
+    ) external onlyOwner {
         if (_newBasisPoints > TOTAL_REFERRAL_BASIS_POINTS) {
             revert MaximumBasisPoints();
         }
@@ -104,20 +106,10 @@ contract ETHRegistrarController is
         referralFeeBasisPoints = _newBasisPoints;
     }
 
-    function changePricesFeed(IPriceOracle _newPrices) external onlyOwner {
-        if (address(_newPrices) == address(0)) {
-            revert IncorrectPricesFeed();
-        }
-
-        prices = _newPrices;
-    }
-
-    function rentPrice(string memory name, uint256 duration)
-        public
-        view
-        override
-        returns (IPriceOracle.Price memory price)
-    {
+    function rentPrice(
+        string memory name,
+        uint256 duration
+    ) public view override returns (IPriceOracle.Price memory price) {
         bytes32 label = keccak256(bytes(name));
         price = prices.price(name, base.nameExpires(uint256(label)), duration);
     }
@@ -131,7 +123,9 @@ contract ETHRegistrarController is
         return valid(name) && base.available(uint256(label));
     }
 
-    function makeCommitment(Registration calldata params) public pure override returns (bytes32) {
+    function makeCommitment(
+        Registration calldata params
+    ) public pure override returns (bytes32) {
         bytes32 label = keccak256(bytes(params.name));
         if (params.data.length > 0 && params.resolver == address(0)) {
             revert ResolverRequiredWhenDataSupplied();
@@ -146,8 +140,7 @@ contract ETHRegistrarController is
                     params.data,
                     params.secret,
                     params.reverseRecord,
-                    params.fuses,
-                    params.wrapperExpiry
+                    params.ownerControlledFuses
                 )
             );
     }
@@ -160,7 +153,10 @@ contract ETHRegistrarController is
     }
 
     function register(Registration calldata params) public payable override {
-        IPriceOracle.Price memory price = rentPrice(params.name, params.duration);
+        IPriceOracle.Price memory price = rentPrice(
+            params.name,
+            params.duration
+        );
         if (msg.value < price.base + price.premium) {
             revert InsufficientValue();
         }
@@ -173,12 +169,15 @@ contract ETHRegistrarController is
             params.owner,
             params.duration,
             params.resolver,
-            params.fuses,
-            params.wrapperExpiry
+            params.ownerControlledFuses
         );
 
         if (params.data.length > 0) {
-            _setRecords(params.resolver, keccak256(bytes(params.name)), params.data);
+            _setRecords(
+                params.resolver,
+                keccak256(bytes(params.name)),
+                params.data
+            );
         }
 
         if (params.reverseRecord) {
@@ -200,54 +199,34 @@ contract ETHRegistrarController is
             );
         }
 
-        uint256 referralFee = (price.base + price.premium) * referralFeeBasisPoints / TOTAL_REFERRAL_BASIS_POINTS;
+        uint256 referralFee = ((price.base + price.premium) *
+            referralFeeBasisPoints) / TOTAL_REFERRAL_BASIS_POINTS;
         /**
          * Will not apply referral in cases of:
          * - referral address is 0x0
          * - users refer themselves
          * - referral fee is zero
          */
-        if (params.referrer != address(0) && params.referrer != params.owner && referralFee > 0) {
+        if (
+            params.referrer != address(0) &&
+            params.referrer != params.owner &&
+            referralFee > 0
+        ) {
             _referral(params.referrer, referralFee);
         }
     }
 
-    function renew(string calldata name, uint256 duration)
-        external
-        payable
-        override
-    {
-        _renew(name, duration, 0, 0);
-    }
-
-    function renewWithFuses(
+    function renew(
         string calldata name,
-        uint256 duration,
-        uint32 fuses,
-        uint64 wrapperExpiry
-    ) external payable {
-        bytes32 labelhash = keccak256(bytes(name));
-        bytes32 nodehash = keccak256(abi.encodePacked(ETH_NODE, labelhash));
-        if (!nameWrapper.isTokenOwnerOrApproved(nodehash, msg.sender)) {
-            revert Unauthorised(nodehash);
-        }
-        _renew(name, duration, fuses, wrapperExpiry);
-    }
-
-    function _renew(
-        string calldata name,
-        uint256 duration,
-        uint32 fuses,
-        uint64 wrapperExpiry
-    ) internal {
+        uint256 duration
+    ) external payable override {
         bytes32 labelhash = keccak256(bytes(name));
         uint256 tokenId = uint256(labelhash);
         IPriceOracle.Price memory price = rentPrice(name, duration);
         if (msg.value < price.base) {
             revert InsufficientValue();
         }
-        uint256 expires;
-        expires = nameWrapper.renew(tokenId, duration, fuses, wrapperExpiry);
+        uint256 expires = nameWrapper.renew(tokenId, duration);
 
         if (msg.value > price.base) {
             payable(msg.sender).transfer(msg.value - price.base);
@@ -260,11 +239,9 @@ contract ETHRegistrarController is
         payable(owner()).transfer(address(this).balance);
     }
 
-    function supportsInterface(bytes4 interfaceID)
-        external
-        pure
-        returns (bool)
-    {
+    function supportsInterface(
+        bytes4 interfaceID
+    ) external pure returns (bool) {
         return
             interfaceID == type(IERC165).interfaceId ||
             interfaceID == type(IETHRegistrarController).interfaceId;
@@ -321,10 +298,7 @@ contract ETHRegistrarController is
         );
     }
 
-    function _referral(
-        address referrer,
-        uint256 referralFee
-    ) internal {
+    function _referral(address referrer, uint256 referralFee) internal {
         payable(referrer).transfer(referralFee);
     }
 }

@@ -2,7 +2,10 @@ const {
   evm,
   reverse: { getReverseNode },
   contracts: { deploy },
+  ens: { FUSES },
 } = require('../test-utils')
+
+const { CANNOT_UNWRAP, PARENT_CANNOT_CONTROL, IS_DOT_ETH } = FUSES
 
 const { expect } = require('chai')
 
@@ -11,9 +14,10 @@ const provider = ethers.provider
 const { namehash } = require('../test-utils/ens')
 const sha3 = require('web3-utils').sha3
 
-const DAYS = 24 * 60 * 60
-const REGISTRATION_TIME = 28 * DAYS
-const BUFFERED_REGISTRATION_COST = REGISTRATION_TIME + 3 * DAYS
+const DAY = 24 * 60 * 60
+const REGISTRATION_TIME = 28 * DAY
+const BUFFERED_REGISTRATION_COST = REGISTRATION_TIME + 3 * DAY
+const GRACE_PERIOD = 90 * DAY
 const NULL_ADDRESS = '0x0000000000000000000000000000000000000000'
 const EMPTY_BYTES =
   '0x0000000000000000000000000000000000000000000000000000000000000000'
@@ -49,9 +53,8 @@ contract('ETHRegistrarController', function () {
       resolver: NULL_ADDRESS,
       data: [],
       reverseRecord: false,
-      fuses: 0,
-      wrapperExpiry: MAX_EXPIRY,
-      referrer: NULL_ADDRESS
+      ownerControlledFuses: 0,
+      referrer: NULL_ADDRESS,
     })
     var tx = await controller.commit(commitment)
     expect(await controller.commitments(commitment)).to.equal(
@@ -69,8 +72,7 @@ contract('ETHRegistrarController', function () {
         resolver: NULL_ADDRESS,
         data: [],
         reverseRecord: false,
-        fuses: 0,
-        wrapperExpiry: MAX_EXPIRY,
+        ownerControlledFuses: 0,
         referrer: NULL_ADDRESS,
       },
       txOptions,
@@ -140,7 +142,7 @@ contract('ETHRegistrarController', function () {
       resolver.interface.encodeFunctionData('setText', [
         namehash('newconfigname.pls'),
         'url',
-        'ethereum.com',
+        'pulsechain.com',
       ]),
     ]
 
@@ -240,9 +242,8 @@ contract('ETHRegistrarController', function () {
       resolver: resolver.address,
       data: callData,
       reverseRecord: false,
-      fuses: 0,
-      wrapperExpiry: 0,
-      referrer: NULL_ADDRESS
+      ownerControlledFuses: 0,
+      referrer: NULL_ADDRESS,
     })
     var tx = await controller2.commit(commitment)
     expect(await controller2.commitments(commitment)).to.equal(
@@ -260,9 +261,8 @@ contract('ETHRegistrarController', function () {
         resolver: resolver.address,
         data: callData,
         reverseRecord: false,
-        fuses: 0,
-        wrapperExpiry: 0,
-        referrer: NULL_ADDRESS
+        ownerControlledFuses: 0,
+        referrer: NULL_ADDRESS,
       },
       { value: BUFFERED_REGISTRATION_COST },
     )
@@ -293,7 +293,7 @@ contract('ETHRegistrarController', function () {
     expect(await resolver['addr(bytes32)'](nodehash)).to.equal(
       registrantAccount,
     )
-    expect(await resolver['text'](nodehash, 'url')).to.equal('ethereum.com')
+    expect(await resolver['text'](nodehash, 'url')).to.equal('pulsechain.com')
     expect(await nameWrapper.ownerOf(nodehash)).to.equal(registrantAccount)
   })
 
@@ -307,9 +307,8 @@ contract('ETHRegistrarController', function () {
         resolver: NULL_ADDRESS,
         data: callData,
         reverseRecord: false,
-        fuses: 0,
-        wrapperExpiry: 0,
-        referrer: NULL_ADDRESS
+        ownerControlledFuses: 0,
+        referrer: NULL_ADDRESS,
       }),
     ).to.be.revertedWith('ResolverRequiredWhenDataSupplied()')
   })
@@ -323,9 +322,8 @@ contract('ETHRegistrarController', function () {
       resolver: registrantAccount,
       data: callData,
       reverseRecord: false,
-      fuses: 0,
-      wrapperExpiry: 0,
-      referrer: NULL_ADDRESS
+      ownerControlledFuses: 0,
+      referrer: NULL_ADDRESS,
     })
 
     const tx = await controller.commit(commitment)
@@ -344,8 +342,7 @@ contract('ETHRegistrarController', function () {
           resolver: registrantAccount,
           data: callData,
           reverseRecord: false,
-          fuses: 0,
-          wrapperExpiry: 0,
+          ownerControlledFuses: 0,
           referrer: NULL_ADDRESS,
         },
         { value: BUFFERED_REGISTRATION_COST },
@@ -362,8 +359,7 @@ contract('ETHRegistrarController', function () {
       resolver: controller.address,
       data: callData,
       reverseRecord: false,
-      fuses: 0,
-      wrapperExpiry: 0,
+      ownerControlledFuses: 0,
       referrer: NULL_ADDRESS,
     })
 
@@ -383,8 +379,7 @@ contract('ETHRegistrarController', function () {
           resolver: controller.address,
           data: callData,
           reverseRecord: false,
-          fuses: 0,
-          wrapperExpiry: 0,
+          ownerControlledFuses: 0,
           referrer: NULL_ADDRESS,
         },
         { value: BUFFERED_REGISTRATION_COST },
@@ -408,9 +403,8 @@ contract('ETHRegistrarController', function () {
         ]),
       ],
       reverseRecord: false,
-      fuses: 0,
-      wrapperExpiry: 0,
-      referrer: NULL_ADDRESS
+      ownerControlledFuses: 0,
+      referrer: NULL_ADDRESS,
     })
     const tx = await controller2.commit(commitment)
     expect(await controller2.commitments(commitment)).to.equal(
@@ -434,9 +428,8 @@ contract('ETHRegistrarController', function () {
             ]),
           ],
           reverseRecord: false,
-          fuses: 0,
-          wrapperExpiry: 0,
-          referrer: NULL_ADDRESS
+          ownerControlledFuses: 0,
+          referrer: NULL_ADDRESS,
         },
         { value: BUFFERED_REGISTRATION_COST },
       ),
@@ -457,13 +450,12 @@ contract('ETHRegistrarController', function () {
         ]),
         resolver.interface.encodeFunctionData(
           'setText(bytes32,string,string)',
-          [namehash('other.pls'), 'url', 'ethereum.com'],
+          [namehash('other.pls'), 'url', 'pulsechain.com'],
         ),
       ],
       reverseRecord: false,
-      fuses: 0,
-      wrapperExpiry: 0,
-      referrer: NULL_ADDRESS
+      ownerControlledFuses: 0,
+      referrer: NULL_ADDRESS,
     })
     const tx = await controller2.commit(commitment)
     expect(await controller2.commitments(commitment)).to.equal(
@@ -487,13 +479,12 @@ contract('ETHRegistrarController', function () {
             ]),
             resolver.interface.encodeFunctionData(
               'setText(bytes32,string,string)',
-              [namehash('other.pls'), 'url', 'ethereum.com'],
+              [namehash('other.pls'), 'url', 'pulsechain.com'],
             ),
           ],
           reverseRecord: false,
-          fuses: 0,
-          wrapperExpiry: 0,
-          referrer: NULL_ADDRESS
+          ownerControlledFuses: 0,
+          referrer: NULL_ADDRESS,
         },
         { value: BUFFERED_REGISTRATION_COST },
       ),
@@ -509,9 +500,8 @@ contract('ETHRegistrarController', function () {
       resolver: resolver.address,
       data: [],
       reverseRecord: false,
-      fuses: 0,
-      wrapperExpiry: 0,
-      referrer: NULL_ADDRESS
+      ownerControlledFuses: 0,
+      referrer: NULL_ADDRESS,
     })
     let tx = await controller.commit(commitment)
     expect(await controller.commitments(commitment)).to.equal(
@@ -529,9 +519,8 @@ contract('ETHRegistrarController', function () {
         resolver: resolver.address,
         data: [],
         reverseRecord: false,
-        fuses: 0,
-        wrapperExpiry: 0,
-        referrer: NULL_ADDRESS
+        ownerControlledFuses: 0,
+        referrer: NULL_ADDRESS,
       },
       { value: BUFFERED_REGISTRATION_COST },
     )
@@ -567,9 +556,8 @@ contract('ETHRegistrarController', function () {
         resolver: NULL_ADDRESS,
         data: [],
         reverseRecord: false,
-        fuses: 0,
-        wrapperExpiry: 0,
-        referrer: NULL_ADDRESS
+        ownerControlledFuses: 0,
+        referrer: NULL_ADDRESS,
       }),
     )
 
@@ -578,15 +566,14 @@ contract('ETHRegistrarController', function () {
       controller.register(
         {
           name: 'newname2',
-        owner: registrantAccount,
-        duration: REGISTRATION_TIME,
-        secret: secret,
-        resolver: NULL_ADDRESS,
-        data: [],
-        reverseRecord: false,
-        fuses: 0,
-        wrapperExpiry: 0,
-        referrer: NULL_ADDRESS
+          owner: registrantAccount,
+          duration: REGISTRATION_TIME,
+          secret: secret,
+          resolver: NULL_ADDRESS,
+          data: [],
+          reverseRecord: false,
+          ownerControlledFuses: 0,
+          referrer: NULL_ADDRESS,
         },
         {
           value: BUFFERED_REGISTRATION_COST,
@@ -607,14 +594,13 @@ contract('ETHRegistrarController', function () {
         resolver: NULL_ADDRESS,
         data: [],
         reverseRecord: false,
-        fuses: 0,
-        wrapperExpiry: 0,
-        referrer: NULL_ADDRESS
+        ownerControlledFuses: 0,
+        referrer: NULL_ADDRESS,
       }),
     )
 
     await evm.advanceTime((await controller.minCommitmentAge()).toNumber())
-    expect(
+    await expect(
       controller.register(
         {
           name: label,
@@ -624,9 +610,8 @@ contract('ETHRegistrarController', function () {
           resolver: NULL_ADDRESS,
           data: [],
           reverseRecord: false,
-          fuses: 0,
-          wrapperExpiry: 0,
-          referrer: NULL_ADDRESS
+          ownerControlledFuses: 0,
+          referrer: NULL_ADDRESS,
         },
         {
           value: BUFFERED_REGISTRATION_COST,
@@ -644,14 +629,13 @@ contract('ETHRegistrarController', function () {
       resolver: NULL_ADDRESS,
       data: [],
       reverseRecord: false,
-      fuses: 0,
-      wrapperExpiry: 0,
-      referrer: NULL_ADDRESS
+      ownerControlledFuses: 0,
+      referrer: NULL_ADDRESS,
     })
     await controller.commit(commitment)
 
     await evm.advanceTime((await controller.maxCommitmentAge()).toNumber() + 1)
-    expect(
+    await expect(
       controller.register(
         {
           name: 'newname2',
@@ -661,9 +645,8 @@ contract('ETHRegistrarController', function () {
           resolver: NULL_ADDRESS,
           data: [],
           reverseRecord: false,
-          fuses: 0,
-          wrapperExpiry: 0,
-          referrer: NULL_ADDRESS
+          ownerControlledFuses: 0,
+          referrer: NULL_ADDRESS,
         },
         {
           value: BUFFERED_REGISTRATION_COST,
@@ -684,14 +667,14 @@ contract('ETHRegistrarController', function () {
     var newExpires = await baseRegistrar.nameExpires(sha3('newname'))
     var newFuseExpiry = (await nameWrapper.getData(nodehash))[2]
     expect(newExpires.toNumber() - expires.toNumber()).to.equal(duration)
-    expect(newFuseExpiry.toNumber() - fuseExpiry.toNumber()).to.equal(0)
+    expect(newFuseExpiry.toNumber() - fuseExpiry.toNumber()).to.equal(86400)
 
     expect(
       (await web3.eth.getBalance(controller.address)) - balanceBefore,
     ).to.equal(86400)
   })
 
-  it('should allow token owners to renew a name with fuse and fuse expiration', async () => {
+  it('should allow token owners to renew a name', async () => {
     const CANNOT_UNWRAP = 1
     const PARENT_CANNOT_CONTROL = 64
 
@@ -703,40 +686,15 @@ contract('ETHRegistrarController', function () {
     var balanceBefore = await web3.eth.getBalance(controller.address)
     const duration = 86400
     const [price] = await controller.rentPrice(sha3('newname'), duration)
-    await controller2.renewWithFuses(
-      'newname',
-      duration,
-      PARENT_CANNOT_CONTROL | CANNOT_UNWRAP,
-      expires.toNumber() + duration,
-      { value: price },
-    )
+    await controller2.renew('newname', duration, { value: price })
     var newExpires = await baseRegistrar.nameExpires(sha3('newname'))
     const [, newFuses, newFuseExpiry] = await nameWrapper.getData(nodehash)
     expect(newExpires.toNumber() - expires.toNumber()).to.equal(duration)
     expect(newFuseExpiry.toNumber() - fuseExpiry.toNumber()).to.equal(duration)
-    expect(newFuses).to.not.equal(fuses)
+    expect(newFuses).to.equal(fuses)
     expect(
       (await web3.eth.getBalance(controller.address)) - balanceBefore,
     ).to.equal(86400)
-  })
-
-  it('should not allow non token owners to renew a name with fuse and fuse expiration', async () => {
-    const CANNOT_UNWRAP = 1
-    const PARENT_CANNOT_CONTROL = 64
-    await registerName('newname')
-
-    var expires = await baseRegistrar.nameExpires(sha3('newname'))
-    const duration = 86400
-    const [price] = await controller.rentPrice(sha3('newname'), duration)
-    expect(
-      controller.renewWithFuses(
-        'newname',
-        duration,
-        PARENT_CANNOT_CONTROL | CANNOT_UNWRAP,
-        expires.toNumber() + duration,
-        { value: price },
-      ),
-    ).to.be.revertedWith(`Unauthorised("${namehash('newname.pls')}")`)
   })
 
   it('non wrapped names can renew', async () => {
@@ -762,7 +720,7 @@ contract('ETHRegistrarController', function () {
   })
 
   it('should require sufficient value for a renewal', async () => {
-    expect(controller.renew('name', 86400)).to.be.revertedWith(
+    await expect(controller.renew('name', 86400)).to.be.revertedWith(
       'InsufficientValue()',
     )
   })
@@ -781,9 +739,8 @@ contract('ETHRegistrarController', function () {
       resolver: resolver.address,
       data: [],
       reverseRecord: true,
-      fuses: 0,
-      wrapperExpiry: 0,
-      referrer: NULL_ADDRESS
+      ownerControlledFuses: 0,
+      referrer: NULL_ADDRESS,
     })
     await controller.commit(commitment)
 
@@ -797,9 +754,8 @@ contract('ETHRegistrarController', function () {
         resolver: resolver.address,
         data: [],
         reverseRecord: true,
-        fuses: 0,
-        wrapperExpiry: 0,
-        referrer: NULL_ADDRESS
+        ownerControlledFuses: 0,
+        referrer: NULL_ADDRESS,
       },
       { value: BUFFERED_REGISTRATION_COST },
     )
@@ -818,9 +774,8 @@ contract('ETHRegistrarController', function () {
       resolver: resolver.address,
       data: [],
       reverseRecord: false,
-      fuses: 0,
-      wrapperExpiry: 0,
-      referrer: NULL_ADDRESS
+      ownerControlledFuses: 0,
+      referrer: NULL_ADDRESS,
     })
     await controller.commit(commitment)
 
@@ -834,9 +789,8 @@ contract('ETHRegistrarController', function () {
         resolver: resolver.address,
         data: [],
         reverseRecord: false,
-        fuses: 0,
-        wrapperExpiry: 0,
-        referrer: NULL_ADDRESS
+        ownerControlledFuses: 0,
+        referrer: NULL_ADDRESS,
       },
       { value: BUFFERED_REGISTRATION_COST },
     )
@@ -855,9 +809,8 @@ contract('ETHRegistrarController', function () {
       resolver: resolver.address,
       data: [],
       reverseRecord: true,
-      fuses: 0,
-      wrapperExpiry: 0,
-      referrer: NULL_ADDRESS
+      ownerControlledFuses: 0,
+      referrer: NULL_ADDRESS,
     })
     await controller.commit(commitment)
 
@@ -871,9 +824,8 @@ contract('ETHRegistrarController', function () {
         resolver: resolver.address,
         data: [],
         reverseRecord: true,
-        fuses: 0,
-        wrapperExpiry: 0,
-        referrer: NULL_ADDRESS
+        ownerControlledFuses: 0,
+        referrer: NULL_ADDRESS,
       },
       { value: BUFFERED_REGISTRATION_COST },
     )
@@ -900,9 +852,8 @@ contract('ETHRegistrarController', function () {
       resolver: resolver.address,
       data: [],
       reverseRecord: true,
-      fuses: 1,
-      wrapperExpiry: MAX_INT_64,
-      referrer: NULL_ADDRESS
+      ownerControlledFuses: 1,
+      referrer: NULL_ADDRESS,
     })
     await controller.commit(commitment)
 
@@ -916,9 +867,8 @@ contract('ETHRegistrarController', function () {
         resolver: resolver.address,
         data: [],
         reverseRecord: true,
-        fuses: 1,
-        wrapperExpiry: MAX_INT_64, // max number for uint64, but wrapper expiry is block.timestamp + REGISTRATION_TIME
-        referrer: NULL_ADDRESS
+        ownerControlledFuses: 1,
+        referrer: NULL_ADDRESS,
       },
       { value: BUFFERED_REGISTRATION_COST },
     )
@@ -926,8 +876,8 @@ contract('ETHRegistrarController', function () {
     const block = await provider.getBlock(tx.block)
 
     const [, fuses, expiry] = await nameWrapper.getData(namehash(name))
-    expect(fuses).to.equal(65)
-    expect(expiry).to.equal(REGISTRATION_TIME + block.timestamp)
+    expect(fuses).to.equal(PARENT_CANNOT_CONTROL | CANNOT_UNWRAP | IS_DOT_ETH)
+    expect(expiry).to.equal(REGISTRATION_TIME + GRACE_PERIOD + block.timestamp)
   })
 
   it('approval should reduce gas for registration', async () => {
@@ -947,9 +897,8 @@ contract('ETHRegistrarController', function () {
         ]),
       ],
       reverseRecord: true,
-      fuses: 1,
-      wrapperExpiry: 0,
-      referrer: NULL_ADDRESS
+      ownerControlledFuses: 1,
+      referrer: NULL_ADDRESS,
     })
 
     await controller.commit(commitment)
@@ -970,9 +919,8 @@ contract('ETHRegistrarController', function () {
           ]),
         ],
         reverseRecord: true,
-        fuses: 1,
-        wrapperExpiry: 0,
-        referrer: NULL_ADDRESS
+        ownerControlledFuses: 1,
+        referrer: NULL_ADDRESS,
       },
       { value: BUFFERED_REGISTRATION_COST },
     )
@@ -993,9 +941,8 @@ contract('ETHRegistrarController', function () {
           ]),
         ],
         reverseRecord: true,
-        fuses: 1,
-        wrapperExpiry: 0,
-        referrer: NULL_ADDRESS
+        ownerControlledFuses: 1,
+        referrer: NULL_ADDRESS,
       },
       { value: BUFFERED_REGISTRATION_COST },
     )
@@ -1014,9 +961,8 @@ contract('ETHRegistrarController', function () {
           ]),
         ],
         reverseRecord: true,
-        fuses: 1,
-        wrapperExpiry: 0,
-        referrer: NULL_ADDRESS
+        ownerControlledFuses: 1,
+        referrer: NULL_ADDRESS,
       },
       { value: BUFFERED_REGISTRATION_COST },
     )
@@ -1052,9 +998,8 @@ contract('ETHRegistrarController', function () {
       resolver: baseRegistrar.address,
       data: callData,
       reverseRecord: false,
-      fuses: 0,
-      wrapperExpiry: 0,
-      referrer: NULL_ADDRESS
+      ownerControlledFuses: 0,
+      referrer: NULL_ADDRESS,
     })
     var tx = await controller.commit(commitment)
     expect(await controller.commitments(commitment)).to.equal(
@@ -1071,9 +1016,8 @@ contract('ETHRegistrarController', function () {
           resolver: baseRegistrar.address,
           data: callData,
           reverseRecord: false,
-          fuses: 0,
-          wrapperExpiry: 0,
-          referrer: NULL_ADDRESS
+          ownerControlledFuses: 0,
+          referrer: NULL_ADDRESS,
         },
         { value: BUFFERED_REGISTRATION_COST },
       ),
@@ -1086,10 +1030,8 @@ contract('ETHRegistrarController', function () {
     const name = 'referral'
     const referrer = await signers[2].getAddress()
     const referrerBalanceBefore = await web3.eth.getBalance(referrer)
-    console.log('referrerBalanceBefore', referrerBalanceBefore.toString())
 
     const balanceBefore = await web3.eth.getBalance(controller.address)
-    console.log('balanceBefore', balanceBefore.toString())
 
     var commitment = await controller.makeCommitment({
       name,
@@ -1099,9 +1041,8 @@ contract('ETHRegistrarController', function () {
       resolver: NULL_ADDRESS,
       data: [],
       reverseRecord: false,
-      fuses: 0,
-      wrapperExpiry: MAX_EXPIRY,
-      referrer: referrer
+      ownerControlledFuses: 0,
+      referrer: referrer,
     })
     var tx = await controller.commit(commitment)
     expect(await controller.commitments(commitment)).to.equal(
@@ -1119,18 +1060,18 @@ contract('ETHRegistrarController', function () {
         resolver: NULL_ADDRESS,
         data: [],
         reverseRecord: false,
-        fuses: 0,
-        wrapperExpiry: MAX_EXPIRY,
+        ownerControlledFuses: 0,
         referrer: referrer,
       },
       { value: BUFFERED_REGISTRATION_COST },
     )
 
     expect(
-       BigInt(await web3.eth.getBalance(referrer)) - BigInt(referrerBalanceBefore),
-    ).to.equal(BigInt(REGISTRATION_TIME * 10 / 100))
+      BigInt(await web3.eth.getBalance(referrer)) -
+        BigInt(referrerBalanceBefore),
+    ).to.equal(BigInt((REGISTRATION_TIME * 10) / 100))
     expect(
       (await web3.eth.getBalance(controller.address)) - balanceBefore,
-    ).to.equal(REGISTRATION_TIME * 90 / 100)
+    ).to.equal((REGISTRATION_TIME * 90) / 100)
   })
 })

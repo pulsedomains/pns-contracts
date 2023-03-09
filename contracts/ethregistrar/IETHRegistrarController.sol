@@ -5,21 +5,21 @@ import "./IPriceOracle.sol";
 
 interface IETHRegistrarController {
     struct Registration {
-        string  name;
+        string name;
         address owner;
         uint256 duration;
         bytes32 secret;
         address resolver;
         bytes[] data;
-        bool    reverseRecord;
-        uint32  fuses;
-        uint64  wrapperExpiry;
+        bool reverseRecord;
+        uint16 ownerControlledFuses;
         address referrer;
     }
 
-    function rentPrice(string memory, uint256)
-        external
-        returns (IPriceOracle.Price memory);
+    function rentPrice(
+        string memory,
+        uint256
+    ) external view returns (IPriceOracle.Price memory);
 
     function available(string memory) external returns (bool);
 

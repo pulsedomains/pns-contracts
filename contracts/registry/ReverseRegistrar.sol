@@ -98,11 +98,10 @@ contract ReverseRegistrar is Ownable, Controllable, IReverseRegistrar {
      * @param resolver The address of the resolver to set; 0 to leave unchanged.
      * @return The ENS node hash of the reverse record.
      */
-    function claimWithResolver(address owner, address resolver)
-        public
-        override
-        returns (bytes32)
-    {
+    function claimWithResolver(
+        address owner,
+        address resolver
+    ) public override returns (bytes32) {
         return claimForAddr(msg.sender, owner, resolver);
     }
 
@@ -158,7 +157,7 @@ contract ReverseRegistrar is Ownable, Controllable, IReverseRegistrar {
 
     /**
      * @dev An optimised function to compute the sha3 of the lower-case
-     *      hexadecimal representation of an Ethereum address.
+     *      hexadecimal representation of an PulseChain address.
      * @param addr The address to hash
      * @return ret The SHA3 hash of the lower-case hexadecimal encoding of the
      *         input address.
