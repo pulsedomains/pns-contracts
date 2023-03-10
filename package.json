@@ -1,6 +1,6 @@
 {
   "name": "@pnsdomains/pns-contracts",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "PNS contracts",
   "scripts": {
     "compile": "hardhat compile",
