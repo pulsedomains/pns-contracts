@@ -1,6 +1,6 @@
 {
   "name": "@pnsdomains/pns-contracts",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "PNS contracts",
   "scripts": {
     "compile": "hardhat compile",
@@ -15,11 +15,10 @@
     "prepare": "husky install"
   },
   "files": [
-    "build",
-    "contracts/**/*.sol",
+    "build/contracts",
     "artifacts",
     "deployments/mainnet/*.json",
-    "deployments/archive/**/*.json"
+    "deployments/testnet/*.json"
   ],
   "main": "index.js",
   "devDependencies": {

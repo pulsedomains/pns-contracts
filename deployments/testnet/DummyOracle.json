@@ -1,5 +1,5 @@
 {
-  "address": "0xFD040a6E3f7df556d727Cf69bA920eDaD98949c8",
+  "address": "0x9D6C6245cFb79f4B8fE56Cfc37B259C0D43bf81D",
   "abi": [
     {
       "inputs": [
@@ -39,18 +39,18 @@
       "type": "function"
     }
   ],
-  "transactionHash": "0xf83501b34296b7f538bbe4c9ff826fe8be032c8b07592fc296c229a6fe40999c",
+  "transactionHash": "0x94c3b18b8fe0d7ed9738242b4f7155927f478e469f634af69db46b7c79a42277",
   "receipt": {
     "to": null,
     "from": "0xF7cC551106A1f4E2843A3DA0C477B6f77FA4a09d",
-    "contractAddress": "0xFD040a6E3f7df556d727Cf69bA920eDaD98949c8",
+    "contractAddress": "0x9D6C6245cFb79f4B8fE56Cfc37B259C0D43bf81D",
     "transactionIndex": 0,
     "gasUsed": "114009",
     "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-    "blockHash": "0x123840ef9bc3d28f0677c8cfc0441e1c3186f74fa1cd89cf21e92ba410cbb036",
-    "transactionHash": "0xf83501b34296b7f538bbe4c9ff826fe8be032c8b07592fc296c229a6fe40999c",
+    "blockHash": "0x6a9c94aa03373d826ee549738b9e68af4158b95cfa23bdf2f9ba54e1403904f1",
+    "transactionHash": "0x94c3b18b8fe0d7ed9738242b4f7155927f478e469f634af69db46b7c79a42277",
     "logs": [],
-    "blockNumber": 21724514,
+    "blockNumber": 24021732,
     "cumulativeGasUsed": "114009",
     "status": 1,
     "byzantium": true
@@ -58,11 +58,11 @@
   "args": [
     "16000000000"
   ],
-  "numDeployments": 2,
-  "solcInputHash": "f9d64a49536bde12a455a58993d2532a",
-  "metadata": "{\"compiler\":{\"version\":\"0.8.17+commit.8df45f5f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"int256\",\"name\":\"_value\",\"type\":\"int256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"latestAnswer\",\"outputs\":[{\"internalType\":\"int256\",\"name\":\"\",\"type\":\"int256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"int256\",\"name\":\"_value\",\"type\":\"int256\"}],\"name\":\"set\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/ethregistrar/DummyOracle.sol\":\"DummyOracle\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":2500},\"remappings\":[]},\"sources\":{\"contracts/ethregistrar/DummyOracle.sol\":{\"content\":\"pragma solidity >=0.8.4;\\n\\ncontract DummyOracle {\\n    int256 value;\\n\\n    constructor(int256 _value) public {\\n        set(_value);\\n    }\\n\\n    function set(int256 _value) public {\\n        value = _value;\\n    }\\n\\n    function latestAnswer() public view returns (int256) {\\n        return value;\\n    }\\n}\\n\",\"keccak256\":\"0x8f0d88c42c074c3fb80710f7639cb455a582fa96629e26a974dd6a19c15678ff\"}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b5060405161011138038061011183398101604081905261002f9161003e565b61003881600055565b50610057565b60006020828403121561005057600080fd5b5051919050565b60ac806100656000396000f3fe6080604052348015600f57600080fd5b506004361060325760003560e01c806350d25bcd146037578063e5c19b2d14604c575b600080fd5b60005460405190815260200160405180910390f35b605c6057366004605e565b600055565b005b600060208284031215606f57600080fd5b503591905056fea26469706673582212206c7c85250c75be5866735a394cf9dc6696ae1aada26371f208e845a6571f9c9064736f6c63430008110033",
-  "deployedBytecode": "0x6080604052348015600f57600080fd5b506004361060325760003560e01c806350d25bcd146037578063e5c19b2d14604c575b600080fd5b60005460405190815260200160405180910390f35b605c6057366004605e565b600055565b005b600060208284031215606f57600080fd5b503591905056fea26469706673582212206c7c85250c75be5866735a394cf9dc6696ae1aada26371f208e845a6571f9c9064736f6c63430008110033",
+  "numDeployments": 1,
+  "solcInputHash": "84e83a11e26171857eac9dd182ca512d",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.17+commit.8df45f5f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"int256\",\"name\":\"_value\",\"type\":\"int256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"latestAnswer\",\"outputs\":[{\"internalType\":\"int256\",\"name\":\"\",\"type\":\"int256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"int256\",\"name\":\"_value\",\"type\":\"int256\"}],\"name\":\"set\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/ethregistrar/DummyOracle.sol\":\"DummyOracle\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":2499},\"remappings\":[]},\"sources\":{\"contracts/ethregistrar/DummyOracle.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity >=0.8.4;\\n\\ncontract DummyOracle {\\n    int256 value;\\n\\n    constructor(int256 _value) public {\\n        set(_value);\\n    }\\n\\n    function set(int256 _value) public {\\n        value = _value;\\n    }\\n\\n    function latestAnswer() public view returns (int256) {\\n        return value;\\n    }\\n}\\n\",\"keccak256\":\"0x4bee8dc2b5f9596eed29a1a3285aa0ffc628b5e18d12167e54d0dcdbe3e15d6b\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5060405161011138038061011183398101604081905261002f9161003e565b61003881600055565b50610057565b60006020828403121561005057600080fd5b5051919050565b60ac806100656000396000f3fe6080604052348015600f57600080fd5b506004361060325760003560e01c806350d25bcd146037578063e5c19b2d14604c575b600080fd5b60005460405190815260200160405180910390f35b605c6057366004605e565b600055565b005b600060208284031215606f57600080fd5b503591905056fea264697066735822122021cad37abcf3435863eb77c090192c82e5a4ec46f30d9c5daba0eb8103f20d1764736f6c63430008110033",
+  "deployedBytecode": "0x6080604052348015600f57600080fd5b506004361060325760003560e01c806350d25bcd146037578063e5c19b2d14604c575b600080fd5b60005460405190815260200160405180910390f35b605c6057366004605e565b600055565b005b600060208284031215606f57600080fd5b503591905056fea264697066735822122021cad37abcf3435863eb77c090192c82e5a4ec46f30d9c5daba0eb8103f20d1764736f6c63430008110033",
   "devdoc": {
     "kind": "dev",
     "methods": {},
@@ -76,7 +76,7 @@
   "storageLayout": {
     "storage": [
       {
-        "astId": 10946,
+        "astId": 11561,
         "contract": "contracts/ethregistrar/DummyOracle.sol:DummyOracle",
         "label": "value",
         "offset": 0,

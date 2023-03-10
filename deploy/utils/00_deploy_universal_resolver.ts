@@ -10,9 +10,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const registry = await ethers.getContract('ENSRegistry')
   const batchGatewayURLs = JSON.parse(process.env.BATCH_GATEWAY_URLS || '[]')
 
-  if (batchGatewayURLs.length === 0) {
-    throw new Error('UniversalResolver: No batch gateway URLs provided')
-  }
+  // TODO: owner will update gateway urls later
+  // if (batchGatewayURLs.length === 0) {
+  //   throw new Error('UniversalResolver: No batch gateway URLs provided')
+  // }
 
   await deploy('UniversalResolver', {
     from: deployer,
