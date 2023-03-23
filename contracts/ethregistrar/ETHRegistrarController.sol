@@ -136,9 +136,9 @@ contract ETHRegistrarController is
                     label,
                     params.owner,
                     params.duration,
+                    params.secret,
                     params.resolver,
                     params.data,
-                    params.secret,
                     params.reverseRecord,
                     params.ownerControlledFuses
                 )
