@@ -13,16 +13,16 @@ const { ethers } = require('hardhat')
 const provider = ethers.provider
 const { namehash } = require('../test-utils/ens')
 const sha3 = require('web3-utils').sha3
+const {
+  EMPTY_BYTES32: EMPTY_BYTES,
+  EMPTY_ADDRESS: ZERO_ADDRESS,
+} = require('../test-utils/constants')
 
 const DAY = 24 * 60 * 60
 const REGISTRATION_TIME = 28 * DAY
 const BUFFERED_REGISTRATION_COST = REGISTRATION_TIME + 3 * DAY
 const GRACE_PERIOD = 90 * DAY
-const NULL_ADDRESS = '0x0000000000000000000000000000000000000000'
-const EMPTY_BYTES =
-  '0x0000000000000000000000000000000000000000000000000000000000000000'
-const MAX_EXPIRY = 2n ** 64n - 1n
-const { ZERO_ADDRESS } = require('@openzeppelin/test-helpers/src/constants')
+const NULL_ADDRESS = ZERO_ADDRESS
 contract('ETHRegistrarController', function () {
   let ens
   let resolver
@@ -95,14 +95,21 @@ contract('ETHRegistrarController', function () {
       namehash('pls'),
     )
 
+    reverseRegistrar = await deploy('ReverseRegistrar', ens.address)
+
+    await ens.setSubnodeOwner(EMPTY_BYTES, sha3('reverse'), accounts[0])
+    await ens.setSubnodeOwner(
+      namehash('reverse'),
+      sha3('addr'),
+      reverseRegistrar.address,
+    )
+
     nameWrapper = await deploy(
       'NameWrapper',
       ens.address,
       baseRegistrar.address,
       ownerAccount,
     )
-
-    reverseRegistrar = await deploy('ReverseRegistrar', ens.address)
 
     await ens.setSubnodeOwner(EMPTY_BYTES, sha3('pls'), baseRegistrar.address)
 
@@ -120,6 +127,7 @@ contract('ETHRegistrarController', function () {
       86400,
       reverseRegistrar.address,
       nameWrapper.address,
+      ens.address,
     )
     controller2 = controller.connect(signers[1])
     await nameWrapper.setController(controller.address, true)
@@ -147,16 +155,6 @@ contract('ETHRegistrarController', function () {
     ]
 
     resolver2 = await resolver.connect(signers[1])
-
-    await ens.setSubnodeOwner(EMPTY_BYTES, sha3('reverse'), accounts[0], {
-      from: accounts[0],
-    })
-    await ens.setSubnodeOwner(
-      namehash('reverse'),
-      sha3('addr'),
-      reverseRegistrar.address,
-      { from: accounts[0] },
-    )
   })
 
   beforeEach(async () => {
