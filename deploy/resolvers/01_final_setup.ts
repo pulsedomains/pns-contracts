@@ -19,6 +19,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const nameWrapper = await ethers.getContract('NameWrapper', owner)
   const controller = await ethers.getContract('ETHRegistrarController', owner)
   const resolver = await ethers.getContract('PublicResolver')
+  const bulkRenewal = await ethers.getContract('BulkRenewal')
 
   const tx1 = await registrar.setResolver(resolver.address)
   console.log(
@@ -105,7 +106,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const tx7 = await resolver.setInterface(
     namehash('pls'),
     iBulkRenewal,
-    controller.address,
+    bulkRenewal.address,
   )
   console.log(
     `Setting BulkRenewal interface ID ${iBulkRenewal} on .pls resolver (tx: ${tx7.hash})...`,

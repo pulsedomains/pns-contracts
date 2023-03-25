@@ -5,8 +5,6 @@ const { labelhash, namehash, encodeName, FUSES } = require('../test-utils/ens')
 const { deploy } = require('../test-utils/contracts')
 const { EMPTY_BYTES32, EMPTY_ADDRESS } = require('../test-utils/constants')
 
-console.log('sss', labelhash('pls'))
-
 use(solidity)
 
 const ROOT_NODE = EMPTY_BYTES32
