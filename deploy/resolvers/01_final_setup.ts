@@ -59,9 +59,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const providerWithEns = new ethers.providers.StaticJsonRpcProvider(
     network.name === 'mainnet'
       ? 'https://rpc.mainnet.pulsechain.com'
-      : 'https://rpc.v2b.testnet.pulsechain.com',
+      : 'https://rpc.v3.testnet.pulsechain.com',
     {
-      chainId: network.name === 'mainnet' ? 369 : 941,
+      chainId: network.name === 'mainnet' ? 369 : 942,
       name: 'pulse',
       ensAddress: registry.address,
     },
