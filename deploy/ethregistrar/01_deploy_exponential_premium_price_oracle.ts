@@ -7,7 +7,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments
   const { deployer } = await getNamedAccounts()
 
-  let oracleAddr
+  let oracleAddr = ''
   if (network.name !== 'mainnet') {
     await deploy('DummyOracle', {
       from: deployer,
@@ -17,8 +17,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
     const dummyOracle = await ethers.getContract('DummyOracle')
     oracleAddr = dummyOracle.address
-  } else {
-    oracleAddr = ''
   }
 
   /**

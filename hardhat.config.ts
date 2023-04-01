@@ -6,11 +6,11 @@ import '@nomiclabs/hardhat-truffle5'
 import '@nomiclabs/hardhat-waffle'
 import dotenv from 'dotenv'
 import 'hardhat-abi-exporter'
+import 'hardhat-contract-sizer'
 import 'hardhat-deploy'
 import 'hardhat-gas-reporter'
 import { HardhatUserConfig } from 'hardhat/config'
 import { promisify } from 'util'
-import 'hardhat-contract-sizer'
 
 const exec = promisify(_exec)
 
@@ -74,6 +74,16 @@ const config: HardhatUserConfig = {
           optimizer: {
             enabled: true,
             runs: 1300,
+          },
+        },
+      },
+      // for DummyOldResolver contract
+      {
+        version: '0.4.11',
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
           },
         },
       },
