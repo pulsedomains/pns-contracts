@@ -72,7 +72,7 @@ contract('ExponentialPricePremiumOracle', function (accounts) {
   })
 
   it('should specify the maximum premium at the moment of expiration', async () => {
-    const ts = (await web3.eth.getBlock('latest')).timestamp - 90 * DAY
+    const ts = (await web3.eth.getBlock('latest')).timestamp - 30 * DAY
     const expectedPrice = ((START_PRICE - LAST_VALUE) / 2) * 1e18 // ETH at $2 for $1 mil in 18 decimal precision
     assert.equal(
       (await priceOracle.premium('foobar', ts, 0)).toString(),
@@ -86,7 +86,7 @@ contract('ExponentialPricePremiumOracle', function (accounts) {
 
   it('should specify the correct price after 2.5 days and 1 year registration', async () => {
     const ts =
-      (await web3.eth.getBlock('latest')).timestamp - (90 * DAY + DAY * 2.5)
+      (await web3.eth.getBlock('latest')).timestamp - (30 * DAY + DAY * 2.5)
     const lengthOfRegistration = DAY * 365
     const expectedPremium = (
       exponentialReduceFloatingPoint(START_PRICE, 2.5) / 2
@@ -109,7 +109,7 @@ contract('ExponentialPricePremiumOracle', function (accounts) {
   })
 
   it('should produce a 0 premium at the end of the decay period', async () => {
-    let ts = (await web3.eth.getBlock('latest')).timestamp - 90 * DAY
+    let ts = (await web3.eth.getBlock('latest')).timestamp - 30 * DAY
     expect(
       (
         await priceOracle.premium('foobar', ts - LAST_DAY * DAY + 1, 0)
@@ -122,7 +122,7 @@ contract('ExponentialPricePremiumOracle', function (accounts) {
 
   // This test only runs every hour of each day. For an exhaustive test use the exponentialPremiumScript and uncomment the exhaustive test below
   it('should not be beyond a certain amount of inaccuracy from floating point calc', async () => {
-    let ts = (await web3.eth.getBlock('latest')).timestamp - 90 * DAY
+    let ts = (await web3.eth.getBlock('latest')).timestamp - 30 * DAY
     let differencePercentSum = 0
     let percentMax = 0
 
@@ -161,7 +161,7 @@ contract('ExponentialPricePremiumOracle', function (accounts) {
   //   function exponentialReduceFloatingPoint(startPrice, days) {
   //     return startPrice * 0.5 ** days
   //   }
-  //   let ts = (await web3.eth.getBlock('latest')).timestamp - 90 * DAY
+  //   let ts = (await web3.eth.getBlock('latest')).timestamp - 30 * DAY
   //   let differencePercentSum = 0
   //   let percentMax = 0
 

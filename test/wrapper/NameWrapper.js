@@ -18,7 +18,7 @@ const ROOT_NODE = EMPTY_BYTES32
 
 const DUMMY_ADDRESS = '0x0000000000000000000000000000000000000001'
 const DAY = 86400
-const GRACE_PERIOD = 90 * DAY
+const GRACE_PERIOD = 30 * DAY
 
 function increaseTime(delay) {
   return ethers.provider.send('evm_increaseTime', [delay])

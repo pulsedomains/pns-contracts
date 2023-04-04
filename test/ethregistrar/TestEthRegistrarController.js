@@ -21,7 +21,7 @@ const {
 const DAY = 24 * 60 * 60
 const REGISTRATION_TIME = 28 * DAY
 const BUFFERED_REGISTRATION_COST = REGISTRATION_TIME + 3 * DAY
-const GRACE_PERIOD = 90 * DAY
+const GRACE_PERIOD = 30 * DAY
 const NULL_ADDRESS = ZERO_ADDRESS
 contract('ETHRegistrarController', function () {
   let ens

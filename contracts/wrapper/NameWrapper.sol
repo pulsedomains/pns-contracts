@@ -45,7 +45,7 @@ contract NameWrapper is
     mapping(bytes32 => bytes) public names;
     string public constant name = "NameWrapper";
 
-    uint64 private constant GRACE_PERIOD = 90 days;
+    uint64 private constant GRACE_PERIOD = 30 days;
     bytes32 private constant ETH_NODE =
         0x55fb31aa6f23709345f51ac8d7e4ed79336defe55be2733bc226ed0f1f62f3c8;
     bytes32 private constant ETH_LABELHASH =
