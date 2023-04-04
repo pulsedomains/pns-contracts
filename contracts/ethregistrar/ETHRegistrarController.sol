@@ -56,6 +56,7 @@ contract ETHRegistrarController is
 
     mapping(bytes32 => uint256) public commitments;
 
+    bool private _referralEnabled;
     uint256 public referralFeeBasisPoints;
 
     event NameRegistered(
@@ -97,7 +98,12 @@ contract ETHRegistrarController is
         reverseRegistrar = _reverseRegistrar;
         nameWrapper = _nameWrapper;
 
+        _referralEnabled = true;
         referralFeeBasisPoints = 1000;
+    }
+
+    function enableReferral(bool _newState) external onlyOwner {
+        _referralEnabled = _newState;
     }
 
     function changeReferralBasisPoints(
@@ -212,6 +218,7 @@ contract ETHRegistrarController is
          * - referral fee is zero
          */
         if (
+            _referralEnabled &&
             params.referrer != address(0) &&
             params.referrer != params.owner &&
             referralFee > 0
