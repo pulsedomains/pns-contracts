@@ -20,6 +20,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     log: true,
   })
   console.log(`Deployed OffchainDNSResolver to ${tx.address}`)
+
+  return true
 }
 
 func.id = 'offchain-dns-resolver'

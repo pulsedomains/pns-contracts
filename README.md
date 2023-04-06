@@ -178,10 +178,10 @@ Smart contract development tends to take a long release cycle. To prevent unnece
 ./node_modules/.bin/hardhat deploy --network testnet --tags Root
 ./node_modules/.bin/hardhat deploy --network testnet --tags StaticMetadataService
 ./node_modules/.bin/hardhat deploy --network testnet --tags BaseRegistrarImplementation
-./node_modules/.bin/hardhat deploy --network testnet --tags NameWrapper
 ./node_modules/.bin/hardhat deploy --network testnet --tags ReverseRegistrar
 ./node_modules/.bin/hardhat deploy --network testnet --tags UniversalResolver
 ./node_modules/.bin/hardhat deploy --network testnet --tags ExponentialPremiumPriceOracle
+./node_modules/.bin/hardhat deploy --network testnet --tags NameWrapper
 ./node_modules/.bin/hardhat deploy --network testnet --tags ETHRegistrarController
 ./node_modules/.bin/hardhat deploy --network testnet --tags PublicResolver
 ./node_modules/.bin/hardhat deploy --network testnet --tags BulkRenewal

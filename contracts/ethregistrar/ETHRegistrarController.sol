@@ -4,7 +4,9 @@ pragma solidity ~0.8.17;
 import {BaseRegistrarImplementation} from "./BaseRegistrarImplementation.sol";
 import {StringUtils} from "./StringUtils.sol";
 import {Resolver} from "../resolvers/Resolver.sol";
-import {ReverseRegistrar} from "../registry/ReverseRegistrar.sol";
+import {ENS} from "../registry/ENS.sol";
+import {ReverseRegistrar} from "../reverseRegistrar/ReverseRegistrar.sol";
+import {ReverseClaimer} from "../reverseRegistrar/ReverseClaimer.sol";
 import {IETHRegistrarController, IPriceOracle} from "./IETHRegistrarController.sol";
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
@@ -33,7 +35,8 @@ contract ETHRegistrarController is
     Ownable,
     IETHRegistrarController,
     IERC165,
-    ERC20Recoverable
+    ERC20Recoverable,
+    ReverseClaimer
 {
     using StringUtils for *;
     using Address for address;
@@ -53,6 +56,7 @@ contract ETHRegistrarController is
 
     mapping(bytes32 => uint256) public commitments;
 
+    bool private _referralEnabled;
     uint256 public referralFeeBasisPoints;
 
     event NameRegistered(
@@ -76,8 +80,9 @@ contract ETHRegistrarController is
         uint256 _minCommitmentAge,
         uint256 _maxCommitmentAge,
         ReverseRegistrar _reverseRegistrar,
-        INameWrapper _nameWrapper
-    ) {
+        INameWrapper _nameWrapper,
+        ENS _ens
+    ) ReverseClaimer(_ens, msg.sender) {
         if (_maxCommitmentAge <= _minCommitmentAge) {
             revert MaxCommitmentAgeTooLow();
         }
@@ -93,7 +98,12 @@ contract ETHRegistrarController is
         reverseRegistrar = _reverseRegistrar;
         nameWrapper = _nameWrapper;
 
+        _referralEnabled = true;
         referralFeeBasisPoints = 1000;
+    }
+
+    function enableReferral(bool _newState) external onlyOwner {
+        _referralEnabled = _newState;
     }
 
     function changeReferralBasisPoints(
@@ -136,9 +146,9 @@ contract ETHRegistrarController is
                     label,
                     params.owner,
                     params.duration,
+                    params.secret,
                     params.resolver,
                     params.data,
-                    params.secret,
                     params.reverseRecord,
                     params.ownerControlledFuses
                 )
@@ -208,6 +218,7 @@ contract ETHRegistrarController is
          * - referral fee is zero
          */
         if (
+            _referralEnabled &&
             params.referrer != address(0) &&
             params.referrer != params.owner &&
             referralFee > 0

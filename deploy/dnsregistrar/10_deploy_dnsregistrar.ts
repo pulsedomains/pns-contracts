@@ -7,9 +7,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments
   const { deployer, owner } = await getNamedAccounts()
 
-  const registry = await hre.deployments.get('ENSRegistry')
-  const dnssec = await hre.deployments.get('DNSSECImpl')
-  const resolver = await hre.deployments.get('OffchainDNSResolver')
+  const registry = await ethers.getContract('ENSRegistry')
+  const dnssec = await ethers.getContract('DNSSECImpl')
+  const resolver = await ethers.getContract('OffchainDNSResolver')
   const root = await ethers.getContract('Root')
 
   const publicSuffixList = await deploy('TLDPublicSuffixList', {
@@ -35,6 +35,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     .connect(await ethers.getSigner(owner))
     .setController(tx.address, true)
   console.log(`Set DNSRegistrar as controller of Root (${tx2.hash})`)
+
+  return true
 }
 
 func.id = 'dns-registrar'

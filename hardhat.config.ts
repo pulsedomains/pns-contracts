@@ -6,12 +6,11 @@ import '@nomiclabs/hardhat-truffle5'
 import '@nomiclabs/hardhat-waffle'
 import dotenv from 'dotenv'
 import 'hardhat-abi-exporter'
+import 'hardhat-contract-sizer'
 import 'hardhat-deploy'
 import 'hardhat-gas-reporter'
-import { HardhatUserConfig, task } from 'hardhat/config'
-import { Artifact } from 'hardhat/types'
+import { HardhatUserConfig } from 'hardhat/config'
 import { promisify } from 'util'
-import 'hardhat-contract-sizer'
 
 const exec = promisify(_exec)
 
@@ -58,11 +57,12 @@ const config: HardhatUserConfig = {
       gasPrice: 10000000000,
     },
     testnet: {
-      url: 'https://rpc.v2b.testnet.pulsechain.com',
+      url: 'https://rpc.v3.testnet.pulsechain.com',
       tags: ['use_root'],
-      chainId: 941,
+      chainId: 942,
       accounts: real_accounts,
       gasPrice: 10000000000,
+      // gas: 30000000,
     },
   },
   mocha: {},
@@ -73,7 +73,17 @@ const config: HardhatUserConfig = {
         settings: {
           optimizer: {
             enabled: true,
-            runs: 2499,
+            runs: 1300,
+          },
+        },
+      },
+      // for DummyOldResolver contract
+      {
+        version: '0.4.11',
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
           },
         },
       },
