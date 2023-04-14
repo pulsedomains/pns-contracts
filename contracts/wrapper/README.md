@@ -213,7 +213,7 @@ getData gets the owner, fuses and also the expiry of the name. The fuses it retu
 **Start State**: Unwrapped
 **End State**: Emancipated | Locked
 
-Wraps a .pls second-level name. The wrapped name's expiration will always be equal to the name's expiration in the .pls registrar plus the grace period (90 days).
+Wraps a .pls second-level name. The wrapped name's expiration will always be equal to the name's expiration in the .pls registrar plus the grace period (30 days).
 
 If fuses are provided, they will be burned at the same time as wrapping, moving the name directly to Locked status.
 

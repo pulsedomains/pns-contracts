@@ -34,7 +34,7 @@ const {
 } = FUSES
 
 const DAY = 86400
-const GRACE_PERIOD = 90 * DAY
+const GRACE_PERIOD = 30 * DAY
 
 function shouldRespectConstraints(contracts, getSigners) {
   let account
