@@ -41,13 +41,13 @@ const config: HardhatUserConfig = {
   networks: {
     hardhat: {
       saveDeployments: false,
-      tags: ['test', 'legacy', 'use_root'],
+      tags: ['test', 'use_root'],
       allowUnlimitedContractSize: false,
     },
     localhost: {
       url: 'http://127.0.0.1:8545',
       saveDeployments: false,
-      tags: ['test', 'legacy', 'use_root'],
+      tags: ['test', 'use_root'],
     },
     mainnet: {
       url: 'https://rpc.mainnet.pulsechain.com',
