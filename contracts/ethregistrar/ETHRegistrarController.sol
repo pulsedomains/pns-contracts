@@ -56,8 +56,9 @@ contract ETHRegistrarController is
 
     mapping(bytes32 => uint256) public commitments;
 
-    bool private _referralEnabled;
+    bool private referralEnabled;
     uint256 public referralFeeBasisPoints;
+    mapping(address => bool) private referrerBlacklists;
 
     event NameRegistered(
         string name,
@@ -98,12 +99,12 @@ contract ETHRegistrarController is
         reverseRegistrar = _reverseRegistrar;
         nameWrapper = _nameWrapper;
 
-        _referralEnabled = true;
+        referralEnabled = true;
         referralFeeBasisPoints = 1000;
     }
 
     function enableReferral(bool _newState) external onlyOwner {
-        _referralEnabled = _newState;
+        referralEnabled = _newState;
     }
 
     function changeReferralBasisPoints(
@@ -114,6 +115,13 @@ contract ETHRegistrarController is
         }
 
         referralFeeBasisPoints = _newBasisPoints;
+    }
+
+    function setReferrerBlacklist(
+        address wallet,
+        bool isBlacklist
+    ) external onlyOwner {
+        referrerBlacklists[wallet] = isBlacklist;
     }
 
     function rentPrice(
@@ -218,9 +226,10 @@ contract ETHRegistrarController is
          * - referral fee is zero
          */
         if (
-            _referralEnabled &&
+            referralEnabled &&
             params.referrer != address(0) &&
             params.referrer != params.owner &&
+            !referrerBlacklists[params.referrer] &&
             referralFee > 0
         ) {
             _referral(params.referrer, referralFee);
