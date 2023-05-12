@@ -56,7 +56,7 @@ contract ETHRegistrarController is
 
     mapping(bytes32 => uint256) public commitments;
 
-    bool private referralEnabled;
+    bool public referralEnabled;
     uint256 public referralFeeBasisPoints;
     mapping(address => bool) private referrerBlacklists;
 
@@ -74,6 +74,7 @@ contract ETHRegistrarController is
         uint256 cost,
         uint256 expires
     );
+    event BlacklistChanged(address indexed account, bool banned);
 
     constructor(
         BaseRegistrarImplementation _base,
@@ -103,6 +104,10 @@ contract ETHRegistrarController is
         referralFeeBasisPoints = 1000;
     }
 
+    function changePricesFeed(address _newPrices) external onlyOwner {
+        prices = IPriceOracle(_newPrices);
+    }
+
     function enableReferral(bool _newState) external onlyOwner {
         referralEnabled = _newState;
     }
@@ -122,6 +127,7 @@ contract ETHRegistrarController is
         bool isBlacklist
     ) external onlyOwner {
         referrerBlacklists[wallet] = isBlacklist;
+        emit BlacklistChanged(wallet, isBlacklist);
     }
 
     function rentPrice(
