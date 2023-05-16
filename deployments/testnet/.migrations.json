@@ -7,13 +7,13 @@
   "universal-resolver": 1682092930,
   "price-oracle": 1682093130,
   "name-wrapper": 1682093252,
-  "eth-registrar": 1682093423,
-  "resolver": 1682093492,
-  "bulk-renewal": 1682093536,
   "dnssec-algorithms": 1682093623,
   "dnssec-digests": 1682093673,
   "dnssec-oracle": 1682093752,
   "offchain-dns-resolver": 1682093779,
   "dns-registrar": 1682093855,
-  "final-setup": 1682094122
+  "eth-registrar": 1684079820,
+  "resolver": 1684079863,
+  "static-bulk-renewal": 1684079882,
+  "final-setup": 1684080032
 }
