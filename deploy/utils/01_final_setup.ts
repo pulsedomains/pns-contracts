@@ -19,7 +19,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const nameWrapper = await ethers.getContract('NameWrapper', owner)
   const controller = await ethers.getContract('ETHRegistrarController', owner)
   const resolver = await ethers.getContract('PublicResolver')
-  const bulkRenewal = await ethers.getContract('BulkRenewal')
+  const bulkRenewal = await ethers.getContract('StaticBulkRenewal')
 
   const tx1 = await registrar.setResolver(resolver.address)
   console.log(
@@ -59,9 +59,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const providerWithEns = new ethers.providers.StaticJsonRpcProvider(
     network.name === 'mainnet'
       ? 'https://rpc.mainnet.pulsechain.com'
-      : 'https://rpc.v3.testnet.pulsechain.com',
+      : 'https://rpc.v4.testnet.pulsechain.com',
     {
-      chainId: network.name === 'mainnet' ? 369 : 942,
+      chainId: network.name === 'mainnet' ? 369 : 943,
       name: 'pulse',
       ensAddress: registry.address,
     },
