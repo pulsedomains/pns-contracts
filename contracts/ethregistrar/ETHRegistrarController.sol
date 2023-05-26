@@ -27,6 +27,7 @@ error MaxCommitmentAgeTooLow();
 error MaxCommitmentAgeTooHigh();
 error IncorrectPricesFeed();
 error MaximumBasisPoints();
+error ExcuteCallFailed();
 
 /**
  * @dev A registrar controller for registering and renewing names at fixed cost.
@@ -258,7 +259,7 @@ contract ETHRegistrarController is
             payable(msg.sender).transfer(msg.value - price.base);
         }
 
-        emit NameRenewed(name, labelhash, msg.value, expires);
+        emit NameRenewed(name, labelhash, price.base, expires);
     }
 
     function withdraw() public {
@@ -325,6 +326,9 @@ contract ETHRegistrarController is
     }
 
     function _referral(address referrer, uint256 referralFee) internal {
-        payable(referrer).transfer(referralFee);
+        (bool success, ) = payable(referrer).call{value: referralFee}("");
+        if (!success) {
+            revert ExcuteCallFailed();
+        }
     }
 }

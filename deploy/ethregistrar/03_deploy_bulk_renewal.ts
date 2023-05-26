@@ -18,8 +18,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   return true
 }
 
-func.id = 'bulk-renewal'
-func.tags = ['BulkRenewal']
+func.id = 'static-bulk-renewal'
+func.tags = ['StaticBulkRenewal']
 func.dependencies = ['ETHRegistrarController']
 
 export default func

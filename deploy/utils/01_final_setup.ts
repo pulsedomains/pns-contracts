@@ -19,7 +19,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const nameWrapper = await ethers.getContract('NameWrapper', owner)
   const controller = await ethers.getContract('ETHRegistrarController', owner)
   const resolver = await ethers.getContract('PublicResolver')
-  const bulkRenewal = await ethers.getContract('BulkRenewal')
+  const bulkRenewal = await ethers.getContract('StaticBulkRenewal')
 
   const tx1 = await registrar.setResolver(resolver.address)
   console.log(
@@ -27,9 +27,14 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   )
   await tx1.wait()
 
-  const ownerOfResolver = await registry.owner(namehash('resolver'))
+  const resolverHash = namehash('resolver.pls')
+  const ownerOfResolver = await registry.owner(resolverHash)
   if (ownerOfResolver == ZERO_ADDRESS) {
-    const tx = await root.setSubnodeOwner('0x' + keccak256('resolver'), owner)
+    const tx = await registry.setSubnodeOwner(
+      namehash('pls'),
+      '0x' + keccak256('resolver'),
+      owner,
+    )
     console.log(
       `Setting owner of resolver.pls to owner on registry (tx: ${tx.hash})...`,
     )
@@ -41,14 +46,14 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     return
   }
 
-  const tx2 = await registry.setResolver(namehash('resolver'), resolver.address)
+  const tx2 = await registry.setResolver(resolverHash, resolver.address)
   console.log(
     `Setting resolver for resolver.pls to PublicResolver (tx: ${tx2.hash})...`,
   )
   await tx2.wait()
 
   const tx3 = await resolver['setAddr(bytes32,address)'](
-    namehash('resolver'),
+    resolverHash,
     resolver.address,
   )
   console.log(

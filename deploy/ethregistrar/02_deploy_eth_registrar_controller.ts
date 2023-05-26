@@ -63,12 +63,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   )
   await tx2.wait()
 
-  const tx3 = await registrar.addController(controller.address)
-  console.log(
-    `Adding controller as controller on registrar (tx: ${tx3.hash})...`,
-  )
-  await tx3.wait()
-
   return true
 }
 
