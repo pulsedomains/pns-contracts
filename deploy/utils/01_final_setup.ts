@@ -21,11 +21,15 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const resolver = await ethers.getContract('PublicResolver')
   const bulkRenewal = await ethers.getContract('StaticBulkRenewal')
 
-  const tx1 = await registrar.setResolver(resolver.address)
-  console.log(
-    `Setting resolver for .pls to PublicResolver (tx: ${tx1.hash})...`,
-  )
+  const tx1 = await root.setSubnodeOwner('0x' + keccak256('pls'), owner)
+  console.log(`Temporarily setting owner of pls to owner  (tx: ${tx1.hash})...`)
   await tx1.wait()
+
+  const tx2 = await registrar.setResolver(resolver.address)
+  console.log(
+    `Setting resolver for .pls to PublicResolver (tx: ${tx2.hash})...`,
+  )
+  await tx2.wait()
 
   const resolverHash = namehash('resolver.pls')
   const ownerOfResolver = await registry.owner(resolverHash)
@@ -46,20 +50,20 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     return
   }
 
-  const tx2 = await registry.setResolver(resolverHash, resolver.address)
+  const tx3 = await registry.setResolver(resolverHash, resolver.address)
   console.log(
-    `Setting resolver for resolver.pls to PublicResolver (tx: ${tx2.hash})...`,
+    `Setting resolver for resolver.pls to PublicResolver (tx: ${tx3.hash})...`,
   )
-  await tx2.wait()
+  await tx3.wait()
 
-  const tx3 = await resolver['setAddr(bytes32,address)'](
+  const tx4 = await resolver['setAddr(bytes32,address)'](
     resolverHash,
     resolver.address,
   )
   console.log(
-    `Setting address for resolver.pls to PublicResolver (tx: ${tx3.hash})...`,
+    `Setting address for resolver.pls to PublicResolver (tx: ${tx4.hash})...`,
   )
-  await tx3.wait()
+  await tx4.wait()
 
   const providerWithEns = new ethers.providers.StaticJsonRpcProvider(
     network.name === 'mainnet'
@@ -77,10 +81,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     console.log('No resolver set for .pls not setting interface')
     return
   }
-
-  const tx4 = await root.setSubnodeOwner('0x' + keccak256('pls'), owner)
-  console.log(`Temporarily setting owner of pls to owner  (tx: ${tx4.hash})...`)
-  await tx4.wait()
 
   const iNameWrapper = await computeInterfaceId(deployments, 'NameWrapper')
   const tx5 = await resolver.setInterface(
