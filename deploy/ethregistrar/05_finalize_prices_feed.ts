@@ -6,12 +6,15 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { getNamedAccounts, network } = hre
   const { deployer, owner } = await getNamedAccounts()
 
-  let oracleAddr
-  if (network.name !== 'mainnet') {
-    const dummyOracle = await ethers.getContract('DummyOracle')
-    oracleAddr = dummyOracle.address
-  } else {
-    oracleAddr = ''
+  let oracleAddr = '' // TODO: set chainlink oracle if it's supported, if not, use USDC/WPLS pair on pulsex
+  if (oracleAddr.length === 0) {
+    if (network.name === 'mainnet') {
+      const pulsexOracle = await ethers.getContract('PulseXOracle')
+      oracleAddr = pulsexOracle.address
+    } else {
+      const dummyOracle = await ethers.getContract('DummyOracle')
+      oracleAddr = dummyOracle.address
+    }
   }
 
   /**
