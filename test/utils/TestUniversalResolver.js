@@ -538,7 +538,7 @@ contract('UniversalResolver', function (accounts) {
     it('should gracefully handle a non-existent function on an offchain resolver', async () => {
       const addrData = publicResolver.interface.encodeFunctionData(
         'addr(bytes32,uint256)',
-        [namehash.hash('offchain.test.pls'), 369],
+        [namehash.hash('offchain.test.pls'), 1028],
       )
       const textData = publicResolver.interface.encodeFunctionData(
         'text(bytes32,string)',
