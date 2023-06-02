@@ -76,6 +76,7 @@ contract ETHRegistrarController is
         uint256 expires
     );
     event BlacklistChanged(address indexed account, bool banned);
+    event ReferralFeeReceived(address indexed referrer, uint256 amount);
 
     constructor(
         BaseRegistrarImplementation _base,
@@ -330,5 +331,6 @@ contract ETHRegistrarController is
         if (!success) {
             revert ExcuteCallFailed();
         }
+        emit ReferralFeeReceived(referrer, referralFee);
     }
 }
