@@ -3,7 +3,6 @@ import { ethers, network } from 'hardhat'
 import { DeployFunction } from 'hardhat-deploy/types'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { keccak256 } from 'js-sha3'
-import { ZERO_ADDRESS } from '../constants'
 import { computeInterfaceId } from '../helpers'
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
@@ -33,37 +32,26 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const resolverHash = namehash('resolver.pls')
   const ownerOfResolver = await registry.owner(resolverHash)
-  if (ownerOfResolver == ZERO_ADDRESS) {
-    const tx = await registry.setSubnodeOwner(
-      namehash('pls'),
-      '0x' + keccak256('resolver'),
-      owner,
+  if (ownerOfResolver === owner) {
+    const tx3 = await registry.setResolver(resolverHash, resolver.address)
+    console.log(
+      `Setting resolver for resolver.pls to PublicResolver (tx: ${tx3.hash})...`,
+    )
+    await tx3.wait()
+
+    const tx4 = await resolver['setAddr(bytes32,address)'](
+      resolverHash,
+      resolver.address,
     )
     console.log(
-      `Setting owner of resolver.pls to owner on registry (tx: ${tx.hash})...`,
+      `Setting address for resolver.pls to PublicResolver (tx: ${tx4.hash})...`,
     )
-    await tx.wait()
-  } else if (ownerOfResolver != owner) {
+    await tx4.wait()
+  } else {
     console.log(
       'resolver.pls is not owned by the owner address, not setting resolver',
     )
-    return
   }
-
-  const tx3 = await registry.setResolver(resolverHash, resolver.address)
-  console.log(
-    `Setting resolver for resolver.pls to PublicResolver (tx: ${tx3.hash})...`,
-  )
-  await tx3.wait()
-
-  const tx4 = await resolver['setAddr(bytes32,address)'](
-    resolverHash,
-    resolver.address,
-  )
-  console.log(
-    `Setting address for resolver.pls to PublicResolver (tx: ${tx4.hash})...`,
-  )
-  await tx4.wait()
 
   const providerWithEns = new ethers.providers.StaticJsonRpcProvider(
     network.name === 'mainnet'
