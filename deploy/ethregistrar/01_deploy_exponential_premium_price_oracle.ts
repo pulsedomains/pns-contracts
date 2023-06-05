@@ -7,29 +7,21 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments
   const { deployer } = await getNamedAccounts()
 
-  let oracleAddr = '' // TODO: set chainlink oracle if it's supported, if not, use USDC/WPLS pair on pulsex
-  if (oracleAddr.length === 0) {
-    if (network.name === 'mainnet') {
-      await deploy('PulseXOracle', {
-        from: deployer,
-        args: [
-          '0xA1077a294dDE1B09bB078844df40758a5D0f9a27', // WPLS https://scan.pulsechain.com/address/0xA1077a294dDE1B09bB078844df40758a5D0f9a27
-          '0x6753560538ECa67617A9Ce605178F788bE7E524E', // USDC/WPLS https://scan.pulsechain.com/address/0x6753560538ECa67617A9Ce605178F788bE7E524E
-        ],
-        log: true,
-      })
-      const pulsexOracle = await ethers.getContract('PulseXOracle')
-      oracleAddr = pulsexOracle.address
-    } else {
-      await deploy('DummyOracle', {
-        from: deployer,
-        args: ['16000000000'],
-        log: true,
-      })
-      const dummyOracle = await ethers.getContract('DummyOracle')
-      oracleAddr = dummyOracle.address
-    }
+  let fetchFlexAddress = ''
+  // refer link: https://github.com/fetchoracle/telliot-core/blob/dev/src/telliot_core/data/contract_directory.json
+  if (network.name === 'mainnet') {
+    fetchFlexAddress = '' // TODO: fill FetchFlex address later
+  } else {
+    fetchFlexAddress = '0x20763435F23a727CD8748CE5d80a0b9F9c886110'
   }
+
+  await deploy('FetchFlexOracle', {
+    from: deployer,
+    args: [fetchFlexAddress],
+    log: true,
+  })
+
+  const fetchFlexOracle = await ethers.getContract('FetchFlexOracle')
 
   /**
    * 3 characters: $555/year
@@ -39,7 +31,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   await deploy('ExponentialPremiumPriceOracle', {
     from: deployer,
     args: [
-      oracleAddr,
+      fetchFlexOracle.address,
       [0, 0, '17598934550989', '5358954845256', '158548959919'],
       '100000000000000000000000000',
       21,
