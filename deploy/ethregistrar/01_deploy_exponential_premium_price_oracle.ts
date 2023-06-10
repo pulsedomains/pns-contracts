@@ -7,21 +7,21 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments
   const { deployer } = await getNamedAccounts()
 
-  let fetchFlexAddress = ''
-  // refer link: https://github.com/fetchoracle/telliot-core/blob/dev/src/telliot_core/data/contract_directory.json
+  let tellorFlexAddress = ''
+  // refer link: https://github.com/telliot-io/telliot-core/blob/dev/src/telliot_core/data/contract_directory.json
   if (network.name === 'mainnet') {
-    fetchFlexAddress = '' // TODO: fill FetchFlex address later
+    tellorFlexAddress = '0xD9157453E2668B2fc45b7A803D3FEF3642430cC0'
   } else {
-    fetchFlexAddress = '0x20763435F23a727CD8748CE5d80a0b9F9c886110'
+    tellorFlexAddress = '0xD9157453E2668B2fc45b7A803D3FEF3642430cC0'
   }
 
-  await deploy('FetchFlexOracle', {
+  await deploy('TellorFlexOracle', {
     from: deployer,
-    args: [fetchFlexAddress],
+    args: [tellorFlexAddress],
     log: true,
   })
 
-  const fetchFlexOracle = await ethers.getContract('FetchFlexOracle')
+  const tellorFlexOracle = await ethers.getContract('TellorFlexOracle')
 
   /**
    * 3 characters: $555/year
@@ -31,7 +31,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   await deploy('ExponentialPremiumPriceOracle', {
     from: deployer,
     args: [
-      fetchFlexOracle.address,
+      tellorFlexOracle.address,
       [0, 0, '17598934550989', '5358954845256', '158548959919'],
       '100000000000000000000000000',
       21,

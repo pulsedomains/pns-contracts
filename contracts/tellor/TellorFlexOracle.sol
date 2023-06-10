@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ~0.8.17;
 
-import {UsingFetch} from "./UsingFetch.sol";
+import {UsingTellor} from "./UsingTellor.sol";
 
 error PriceOutdated();
 
-contract FetchFlexOracle is UsingFetch {
-    constructor(address payable _fetchAddress) UsingFetch(_fetchAddress) {}
+contract TellorFlexOracle is UsingTellor {
+    constructor(address payable _tellorAddress) UsingTellor(_tellorAddress) {}
 
     function latestAnswer() public view returns (int256) {
         bytes memory _queryData = abi.encode(
