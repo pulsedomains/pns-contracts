@@ -29,8 +29,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const controller = await ethers.getContract('ETHRegistrarController', owner)
 
   /**
-   * TESTNET: 0x611AAa46Da3C6733329a87d1823900758B2f1aEC (zero cost fee)
-   * TESTNET: 0x34669C73E2Bd939ed0d5746d887f18Cca96C7951 (normal cost fee)
+   * TESTNET: TBD (zero cost fee)
+   * TESTNET: 0x86A41aA4218a876D641E8071Cb6A0dF139869Ae1 (normal cost fee)
    */
   const tx = await controller.changePricesFeed(priceFeeds.address)
   console.log(`Updating new prices feed on (tx: ${tx.hash})...`)
