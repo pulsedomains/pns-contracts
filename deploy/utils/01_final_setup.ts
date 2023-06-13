@@ -17,40 +17,47 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   )
   const nameWrapper = await ethers.getContract('NameWrapper', owner)
   const controller = await ethers.getContract('ETHRegistrarController', owner)
-  const resolver = await ethers.getContract('PublicResolver')
+  const publicResolver = await ethers.getContract('PublicResolver', owner)
+  const plsOwnedResolver = await ethers.getContract('OwnedResolver')
   const bulkRenewal = await ethers.getContract('StaticBulkRenewal')
 
-  const tx1 = await root.setSubnodeOwner('0x' + keccak256('pls'), owner)
-  console.log(`Temporarily setting owner of pls to owner  (tx: ${tx1.hash})...`)
-  await tx1.wait()
-
-  const tx2 = await registrar.setResolver(resolver.address)
-  console.log(
-    `Setting resolver for .pls to PublicResolver (tx: ${tx2.hash})...`,
-  )
-  await tx2.wait()
+  let tx
 
   const resolverHash = namehash('resolver.pls')
   const ownerOfResolver = await registry.owner(resolverHash)
-  if (ownerOfResolver === owner) {
-    const tx3 = await registry.setResolver(resolverHash, resolver.address)
-    console.log(
-      `Setting resolver for resolver.pls to PublicResolver (tx: ${tx3.hash})...`,
-    )
-    await tx3.wait()
+  switch (ownerOfResolver) {
+    case nameWrapper.address:
+      tx = await nameWrapper.unwrapETH2LD(
+        '0x' + keccak256('resolver'),
+        owner,
+        owner,
+      )
+      console.log(
+        `Unwrap resolver.pls and transfer to owner (tx: ${tx.hash})...`,
+      )
+      await tx.wait(2)
 
-    const tx4 = await resolver['setAddr(bytes32,address)'](
-      resolverHash,
-      resolver.address,
-    )
-    console.log(
-      `Setting address for resolver.pls to PublicResolver (tx: ${tx4.hash})...`,
-    )
-    await tx4.wait()
-  } else {
-    console.log(
-      'resolver.pls is not owned by the owner address, not setting resolver',
-    )
+    case owner:
+      tx = await registry.setResolver(resolverHash, publicResolver.address)
+      console.log(
+        `Setting resolver for resolver.pls to PublicResolver (tx: ${tx.hash})...`,
+      )
+      await tx.wait()
+
+      tx = await publicResolver['setAddr(bytes32,address)'](
+        resolverHash,
+        publicResolver.address,
+      )
+      console.log(
+        `Setting address for resolver.pls to PublicResolver (tx: ${tx.hash})...`,
+      )
+      await tx.wait()
+      break
+    default:
+      console.log(
+        'resolver.pls is not owned by the owner address, not setting resolver',
+      )
+      break
   }
 
   const providerWithEns = new ethers.providers.StaticJsonRpcProvider(
@@ -64,54 +71,62 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     },
   )
 
-  const resolverAddr = await providerWithEns.getResolver('pls')
-  if (resolverAddr === null) {
-    console.log('No resolver set for .pls not setting interface')
-    return
+  const resolver = await providerWithEns.getResolver('pls')
+  if (resolver === null) {
+    tx = await registrar.setResolver(plsOwnedResolver.address)
+    await tx.wait()
+    console.log(`No resolver set for .pls; not setting interfaces.`)
+    return true
   }
 
+  const resolverContract = await ethers.getContractAt(
+    'PublicResolver',
+    resolver.address,
+  )
+
+  tx = await root.setSubnodeOwner('0x' + keccak256('pls'), owner)
+  console.log(`Temporarily setting owner of pls to owner  (tx: ${tx.hash})...`)
+  await tx.wait()
+
   const iNameWrapper = await computeInterfaceId(deployments, 'NameWrapper')
-  const tx5 = await resolver.setInterface(
+  tx = await resolverContract.setInterface(
     namehash('pls'),
     iNameWrapper,
     nameWrapper.address,
   )
   console.log(
-    `Setting NameWrapper interface ID ${iNameWrapper} on .pls resolver (tx: ${tx5.hash})...`,
+    `Setting NameWrapper interface ID ${iNameWrapper} on .pls resolver (tx: ${tx.hash})...`,
   )
-  await tx5.wait()
+  await tx.wait()
 
   const iRegistrarController = await computeInterfaceId(
     deployments,
     'IETHRegistrarController',
   )
-  const tx6 = await resolver.setInterface(
+  tx = await resolverContract.setInterface(
     namehash('pls'),
     iRegistrarController,
     controller.address,
   )
   console.log(
-    `Setting IETHRegistrarController interface ID ${iRegistrarController} on .pls resolver (tx: ${tx6.hash})...`,
+    `Setting IETHRegistrarController interface ID ${iRegistrarController} on .pls resolver (tx: ${tx.hash})...`,
   )
-  await tx6.wait()
+  await tx.wait()
 
   const iBulkRenewal = await computeInterfaceId(deployments, 'IBulkRenewal')
-  const tx7 = await resolver.setInterface(
+  tx = await resolverContract.setInterface(
     namehash('pls'),
     iBulkRenewal,
     bulkRenewal.address,
   )
   console.log(
-    `Setting BulkRenewal interface ID ${iBulkRenewal} on .pls resolver (tx: ${tx7.hash})...`,
+    `Setting BulkRenewal interface ID ${iBulkRenewal} on .pls resolver (tx: ${tx.hash})...`,
   )
-  await tx7.wait()
+  await tx.wait()
 
-  const tx8 = await root.setSubnodeOwner(
-    '0x' + keccak256('pls'),
-    registrar.address,
-  )
-  console.log(`Set owner of pls back to registrar (tx: ${tx8.hash})...`)
-  await tx8.wait()
+  tx = await root.setSubnodeOwner('0x' + keccak256('pls'), registrar.address)
+  console.log(`Set owner of pls back to registrar (tx: ${tx.hash})...`)
+  await tx.wait()
 
   return true
 }
@@ -124,6 +139,8 @@ func.dependencies = [
   'NameWrapper',
   'ETHRegistrarController',
   'PublicResolver',
+  'OwnedResolver',
+  'StaticBulkRenewal',
 ]
 
 export default func
