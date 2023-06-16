@@ -84,9 +84,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     resolver.address,
   )
 
-  tx = await root.setSubnodeOwner('0x' + keccak256('pls'), owner)
-  console.log(`Temporarily setting owner of pls to owner  (tx: ${tx.hash})...`)
-  await tx.wait()
+  // tx = await root.setSubnodeOwner('0x' + keccak256('pls'), owner)
+  // console.log(`Temporarily setting owner of pls to owner  (tx: ${tx.hash})...`)
+  // await tx.wait()
 
   const iNameWrapper = await computeInterfaceId(deployments, 'NameWrapper')
   tx = await resolverContract.setInterface(
@@ -124,9 +124,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   )
   await tx.wait()
 
-  tx = await root.setSubnodeOwner('0x' + keccak256('pls'), registrar.address)
-  console.log(`Set owner of pls back to registrar (tx: ${tx.hash})...`)
-  await tx.wait()
+  // tx = await root.setSubnodeOwner('0x' + keccak256('pls'), registrar.address)
+  // console.log(`Set owner of pls back to registrar (tx: ${tx.hash})...`)
+  // await tx.wait()
 
   return true
 }
