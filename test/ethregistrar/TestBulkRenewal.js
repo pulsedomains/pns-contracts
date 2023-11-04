@@ -104,7 +104,7 @@ contract('BulkRenewal', function (accounts) {
       resolver.address,
       0,
     )
-    await resolver.setInterface(ETH_NAMEHASH, '0x612e8c09', controller.address)
+    await resolver.setInterface(ETH_NAMEHASH, '0xeebf8169', controller.address)
     await ens.setOwner(ETH_NAMEHASH, baseRegistrar.address)
 
     // Register some names
@@ -114,12 +114,9 @@ contract('BulkRenewal', function (accounts) {
   })
 
   it('should return the cost of a bulk renewal', async () => {
-    const rentPrice1 = await controller.rentPrice('test1', 86400)
-    console.log('rentPrice1', rentPrice1)
-    const rentPrice2 = await controller.rentPrice('test2', 86400)
-    console.log('rentPrice2', rentPrice2)
+    await controller.rentPrice('test1', 86400)
+    await controller.rentPrice('test2', 86400)
     const total = await bulkRenewal.rentPrice(['test1', 'test2'], 86400)
-    console.log('total', total)
     assert.equal(total, 86400 * 2)
   })
 

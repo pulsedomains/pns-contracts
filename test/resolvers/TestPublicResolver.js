@@ -737,56 +737,56 @@ contract('PublicResolver', function (accounts) {
   describe('dns', async () => {
     const basicSetDNSRecords = async () => {
       // a.pls. 3600 IN A 1.2.3.4
-      const arec = '016103657468000001000100000e10000401020304'
+      const arec = '016103706c73000001000100000e10000401020304'
       // b.pls. 3600 IN A 2.3.4.5
-      const b1rec = '016203657468000001000100000e10000402030405'
+      const b1rec = '016203706c73000001000100000e10000402030405'
       // b.pls. 3600 IN A 3.4.5.6
-      const b2rec = '016203657468000001000100000e10000403040506'
+      const b2rec = '016203706c73000001000100000e10000403040506'
       // pls. 86400 IN SOA ns1.plsdns.xyz. hostmaster.test.pls. 2018061501 15620 1800 1814400 14400
       const soarec =
-        '03657468000006000100015180003a036e733106657468646e730378797a000a686f73746d6173746572057465737431036574680078492cbd00003d0400000708001baf8000003840'
+        '03706c73000006000100015180003a036e733106706c73646e730378797a000a686f73746d617374657205746573743103706c730078492cbd00003d0400000708001baf8000003840'
       const rec = '0x' + arec + b1rec + b2rec + soarec
 
       await resolver.setDNSRecords(node, rec, { from: accounts[0] })
 
       assert.equal(
         await resolver.dnsRecord(node, sha3(dnsName('a.pls.')), 1),
-        '0x016103657468000001000100000e10000401020304',
+        '0x016103706c73000001000100000e10000401020304',
       )
       assert.equal(
         await resolver.dnsRecord(node, sha3(dnsName('b.pls.')), 1),
-        '0x016203657468000001000100000e10000402030405016203657468000001000100000e10000403040506',
+        '0x016203706c73000001000100000e10000402030405016203706c73000001000100000e10000403040506',
       )
       assert.equal(
         await resolver.dnsRecord(node, sha3(dnsName('pls.')), 6),
-        '0x03657468000006000100015180003a036e733106657468646e730378797a000a686f73746d6173746572057465737431036574680078492cbd00003d0400000708001baf8000003840',
+        '0x03706c73000006000100015180003a036e733106706c73646e730378797a000a686f73746d617374657205746573743103706c730078492cbd00003d0400000708001baf8000003840',
       )
     }
     it('permits setting name by owner', basicSetDNSRecords)
 
     it('should update existing records', async () => {
       // a.pls. 3600 IN A 4.5.6.7
-      const arec = '016103657468000001000100000e10000404050607'
+      const arec = '016103706c73000001000100000e10000404050607'
       // pls. 86400 IN SOA ns1.plsdns.xyz. hostmaster.test.pls. 2018061502 15620 1800 1814400 14400
       const soarec =
-        '03657468000006000100015180003a036e733106657468646e730378797a000a686f73746d6173746572057465737431036574680078492cbe00003d0400000708001baf8000003840'
+        '03706c73000006000100015180003a036e733106706c73646e730378797a000a686f73746d617374657205746573743103706c730078492cbe00003d0400000708001baf8000003840'
       const rec = '0x' + arec + soarec
 
       await resolver.setDNSRecords(node, rec, { from: accounts[0] })
 
       assert.equal(
         await resolver.dnsRecord(node, sha3(dnsName('a.pls.')), 1),
-        '0x016103657468000001000100000e10000404050607',
+        '0x016103706c73000001000100000e10000404050607',
       )
       assert.equal(
         await resolver.dnsRecord(node, sha3(dnsName('pls.')), 6),
-        '0x03657468000006000100015180003a036e733106657468646e730378797a000a686f73746d6173746572057465737431036574680078492cbe00003d0400000708001baf8000003840',
+        '0x03706c73000006000100015180003a036e733106706c73646e730378797a000a686f73746d617374657205746573743103706c730078492cbe00003d0400000708001baf8000003840',
       )
     })
 
     it('should keep track of entries', async () => {
       // c.pls. 3600 IN A 1.2.3.4
-      const crec = '016303657468000001000100000e10000401020304'
+      const crec = '016303706c73000001000100000e10000401020304'
       const rec = '0x' + crec
 
       await resolver.setDNSRecords(node, rec, { from: accounts[0] })
@@ -806,7 +806,7 @@ contract('PublicResolver', function (accounts) {
       assert.equal(hasEntries, true)
 
       // c.pls. 3600 IN A
-      const crec2 = '016303657468000001000100000e100000'
+      const crec2 = '016303706c73000001000100000e100000'
       const rec2 = '0x' + crec2
 
       await resolver.setDNSRecords(node, rec2, { from: accounts[0] })
@@ -818,20 +818,20 @@ contract('PublicResolver', function (accounts) {
 
     it('should handle single-record updates', async () => {
       // e.pls. 3600 IN A 1.2.3.4
-      const erec = '016503657468000001000100000e10000401020304'
+      const erec = '016503706c73000001000100000e10000401020304'
       const rec = '0x' + erec
 
       await resolver.setDNSRecords(node, rec, { from: accounts[0] })
 
       assert.equal(
         await resolver.dnsRecord(node, sha3(dnsName('e.pls.')), 1),
-        '0x016503657468000001000100000e10000401020304',
+        '0x016503706c73000001000100000e10000401020304',
       )
     })
 
     it('forbids setting DNS records by non-owners', async () => {
       // f.pls. 3600 IN A 1.2.3.4
-      const frec = '016603657468000001000100000e10000401020304'
+      const frec = '016603706c73000001000100000e10000401020304'
       const rec = '0x' + frec
       await exceptions.expectFailure(
         resolver.setDNSRecords(node, rec, { from: accounts[1] }),

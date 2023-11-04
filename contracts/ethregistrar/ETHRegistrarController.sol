@@ -207,7 +207,7 @@ contract ETHRegistrarController is
         }
 
         if (params.reverseRecord) {
-            _setReverseRecord(params.name, params.resolver, params.owner);
+            _setReverseRecord(params.name, params.resolver, msg.sender);
         }
 
         emit NameRegistered(
@@ -319,7 +319,7 @@ contract ETHRegistrarController is
         address owner
     ) internal {
         reverseRegistrar.setNameForAddr(
-            owner,
+            msg.sender,
             owner,
             resolver,
             string.concat(name, ".pls")
