@@ -10,7 +10,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { owner } = await getNamedAccounts()
 
   const registry = await ethers.getContract('ENSRegistry', owner)
-  const root = await ethers.getContract('Root', owner)
   const registrar = await ethers.getContract(
     'BaseRegistrarImplementation',
     owner,
@@ -51,7 +50,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       console.log(
         `Setting address for resolver.pls to PublicResolver (tx: ${tx.hash})...`,
       )
-      await tx.wait()
+      await tx.wait(6)
       break
     default:
       console.log(
@@ -84,11 +83,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     resolver.address,
   )
 
-  // tx = await root.setSubnodeOwner('0x' + keccak256('pls'), owner)
-  // console.log(`Temporarily setting owner of pls to owner  (tx: ${tx.hash})...`)
-  // await tx.wait()
-
-  const iNameWrapper = await computeInterfaceId(deployments, 'NameWrapper')
+  const iNameWrapper = await computeInterfaceId(deployments, 'INameWrapper')
   tx = await resolverContract.setInterface(
     namehash('pls'),
     iNameWrapper,
@@ -123,10 +118,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     `Setting BulkRenewal interface ID ${iBulkRenewal} on .pls resolver (tx: ${tx.hash})...`,
   )
   await tx.wait()
-
-  // tx = await root.setSubnodeOwner('0x' + keccak256('pls'), registrar.address)
-  // console.log(`Set owner of pls back to registrar (tx: ${tx.hash})...`)
-  // await tx.wait()
 
   return true
 }
