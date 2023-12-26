@@ -7,7 +7,14 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { owner } = await getNamedAccounts()
 
   const controller = await ethers.getContract('ETHRegistrarController', owner)
-  const tx = await controller.transferOwnership(
+  let tx = await controller.transferOwnership(
+    '0xBcf8996B20E92304206cE8643E273Fef5E22f6Ef',
+  )
+  console.log(`Transferring owner (tx: ${tx.hash})`)
+  await tx.wait()
+
+  const nameWrapper = await ethers.getContract('NameWrapper', owner)
+  tx = await nameWrapper.transferOwnership(
     '0xBcf8996B20E92304206cE8643E273Fef5E22f6Ef',
   )
   console.log(`Transferring owner (tx: ${tx.hash})`)
@@ -16,6 +23,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
 func.id = 'transfer-ownership'
 func.tags = ['TransferOwnership']
-func.dependencies = ['ETHRegistrarController']
+func.dependencies = ['ETHRegistrarController', 'NameWrapper']
 
 export default func

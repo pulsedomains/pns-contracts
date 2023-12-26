@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-interface ITellor {
+interface IFetch {
     //Controller
     function addresses(bytes32) external view returns (address);
 
@@ -349,7 +349,7 @@ interface ITellor {
 
     function rescueFailedUpdate() external;
 
-    //Tellor 360
+    //Fetch 360
     function addStakingRewards(uint256 _amount) external;
 
     function _sliceUint(
@@ -468,7 +468,7 @@ interface ITellor {
         uint256 _amount
     ) external;
 
-    function tellor() external view returns (address);
+    function fetch() external view returns (address);
 
     function tip(
         bytes32 _queryId,

@@ -1,26 +1,26 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./ITellor.sol";
+import "./IFetch.sol";
 import "./IERC2362.sol";
 import "./IMappingContract.sol";
 
 /**
- @author Tellor Inc
- @title UsingTellor
- @dev This contract helps smart contracts read data from Tellor
+ @author Fetch Inc
+ @title UsingFetch
+ @dev This contract helps smart contracts read data from Fetch
  */
-contract UsingTellor is IERC2362 {
-    ITellor public tellor;
+contract UsingFetch is IERC2362 {
+    IFetch public fetch;
     IMappingContract public idMappingContract;
 
     /*Constructor*/
     /**
      * @dev the constructor sets the oracle address in storage
-     * @param _tellor is the Tellor Oracle address
+     * @param _fetch is the Fetch Oracle address
      */
-    constructor(address payable _tellor) {
-        tellor = ITellor(_tellor);
+    constructor(address payable _fetch) {
+        fetch = IFetch(_fetch);
     }
 
     /*Getters*/
@@ -58,7 +58,7 @@ contract UsingTellor is IERC2362 {
         bytes32 _queryId,
         uint256 _timestamp
     ) public view returns (bytes memory _value, uint256 _timestampRetrieved) {
-        (, _value, _timestampRetrieved) = tellor.getDataBefore(
+        (, _value, _timestampRetrieved) = fetch.getDataBefore(
             _queryId,
             _timestamp
         );
@@ -166,7 +166,7 @@ contract UsingTellor is IERC2362 {
         bytes32 _queryId,
         uint256 _timestamp
     ) public view returns (bool _found, uint256 _index) {
-        return tellor.getIndexForDataBefore(_queryId, _timestamp);
+        return fetch.getIndexForDataBefore(_queryId, _timestamp);
     }
 
     /**
@@ -238,7 +238,7 @@ contract UsingTellor is IERC2362 {
     function getNewValueCountbyQueryId(
         bytes32 _queryId
     ) public view returns (uint256) {
-        return tellor.getNewValueCountbyQueryId(_queryId);
+        return fetch.getNewValueCountbyQueryId(_queryId);
     }
 
     /**
@@ -251,7 +251,7 @@ contract UsingTellor is IERC2362 {
         bytes32 _queryId,
         uint256 _timestamp
     ) public view returns (address) {
-        return tellor.getReporterByTimestamp(_queryId, _timestamp);
+        return fetch.getReporterByTimestamp(_queryId, _timestamp);
     }
 
     /**
@@ -264,7 +264,7 @@ contract UsingTellor is IERC2362 {
         bytes32 _queryId,
         uint256 _index
     ) public view returns (uint256) {
-        return tellor.getTimestampbyQueryIdandIndex(_queryId, _index);
+        return fetch.getTimestampbyQueryIdandIndex(_queryId, _index);
     }
 
     /**
@@ -277,7 +277,7 @@ contract UsingTellor is IERC2362 {
         bytes32 _queryId,
         uint256 _timestamp
     ) public view returns (bool) {
-        return tellor.isInDispute(_queryId, _timestamp);
+        return fetch.isInDispute(_queryId, _timestamp);
     }
 
     /**
@@ -290,7 +290,7 @@ contract UsingTellor is IERC2362 {
         bytes32 _queryId,
         uint256 _timestamp
     ) public view returns (bytes memory) {
-        return tellor.retrieveData(_queryId, _timestamp);
+        return fetch.retrieveData(_queryId, _timestamp);
     }
 
     /**
@@ -317,7 +317,7 @@ contract UsingTellor is IERC2362 {
         override
         returns (int256 _value, uint256 _timestamp, uint256 _statusCode)
     {
-        bytes32 _queryId = idMappingContract.getTellorID(_id);
+        bytes32 _queryId = idMappingContract.getFetchID(_id);
         bytes memory _valueBytes;
         (_valueBytes, _timestamp) = getDataBefore(
             _queryId,
@@ -343,37 +343,5 @@ contract UsingTellor is IERC2362 {
         for (uint256 _i = 0; _i < _b.length; _i++) {
             _number = _number * 256 + uint8(_b[_i]);
         }
-    }
-
-    /**
-     * @dev Allows the user to get the latest value for the queryId specified
-     * @param _queryId is the id to look up the value for
-     * @return _ifRetrieve bool true if non-zero value successfully retrieved
-     * @return _value the value retrieved
-     * @return _timestampRetrieved the retrieved value's timestamp
-     */
-    function getCurrentValue(
-        bytes32 _queryId
-    )
-        public
-        view
-        returns (
-            bool _ifRetrieve,
-            bytes memory _value,
-            uint256 _timestampRetrieved
-        )
-    {
-        uint256 _count = tellor.getNewValueCountbyQueryId(_queryId);
-        if (_count == 0) {
-            return (false, bytes(""), 0);
-        }
-        uint256 _time = tellor.getTimestampbyQueryIdandIndex(
-            _queryId,
-            _count - 1
-        );
-        _value = tellor.retrieveData(_queryId, _time);
-        if (keccak256(_value) != keccak256(bytes("")))
-            return (true, _value, _time);
-        return (false, bytes(""), _time);
     }
 }

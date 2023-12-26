@@ -6,7 +6,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { getNamedAccounts } = hre
   const { deployer, owner } = await getNamedAccounts()
 
-  // const tellorFlexOracle = await ethers.getContract('TellorFlexOracle')
+  // const fetchFlexOracle = await ethers.getContract('FetchFlexOracle')
 
   /**
    * 3 characters: $555/year
@@ -18,7 +18,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   //   deployer,
   // )
   // const priceFeeds = await ExponentialPremiumPriceOracle.deploy(
-  //   tellorFlexOracle.address,
+  //   fetchFlexOracle.address,
   //   // [0, 0, '17598934550989', '5358954845256', '158548959919'],
   //   [0, 0, 0, 0, 0],
   //   '100000000000000000000000000',
