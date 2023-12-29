@@ -74,6 +74,7 @@ func.dependencies = [
   'ExponentialPremiumPriceOracle',
   'ReverseRegistrar',
   'NameWrapper',
+  'OwnedResolver',
 ]
 
 export default func
