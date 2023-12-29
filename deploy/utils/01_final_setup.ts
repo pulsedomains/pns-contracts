@@ -24,6 +24,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const resolverHash = namehash('resolver.pls')
   const ownerOfResolver = await registry.owner(resolverHash)
+  console.log('ownerOfResolver', ownerOfResolver)
   switch (ownerOfResolver) {
     case nameWrapper.address:
       tx = await nameWrapper.unwrapETH2LD(
@@ -71,6 +72,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   )
 
   const resolver = await providerWithEns.getResolver('pls')
+  console.log('resolver', resolver)
   if (resolver === null) {
     tx = await registrar.setResolver(plsOwnedResolver.address)
     await tx.wait()
