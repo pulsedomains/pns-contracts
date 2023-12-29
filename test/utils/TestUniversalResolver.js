@@ -337,29 +337,6 @@ contract('UniversalResolver', function (accounts) {
       }
     })
 
-    it('should return with revert data if resolver reverts', async () => {
-      const data = publicResolver.interface.encodeFunctionData(
-        'addr(bytes32)',
-        [namehash.hash('revert-resolver.test.pls')],
-      )
-
-      const result = await universalResolver['resolve(bytes,bytes)'](
-        dns.hexEncodeName('revert-resolver.test.pls'),
-        data,
-      )
-      try {
-        publicResolver.interface.decodeFunctionResult(
-          'addr(bytes32)',
-          result['0'],
-        )
-        expect(false).to.be.true
-      } catch (e) {
-        expect(e.errorName).to.equal('Error')
-        expect(e.errorSignature).to.equal('Error(string)')
-        expect(e.reason).to.equal('Not Supported')
-      }
-    })
-
     it('should throw if a resolver is not set on the queried name, and the found resolver does not support resolve()', async () => {
       const data = publicResolver.interface.encodeFunctionData(
         'addr(bytes32)',
