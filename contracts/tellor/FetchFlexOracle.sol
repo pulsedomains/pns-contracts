@@ -4,6 +4,7 @@ pragma solidity ~0.8.17;
 import {UsingFetch} from "./UsingFetch.sol";
 
 error PriceOutdated();
+error ZeroValue();
 
 contract FetchFlexOracle is UsingFetch {
     constructor(address payable _fetchAddress) UsingFetch(_fetchAddress) {}
@@ -17,13 +18,19 @@ contract FetchFlexOracle is UsingFetch {
 
         (bytes memory _value, uint256 _timestampRetrieved) = getDataBefore(
             _queryId,
-            block.timestamp - 10 minutes
+            block.timestamp - 20 minutes
         );
+        if (_timestampRetrieved == 0) {
+            revert ZeroValue();
+        }
         if (block.timestamp - _timestampRetrieved > 24 hours) {
             revert PriceOutdated();
         }
 
         uint256 price = abi.decode(_value, (uint256));
+        if (price == 0) {
+            revert ZeroValue();
+        }
         // convert value to chainlink oracle format
         return int256((price * 1e8) / 1e18);
     }
