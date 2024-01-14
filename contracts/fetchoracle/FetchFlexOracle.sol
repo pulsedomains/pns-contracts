@@ -28,10 +28,12 @@ contract FetchFlexOracle is UsingFetch {
         }
 
         uint256 price = abi.decode(_value, (uint256));
-        if (price == 0) {
+        // convert value to chainlink oracle format
+        int256 oraclePrice = int256((price * 1e8) / 1e18);
+        if (oraclePrice == 0) {
             revert ZeroValue();
         }
-        // convert value to chainlink oracle format
-        return int256((price * 1e8) / 1e18);
+
+        return oraclePrice;
     }
 }
