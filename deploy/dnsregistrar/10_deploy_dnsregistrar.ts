@@ -18,7 +18,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     log: true,
   })
 
-  const tx = await deploy('DNSRegistrar', {
+  const dnsRegistrar = await deploy('DNSRegistrar', {
     from: deployer,
     args: [
       '0x0000000000000000000000000000000000000000',
@@ -29,13 +29,23 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     ],
     log: true,
   })
-  console.log(`Deployed DNSRegistrar to ${tx.address}`)
+  console.log(`Deployed DNSRegistrar to ${dnsRegistrar.address}`)
 
   const tx2 = await root
     .connect(await ethers.getSigner(owner))
-    .setController(tx.address, true)
-  console.log(`Set DNSRegistrar as controller of Root (${tx2.hash})`)
+    .setController(dnsRegistrar.address, true)
+  console.log(`Set DNSRegistrar as controller of Root (${tx2.hash})...`)
   await tx2.wait()
+
+  const publicResolver = await ethers.getContract('PublicResolver')
+  const tx3 = await publicResolver.setApprovalForAll(
+    publicResolver.address,
+    true,
+  )
+  console.log(
+    `PublicResolver setApprovalForAll to DNSRegistrar (${tx3.hash})...`,
+  )
+  await tx3.wait()
 
   return true
 }

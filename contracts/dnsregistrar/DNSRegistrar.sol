@@ -100,7 +100,7 @@ contract DNSRegistrar is IDNSRegistrar, IERC165 {
     function proveAndClaimWithResolver(
         bytes memory name,
         DNSSEC.RRSetWithSignature[] memory input,
-        address resolver,
+        address _resolver,
         address addr
     ) public override {
         (bytes32 rootNode, bytes32 labelHash, address owner) = _claim(
@@ -110,14 +110,14 @@ contract DNSRegistrar is IDNSRegistrar, IERC165 {
         if (msg.sender != owner) {
             revert PermissionDenied(msg.sender, owner);
         }
-        ens.setSubnodeRecord(rootNode, labelHash, owner, resolver, 0);
+        ens.setSubnodeRecord(rootNode, labelHash, owner, _resolver, 0);
         if (addr != address(0)) {
-            if (resolver == address(0)) {
+            if (_resolver == address(0)) {
                 revert PreconditionNotMet();
             }
             bytes32 node = keccak256(abi.encodePacked(rootNode, labelHash));
             // Set the resolver record
-            AddrResolver(resolver).setAddr(node, addr);
+            AddrResolver(_resolver).setAddr(node, addr);
         }
     }
 

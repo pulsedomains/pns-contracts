@@ -396,7 +396,7 @@ contract('UniversalResolver', function (accounts) {
       )
       const data = publicResolver.interface.encodeFunctionData(
         'addr(bytes32,uint256)',
-        [namehash.hash('test.pls'), 60],
+        [namehash.hash('test.pls'), 1028],
       )
       try {
         await universalResolver['resolve(bytes,bytes)'](
