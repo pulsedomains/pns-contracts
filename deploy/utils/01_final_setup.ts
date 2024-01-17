@@ -62,7 +62,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const providerWithEns = new ethers.providers.StaticJsonRpcProvider(
     network.name === 'mainnet'
-      ? 'https://rpc.mainnet.pulsechain.com'
+      ? 'https://rpc.pulsechain.com'
       : 'https://rpc.v4.testnet.pulsechain.com',
     {
       chainId: network.name === 'mainnet' ? 369 : 943,
@@ -75,14 +75,13 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   console.log('resolver', resolver)
   if (resolver === null) {
     tx = await registrar.setResolver(plsOwnedResolver.address)
+    console.log(`Registrar set resolver to OwnedResolver (tx: ${tx.hash})...`)
     await tx.wait()
-    console.log(`No resolver set for .pls; not setting interfaces.`)
-    return true
   }
 
   const resolverContract = await ethers.getContractAt(
     'PublicResolver',
-    resolver.address,
+    resolver?.address || plsOwnedResolver.address,
   )
 
   const iNameWrapper = await computeInterfaceId(deployments, 'INameWrapper')

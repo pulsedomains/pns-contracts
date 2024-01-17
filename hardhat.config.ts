@@ -50,7 +50,7 @@ const config: HardhatUserConfig = {
       tags: ['test', 'use_root'],
     },
     mainnet: {
-      url: 'https://rpc.mainnet.pulsechain.com',
+      url: 'https://rpc.pulsechain.com',
       tags: ['use_root'],
       chainId: 369,
       accounts: real_accounts,
@@ -71,16 +71,6 @@ const config: HardhatUserConfig = {
           optimizer: {
             enabled: true,
             runs: 1200,
-          },
-        },
-      },
-      // for DummyOldResolver contract
-      {
-        version: '0.4.11',
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 200,
           },
         },
       },

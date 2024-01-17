@@ -37,16 +37,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   console.log(`Set DNSRegistrar as controller of Root (${tx2.hash})...`)
   await tx2.wait()
 
-  const publicResolver = await ethers.getContract('PublicResolver')
-  const tx3 = await publicResolver.setApprovalForAll(
-    publicResolver.address,
-    true,
-  )
-  console.log(
-    `PublicResolver setApprovalForAll to DNSRegistrar (${tx3.hash})...`,
-  )
-  await tx3.wait()
-
   return true
 }
 

@@ -174,20 +174,20 @@ Smart contract development tends to take a long release cycle. To prevent unnece
 ### Deploy
 
 ```bash
-./node_modules/.bin/hardhat deploy --network testnet --tags ENSRegistry
-./node_modules/.bin/hardhat deploy --network testnet --tags Root
-./node_modules/.bin/hardhat deploy --network testnet --tags StaticMetadataService
-./node_modules/.bin/hardhat deploy --network testnet --tags BaseRegistrarImplementation
-./node_modules/.bin/hardhat deploy --network testnet --tags ReverseRegistrar
-./node_modules/.bin/hardhat deploy --network testnet --tags UniversalResolver
-./node_modules/.bin/hardhat deploy --network testnet --tags ExponentialPremiumPriceOracle
-./node_modules/.bin/hardhat deploy --network testnet --tags OwnedResolver
-./node_modules/.bin/hardhat deploy --network testnet --tags NameWrapper
-./node_modules/.bin/hardhat deploy --network testnet --tags ETHRegistrarController
-./node_modules/.bin/hardhat deploy --network testnet --tags PublicResolver
-./node_modules/.bin/hardhat deploy --network testnet --tags StaticBulkRenewal
-./node_modules/.bin/hardhat deploy --network testnet --tags DNSSecOracle
-./node_modules/.bin/hardhat deploy --network testnet --tags OffchainDNSResolver
-./node_modules/.bin/hardhat deploy --network testnet --tags DNSRegistrar
-./node_modules/.bin/hardhat deploy --network testnet --tags FinalSetup
+./node_modules/.bin/hardhat deploy --network mainnet --tags ENSRegistry
+./node_modules/.bin/hardhat deploy --network mainnet --tags Root
+./node_modules/.bin/hardhat deploy --network mainnet --tags StaticMetadataService
+./node_modules/.bin/hardhat deploy --network mainnet --tags BaseRegistrarImplementation
+./node_modules/.bin/hardhat deploy --network mainnet --tags ReverseRegistrar
+./node_modules/.bin/hardhat deploy --network mainnet --tags UniversalResolver
+./node_modules/.bin/hardhat deploy --network mainnet --tags ExponentialPremiumPriceOracle
+./node_modules/.bin/hardhat deploy --network mainnet --tags OwnedResolver
+./node_modules/.bin/hardhat deploy --network mainnet --tags NameWrapper
+./node_modules/.bin/hardhat deploy --network mainnet --tags ETHRegistrarController
+./node_modules/.bin/hardhat deploy --network mainnet --tags PublicResolver
+./node_modules/.bin/hardhat deploy --network mainnet --tags StaticBulkRenewal
+./node_modules/.bin/hardhat deploy --network mainnet --tags DNSSecOracle
+./node_modules/.bin/hardhat deploy --network mainnet --tags OffchainDNSResolver
+./node_modules/.bin/hardhat deploy --network mainnet --tags DNSRegistrar
+./node_modules/.bin/hardhat deploy --network mainnet --tags FinalSetup
 ```

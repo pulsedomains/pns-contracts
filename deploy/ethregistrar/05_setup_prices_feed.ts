@@ -33,9 +33,13 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
    * TESTNET: 0x50C624fDf3E1B95D25F239B4c5DFE52fe2D4A950 (zero cost fee)
    * TESTNET: 0x3C91683AeBD680ea71A967e44391f22EdF8b2C0e (normal cost fee)
    */
+  /**
+   * MAINNET: 0x3be3E88814fF6e6BF98A6Af058a723e71Ec91D24 (zero cost fee)
+   * MAINNET: 0x3E3Bc047AeAa3FaFeAE96B2588A447e1FA70C818 (normal cost fee)
+   */
   const tx = await controller.changePricesFeed(
     // priceFeeds.address,
-    '0x3C91683AeBD680ea71A967e44391f22EdF8b2C0e',
+    '0x3E3Bc047AeAa3FaFeAE96B2588A447e1FA70C818',
   )
   console.log(`Updating new prices feed on (tx: ${tx.hash})...`)
   await tx.wait()

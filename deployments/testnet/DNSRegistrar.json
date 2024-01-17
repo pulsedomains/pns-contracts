@@ -266,6 +266,11 @@
           "type": "tuple[]"
         },
         {
+          "internalType": "bytes",
+          "name": "proof",
+          "type": "bytes"
+        },
+        {
           "internalType": "address",
           "name": "_resolver",
           "type": "address"

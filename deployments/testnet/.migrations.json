@@ -15,5 +15,6 @@
   "dnssec-digests": 1705328992,
   "dnssec-oracle": 1705329042,
   "offchain-dns-resolver": 1705329091,
-  "dns-registrar": 1705329133
+  "dns-registrar": 1705329133,
+  "final-setup": 1705335820
 }
