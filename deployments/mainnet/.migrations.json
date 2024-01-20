@@ -1,4 +1,20 @@
 {
   "pns": 1705764788,
-  "root": 1705764958
+  "root": 1705764958,
+  "metadata": 1705765041,
+  "registrar": 1705765128,
+  "reverse-registrar": 1705765209,
+  "universal-resolver": 1705765234,
+  "price-oracle": 1705765302,
+  "owned-resolver": 1705765334,
+  "name-wrapper": 1705765392,
+  "eth-registrar": 1705765480,
+  "resolver": 1705765539,
+  "static-bulk-renewal": 1705765570,
+  "dnssec-algorithms": 1705765618,
+  "dnssec-digests": 1705765649,
+  "dnssec-oracle": 1705765700,
+  "offchain-dns-resolver": 1705765740,
+  "dns-registrar": 1705765820,
+  "final-setup": 1705770710
 }
