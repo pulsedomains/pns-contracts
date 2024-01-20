@@ -1,8 +1,8 @@
-const ENS = artifacts.require('./registry/ENSRegistry.sol')
+const PNS = artifacts.require('./registry/PNSRegistry.sol')
 const PublicResolver = artifacts.require('PublicResolver.sol')
 const NameWrapper = artifacts.require('DummyNameWrapper.sol')
 const { deploy } = require('../test-utils/contracts')
-const { labelhash } = require('../test-utils/ens')
+const { labelhash } = require('../test-utils/pns')
 const {
   EMPTY_BYTES32: ROOT_NODE,
   EMPTY_ADDRESS,
@@ -16,7 +16,7 @@ const { exceptions } = require('../test-utils')
 
 contract('PublicResolver', function (accounts) {
   let node
-  let ens, resolver, nameWrapper
+  let pns, resolver, nameWrapper
   let account
   let signers
   let result
@@ -25,22 +25,22 @@ contract('PublicResolver', function (accounts) {
     signers = await ethers.getSigners()
     account = await signers[0].getAddress()
     node = namehash.hash('pls')
-    ens = await ENS.new()
+    pns = await PNS.new()
     nameWrapper = await NameWrapper.new()
 
     //setup reverse registrar
 
-    const ReverseRegistrar = await deploy('ReverseRegistrar', ens.address)
+    const ReverseRegistrar = await deploy('ReverseRegistrar', pns.address)
 
-    await ens.setSubnodeOwner(ROOT_NODE, labelhash('reverse'), account)
-    await ens.setSubnodeOwner(
+    await pns.setSubnodeOwner(ROOT_NODE, labelhash('reverse'), account)
+    await pns.setSubnodeOwner(
       namehash.hash('reverse'),
       labelhash('addr'),
       ReverseRegistrar.address,
     )
 
     resolver = await PublicResolver.new(
-      ens.address,
+      pns.address,
       nameWrapper.address,
       accounts[9], // trusted contract
       ReverseRegistrar.address, //ReverseRegistrar.address,
@@ -48,7 +48,7 @@ contract('PublicResolver', function (accounts) {
 
     await ReverseRegistrar.setDefaultResolver(resolver.address)
 
-    await ens.setSubnodeOwner('0x0', sha3('pls'), accounts[0], {
+    await pns.setSubnodeOwner('0x0', sha3('pls'), accounts[0], {
       from: accounts[0],
     })
   })
@@ -1064,7 +1064,7 @@ contract('PublicResolver', function (accounts) {
 
     it('returns 0 on fallback when target contract does not support implementsInterface', async () => {
       // Set addr to the PNS registry, which doesn't implement supportsInterface.
-      await resolver.methods['setAddr(bytes32,address)'](node, ens.address, {
+      await resolver.methods['setAddr(bytes32,address)'](node, pns.address, {
         from: accounts[0],
       })
       // Check the ID for `supportsInterface(bytes4)`
@@ -1112,7 +1112,7 @@ contract('PublicResolver', function (accounts) {
         from: accounts[0],
       })
       assert.equal(
-        await resolver.isApprovedForAll(await ens.owner(node), accounts[1]),
+        await resolver.isApprovedForAll(await pns.owner(node), accounts[1]),
         true,
       )
       await resolver.methods['setAddr(bytes32,address)'](node, accounts[1], {
@@ -1149,7 +1149,7 @@ contract('PublicResolver', function (accounts) {
       await resolver.setApprovalForAll(accounts[2], true, {
         from: accounts[1],
       })
-      await ens.setOwner(node, accounts[1], { from: accounts[0] })
+      await pns.setOwner(node, accounts[1], { from: accounts[0] })
 
       await resolver.methods['setAddr(bytes32,address)'](node, accounts[0], {
         from: accounts[2],
@@ -1184,14 +1184,14 @@ contract('PublicResolver', function (accounts) {
     })
 
     it('permits name wrapper owner to make changes if owner is set to name wrapper address', async () => {
-      var owner = await ens.owner(node)
+      var owner = await pns.owner(node)
       var operator = accounts[2]
       await exceptions.expectFailure(
         resolver.methods['setAddr(bytes32,address)'](node, owner, {
           from: operator,
         }),
       )
-      await ens.setOwner(node, nameWrapper.address, { from: owner })
+      await pns.setOwner(node, nameWrapper.address, { from: owner })
       await expect(
         resolver.methods['setAddr(bytes32,address)'](node, owner, {
           from: operator,
@@ -1216,7 +1216,7 @@ contract('PublicResolver', function (accounts) {
         from: accounts[0],
       })
       assert.equal(
-        await resolver.isApprovedFor(await ens.owner(node), node, accounts[1]),
+        await resolver.isApprovedFor(await pns.owner(node), node, accounts[1]),
         true,
       )
       await resolver.methods['setAddr(bytes32,address)'](node, accounts[1], {
@@ -1253,7 +1253,7 @@ contract('PublicResolver', function (accounts) {
       await resolver.approve(node, accounts[2], true, {
         from: accounts[1],
       })
-      await ens.setOwner(node, accounts[1], { from: accounts[0] })
+      await pns.setOwner(node, accounts[1], { from: accounts[0] })
 
       await resolver.methods['setAddr(bytes32,address)'](node, accounts[0], {
         from: accounts[2],

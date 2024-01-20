@@ -4,10 +4,10 @@ pragma solidity ~0.8.17;
 import {BaseRegistrarImplementation} from "./BaseRegistrarImplementation.sol";
 import {StringUtils} from "./StringUtils.sol";
 import {Resolver} from "../resolvers/Resolver.sol";
-import {ENS} from "../registry/ENS.sol";
+import {PNS} from "../registry/PNS.sol";
 import {ReverseRegistrar} from "../reverseRegistrar/ReverseRegistrar.sol";
 import {ReverseClaimer} from "../reverseRegistrar/ReverseClaimer.sol";
-import {IETHRegistrarController, IPriceOracle} from "./IETHRegistrarController.sol";
+import {IPLSRegistrarController, IPriceOracle} from "./IPLSRegistrarController.sol";
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
@@ -32,9 +32,9 @@ error ExcuteCallFailed();
 /**
  * @dev A registrar controller for registering and renewing names at fixed cost.
  */
-contract ETHRegistrarController is
+contract PLSRegistrarController is
     Ownable,
-    IETHRegistrarController,
+    IPLSRegistrarController,
     IERC165,
     ERC20Recoverable,
     ReverseClaimer
@@ -43,7 +43,7 @@ contract ETHRegistrarController is
     using Address for address;
 
     uint256 public constant MIN_REGISTRATION_DURATION = 28 days;
-    bytes32 private constant ETH_NODE =
+    bytes32 private constant PLS_NODE =
         0x55fb31aa6f23709345f51ac8d7e4ed79336defe55be2733bc226ed0f1f62f3c8;
     uint64 private constant MAX_EXPIRY = type(uint64).max;
     uint256 private constant TOTAL_REFERRAL_BASIS_POINTS = 10000;
@@ -85,8 +85,8 @@ contract ETHRegistrarController is
         uint256 _maxCommitmentAge,
         ReverseRegistrar _reverseRegistrar,
         INameWrapper _nameWrapper,
-        ENS _ens
-    ) ReverseClaimer(_ens, msg.sender) {
+        PNS _pns
+    ) ReverseClaimer(_pns, msg.sender) {
         if (_maxCommitmentAge <= _minCommitmentAge) {
             revert MaxCommitmentAgeTooLow();
         }
@@ -190,7 +190,7 @@ contract ETHRegistrarController is
         bytes32 commitment = makeCommitment(params);
         _consumeCommitment(params.name, params.duration, commitment);
 
-        uint256 expires = nameWrapper.registerAndWrapETH2LD(
+        uint256 expires = nameWrapper.registerAndWrapPLS2LD(
             params.name,
             params.owner,
             params.duration,
@@ -272,7 +272,7 @@ contract ETHRegistrarController is
     ) external pure returns (bool) {
         return
             interfaceID == type(IERC165).interfaceId ||
-            interfaceID == type(IETHRegistrarController).interfaceId;
+            interfaceID == type(IPLSRegistrarController).interfaceId;
     }
 
     /* Internal functions */
@@ -308,7 +308,7 @@ contract ETHRegistrarController is
         bytes[] calldata data
     ) internal {
         // use hardcoded .pls namehash
-        bytes32 nodehash = keccak256(abi.encodePacked(ETH_NODE, label));
+        bytes32 nodehash = keccak256(abi.encodePacked(PLS_NODE, label));
         Resolver resolver = Resolver(resolverAddress);
         resolver.multicallWithNodeCheck(nodehash, data);
     }

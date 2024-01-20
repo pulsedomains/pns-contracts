@@ -16,7 +16,7 @@ const EMPTY_BYTES32 =
   '0x0000000000000000000000000000000000000000000000000000000000000000'
 
 contract('UniversalResolver', function (accounts) {
-  let ENSRegistry,
+  let PNSRegistry,
     PublicResolver,
     NameWrapper,
     UniversalResolver,
@@ -26,7 +26,7 @@ contract('UniversalResolver', function (accounts) {
   /**
    * @type {Contract}
    */
-  let ens,
+  let pns,
     /**
      * @type {Contract}
      */
@@ -46,7 +46,7 @@ contract('UniversalResolver', function (accounts) {
   before(async () => {
     batchGateway = (await ethers.getContractAt('BatchGateway', ZERO_ADDRESS))
       .interface
-    ENSRegistry = await ethers.getContractFactory('ENSRegistry')
+    PNSRegistry = await ethers.getContractFactory('PNSRegistry')
     PublicResolver = await ethers.getContractFactory('PublicResolver')
     NameWrapper = await ethers.getContractFactory('DummyNameWrapper')
     UniversalResolver = await ethers.getContractFactory('UniversalResolver')
@@ -59,16 +59,16 @@ contract('UniversalResolver', function (accounts) {
 
   beforeEach(async () => {
     node = namehash.hash('pls')
-    ens = await deploy('ENSRegistry')
+    pns = await deploy('PNSRegistry')
     nameWrapper = await deploy('DummyNameWrapper')
-    reverseRegistrar = await deploy('ReverseRegistrar', ens.address)
+    reverseRegistrar = await deploy('ReverseRegistrar', pns.address)
     reverseNode = accounts[0].toLowerCase().substring(2) + '.addr.reverse'
     oldResolverReverseNode =
       accounts[10].toLowerCase().substring(2) + '.addr.reverse'
-    await ens.setSubnodeOwner(EMPTY_BYTES32, sha3('reverse'), accounts[0], {
+    await pns.setSubnodeOwner(EMPTY_BYTES32, sha3('reverse'), accounts[0], {
       from: accounts[0],
     })
-    await ens.setSubnodeOwner(
+    await pns.setSubnodeOwner(
       namehash.hash('reverse'),
       sha3('addr'),
       reverseRegistrar.address,
@@ -76,34 +76,34 @@ contract('UniversalResolver', function (accounts) {
     )
     publicResolver = await deploy(
       'PublicResolver',
-      ens.address,
+      pns.address,
       nameWrapper.address,
       ZERO_ADDRESS,
       ZERO_ADDRESS,
     )
-    universalResolver = await deploy('UniversalResolver', ens.address, [
+    universalResolver = await deploy('UniversalResolver', pns.address, [
       'http://universal-offchain-resolver.local/',
     ])
     dummyOffchainResolver = await deploy('DummyOffchainResolver')
     dummyOldResolver = await deploy('DummyOldResolver')
     dummyRevertResolver = await deploy('DummyRevertResolver')
 
-    await ens.setSubnodeOwner(EMPTY_BYTES32, sha3('pls'), accounts[0], {
+    await pns.setSubnodeOwner(EMPTY_BYTES32, sha3('pls'), accounts[0], {
       from: accounts[0],
     })
-    await ens.setSubnodeOwner(namehash.hash('pls'), sha3('test'), accounts[0], {
+    await pns.setSubnodeOwner(namehash.hash('pls'), sha3('test'), accounts[0], {
       from: accounts[0],
     })
-    await ens.setResolver(namehash.hash('test.pls'), publicResolver.address, {
+    await pns.setResolver(namehash.hash('test.pls'), publicResolver.address, {
       from: accounts[0],
     })
-    await ens.setSubnodeOwner(
+    await pns.setSubnodeOwner(
       namehash.hash('test.pls'),
       sha3('sub'),
       accounts[0],
       { from: accounts[0] },
     )
-    await ens.setResolver(namehash.hash('sub.test.pls'), accounts[1], {
+    await pns.setResolver(namehash.hash('sub.test.pls'), accounts[1], {
       from: accounts[0],
     })
     await publicResolver.functions['setAddr(bytes32,address)'](
@@ -117,25 +117,25 @@ contract('UniversalResolver', function (accounts) {
       'bar',
       { from: accounts[0] },
     )
-    await ens.setSubnodeOwner(
+    await pns.setSubnodeOwner(
       namehash.hash('test.pls'),
       sha3('offchain'),
       accounts[0],
       { from: accounts[0] },
     )
-    await ens.setSubnodeOwner(
+    await pns.setSubnodeOwner(
       namehash.hash('test.pls'),
       sha3('no-resolver'),
       accounts[0],
       { from: accounts[0] },
     )
-    await ens.setSubnodeOwner(
+    await pns.setSubnodeOwner(
       namehash.hash('test.pls'),
       sha3('revert-resolver'),
       accounts[0],
       { from: accounts[0] },
     )
-    await ens.setSubnodeOwner(
+    await pns.setSubnodeOwner(
       namehash.hash('test.pls'),
       sha3('non-contract-resolver'),
       accounts[0],
@@ -145,7 +145,7 @@ contract('UniversalResolver', function (accounts) {
     for (let i = 0; i < 5; i += 1) {
       const parent = name
       const label = `sub${i}`
-      await ens.setSubnodeOwner(
+      await pns.setSubnodeOwner(
         namehash.hash(parent),
         sha3(label),
         accounts[0],
@@ -153,17 +153,17 @@ contract('UniversalResolver', function (accounts) {
       )
       name = `${label}.${parent}`
     }
-    await ens.setResolver(
+    await pns.setResolver(
       namehash.hash('offchain.test.pls'),
       dummyOffchainResolver.address,
       { from: accounts[0] },
     )
-    await ens.setResolver(
+    await pns.setResolver(
       namehash.hash('revert-resolver.test.pls'),
       dummyRevertResolver.address,
       { from: accounts[0] },
     )
-    await ens.setResolver(
+    await pns.setResolver(
       namehash.hash('non-contract-resolver.test.pls'),
       accounts[0],
       { from: accounts[0] },
@@ -172,17 +172,17 @@ contract('UniversalResolver', function (accounts) {
     await reverseRegistrar.claim(accounts[0], {
       from: accounts[0],
     })
-    await ens.setResolver(namehash.hash(reverseNode), publicResolver.address, {
+    await pns.setResolver(namehash.hash(reverseNode), publicResolver.address, {
       from: accounts[0],
     })
     await publicResolver.setName(namehash.hash(reverseNode), 'test.pls')
 
     const oldResolverSigner = await ethers.getSigner(accounts[10])
     const _reverseRegistrar = reverseRegistrar.connect(oldResolverSigner)
-    const _ens = ens.connect(oldResolverSigner)
+    const _pns = pns.connect(oldResolverSigner)
 
     await _reverseRegistrar.claim(accounts[10])
-    await _ens.setResolver(
+    await _pns.setResolver(
       namehash.hash(oldResolverReverseNode),
       dummyOldResolver.address,
     )
@@ -355,13 +355,13 @@ contract('UniversalResolver', function (accounts) {
 
     it('should resolve a record if `supportsInterface` throws', async () => {
       const legacyResolver = await LegacyResolver.deploy()
-      await ens.setSubnodeOwner(
+      await pns.setSubnodeOwner(
         namehash.hash('pls'),
         sha3('test2'),
         accounts[0],
         { from: accounts[0] },
       )
-      await ens.setResolver(
+      await pns.setResolver(
         namehash.hash('test2.pls'),
         legacyResolver.address,
         { from: accounts[0] },
@@ -383,13 +383,13 @@ contract('UniversalResolver', function (accounts) {
 
     it('should not run out of gas if calling a non-existent function on a legacy resolver', async () => {
       const legacyResolver = await LegacyResolver.deploy()
-      await ens.setSubnodeOwner(
+      await pns.setSubnodeOwner(
         namehash.hash('pls'),
         sha3('test2'),
         accounts[0],
         { from: accounts[0] },
       )
-      await ens.setResolver(
+      await pns.setResolver(
         namehash.hash('test2.pls'),
         legacyResolver.address,
         { from: accounts[0] },

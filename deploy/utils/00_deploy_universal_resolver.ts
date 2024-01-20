@@ -7,7 +7,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments
   const { deployer } = await getNamedAccounts()
 
-  const registry = await ethers.getContract('ENSRegistry')
+  const registry = await ethers.getContract('PNSRegistry')
   const batchGatewayURLs = [
     'https://universal-offchain-unwrapper.pns-cf.workers.dev/',
   ]
@@ -23,6 +23,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
 func.id = 'universal-resolver'
 func.tags = ['UniversalResolver']
-func.dependencies = ['ENSRegistry']
+func.dependencies = ['PNSRegistry']
 
 export default func

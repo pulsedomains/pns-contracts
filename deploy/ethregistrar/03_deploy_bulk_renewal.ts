@@ -7,7 +7,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments
   const { deployer } = await getNamedAccounts()
 
-  const controller = await ethers.getContract('ETHRegistrarController')
+  const controller = await ethers.getContract('PLSRegistrarController')
 
   await deploy('StaticBulkRenewal', {
     from: deployer,
@@ -20,6 +20,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
 func.id = 'static-bulk-renewal'
 func.tags = ['StaticBulkRenewal']
-func.dependencies = ['ETHRegistrarController']
+func.dependencies = ['PLSRegistrarController']
 
 export default func

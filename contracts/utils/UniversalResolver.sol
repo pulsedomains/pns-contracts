@@ -5,7 +5,7 @@ import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {LowLevelCallUtils} from "./LowLevelCallUtils.sol";
-import {ENS} from "../registry/ENS.sol";
+import {PNS} from "../registry/PNS.sol";
 import {IExtendedResolver} from "../resolvers/profiles/IExtendedResolver.sol";
 import {Resolver, INameResolver, IAddrResolver} from "../resolvers/Resolver.sol";
 import {NameEncoder} from "./NameEncoder.sol";
@@ -75,7 +75,7 @@ interface BatchGateway {
 
 /**
  * The Universal Resolver is a contract that handles the work of resolving a name entirely onchain,
- * making it possible to make a single smart contract call to resolve an ENS name.
+ * making it possible to make a single smart contract call to resolve an PNS name.
  */
 contract UniversalResolver is ERC165, Ownable {
     using Address for address;
@@ -84,10 +84,10 @@ contract UniversalResolver is ERC165, Ownable {
     using HexUtils for bytes;
 
     string[] public batchGatewayURLs;
-    ENS public immutable registry;
+    PNS public immutable registry;
 
     constructor(address _registry, string[] memory _urls) {
-        registry = ENS(_registry);
+        registry = PNS(_registry);
         batchGatewayURLs = _urls;
     }
 

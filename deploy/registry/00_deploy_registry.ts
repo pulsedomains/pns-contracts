@@ -8,14 +8,14 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments
   const { deployer, owner } = await getNamedAccounts()
 
-  await deploy('ENSRegistry', {
+  await deploy('PNSRegistry', {
     from: deployer,
     args: [],
     log: true,
   })
 
   if (!network.tags.use_root) {
-    const registry = await ethers.getContract('ENSRegistry')
+    const registry = await ethers.getContract('PNSRegistry')
     const rootOwner = await registry.owner(ZERO_HASH)
     switch (rootOwner) {
       case deployer:
@@ -37,7 +37,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   return true
 }
 
-func.id = 'ens'
-func.tags = ['ENSRegistry']
+func.id = 'pns'
+func.tags = ['PNSRegistry']
 
 export default func

@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import "../dnssec-oracle/BytesUtils.sol";
 import "../dnssec-oracle/DNSSEC.sol";
 import "../dnssec-oracle/RRUtils.sol";
-import "../registry/ENSRegistry.sol";
+import "../registry/PNSRegistry.sol";
 import "../utils/HexUtils.sol";
 
 error OffchainLookup(
@@ -34,14 +34,14 @@ contract OffchainDNSResolver is IExtendedResolver {
     using BytesUtils for bytes;
     using HexUtils for bytes;
 
-    ENS public immutable ens;
+    PNS public immutable pns;
     DNSSEC public immutable oracle;
     string public gatewayURL;
 
     error CouldNotResolve(bytes name);
 
-    constructor(ENS _ens, DNSSEC _oracle, string memory _gatewayURL) {
-        ens = _ens;
+    constructor(PNS _pns, DNSSEC _oracle, string memory _gatewayURL) {
+        pns = _pns;
         oracle = _oracle;
         gatewayURL = _gatewayURL;
     }
@@ -193,7 +193,7 @@ contract OffchainDNSResolver is IExtendedResolver {
         uint256 lastIdx
     ) internal view returns (address) {
         bytes32 node = textNamehash(name, idx, lastIdx);
-        address resolver = ens.resolver(node);
+        address resolver = pns.resolver(node);
         if (resolver == address(0)) {
             return address(0);
         }

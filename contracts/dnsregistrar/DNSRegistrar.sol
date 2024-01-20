@@ -6,7 +6,7 @@ import "@ensdomains/buffer/contracts/Buffer.sol";
 import "../dnssec-oracle/BytesUtils.sol";
 import "../dnssec-oracle/DNSSEC.sol";
 import "../dnssec-oracle/RRUtils.sol";
-import "../registry/ENSRegistry.sol";
+import "../registry/PNSRegistry.sol";
 import "../root/Root.sol";
 import "../resolvers/profiles/AddrResolver.sol";
 import "./DNSClaimChecker.sol";
@@ -22,7 +22,7 @@ contract DNSRegistrar is IDNSRegistrar, IERC165 {
     using Buffer for Buffer.buffer;
     using RRUtils for *;
 
-    ENS public immutable ens;
+    PNS public immutable pns;
     DNSSEC public immutable oracle;
     PublicSuffixList public suffixes;
     address public immutable previousRegistrar;
@@ -56,21 +56,21 @@ contract DNSRegistrar is IDNSRegistrar, IERC165 {
         address _resolver,
         DNSSEC _dnssec,
         PublicSuffixList _suffixes,
-        ENS _ens
+        PNS _pns
     ) {
         previousRegistrar = _previousRegistrar;
         resolver = _resolver;
         oracle = _dnssec;
         suffixes = _suffixes;
         emit NewPublicSuffixList(address(suffixes));
-        ens = _ens;
+        pns = _pns;
     }
 
     /**
      * @dev This contract's owner-only functions can be invoked by the owner of the PNS root.
      */
     modifier onlyOwner() {
-        Root root = Root(ens.owner(bytes32(0)));
+        Root root = Root(pns.owner(bytes32(0)));
         address owner = root.owner();
         require(msg.sender == owner);
         _;
@@ -94,7 +94,7 @@ contract DNSRegistrar is IDNSRegistrar, IERC165 {
             name,
             input
         );
-        ens.setSubnodeOwner(rootNode, labelHash, addr);
+        pns.setSubnodeOwner(rootNode, labelHash, addr);
     }
 
     function proveAndClaimWithResolver(
@@ -110,7 +110,7 @@ contract DNSRegistrar is IDNSRegistrar, IERC165 {
         if (msg.sender != owner) {
             revert PermissionDenied(msg.sender, owner);
         }
-        ens.setSubnodeRecord(rootNode, labelHash, owner, resolver, 0);
+        pns.setSubnodeRecord(rootNode, labelHash, owner, resolver, 0);
         if (addr != address(0)) {
             if (resolver == address(0)) {
                 revert PreconditionNotMet();
@@ -182,14 +182,14 @@ contract DNSRegistrar is IDNSRegistrar, IERC165 {
         bytes32 parentNode = _enableNode(domain, offset + len + 1);
         bytes32 label = domain.keccak(offset + 1, len);
         node = keccak256(abi.encodePacked(parentNode, label));
-        address owner = ens.owner(node);
+        address owner = pns.owner(node);
         if (owner == address(0) || owner == previousRegistrar) {
             if (parentNode == bytes32(0)) {
-                Root root = Root(ens.owner(bytes32(0)));
+                Root root = Root(pns.owner(bytes32(0)));
                 root.setSubnodeOwner(label, address(this));
-                ens.setResolver(node, resolver);
+                pns.setResolver(node, resolver);
             } else {
-                ens.setSubnodeRecord(
+                pns.setSubnodeRecord(
                     parentNode,
                     label,
                     address(this),

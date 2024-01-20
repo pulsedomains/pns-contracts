@@ -26,7 +26,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   // only deploy on testnets
   if (network.name === 'mainnet') return
 
-  const registry = await ethers.getContract('ENSRegistry', owner)
+  const registry = await ethers.getContract('PNSRegistry', owner)
   const registrar = await ethers.getContract(
     'BaseRegistrarImplementation',
     owner,

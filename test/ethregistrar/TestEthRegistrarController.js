@@ -2,16 +2,16 @@ const {
   evm,
   reverse: { getReverseNode },
   contracts: { deploy },
-  ens: { FUSES },
+  pns: { FUSES },
 } = require('../test-utils')
 
-const { CANNOT_UNWRAP, PARENT_CANNOT_CONTROL, IS_DOT_ETH } = FUSES
+const { CANNOT_UNWRAP, PARENT_CANNOT_CONTROL, IS_DOT_PLS } = FUSES
 
 const { expect } = require('chai')
 
 const { ethers } = require('hardhat')
 const provider = ethers.provider
-const { namehash } = require('../test-utils/ens')
+const { namehash } = require('../test-utils/pns')
 const sha3 = require('web3-utils').sha3
 const {
   EMPTY_BYTES32: EMPTY_BYTES,
@@ -23,8 +23,8 @@ const REGISTRATION_TIME = 28 * DAY
 const BUFFERED_REGISTRATION_COST = REGISTRATION_TIME + 3 * DAY
 const GRACE_PERIOD = 30 * DAY
 const NULL_ADDRESS = ZERO_ADDRESS
-contract('ETHRegistrarController', function () {
-  let ens
+contract('PLSRegistrarController', function () {
+  let pns
   let resolver
   let resolver2 // resolver signed by accounts[1]
   let baseRegistrar
@@ -87,18 +87,18 @@ contract('ETHRegistrarController', function () {
     registrantAccount = await signers[1].getAddress()
     accounts = [ownerAccount, registrantAccount, signers[2].getAddress()]
 
-    ens = await deploy('ENSRegistry')
+    pns = await deploy('PNSRegistry')
 
     baseRegistrar = await deploy(
       'BaseRegistrarImplementation',
-      ens.address,
+      pns.address,
       namehash('pls'),
     )
 
-    reverseRegistrar = await deploy('ReverseRegistrar', ens.address)
+    reverseRegistrar = await deploy('ReverseRegistrar', pns.address)
 
-    await ens.setSubnodeOwner(EMPTY_BYTES, sha3('reverse'), accounts[0])
-    await ens.setSubnodeOwner(
+    await pns.setSubnodeOwner(EMPTY_BYTES, sha3('reverse'), accounts[0])
+    await pns.setSubnodeOwner(
       namehash('reverse'),
       sha3('addr'),
       reverseRegistrar.address,
@@ -106,12 +106,12 @@ contract('ETHRegistrarController', function () {
 
     nameWrapper = await deploy(
       'NameWrapper',
-      ens.address,
+      pns.address,
       baseRegistrar.address,
       ownerAccount,
     )
 
-    await ens.setSubnodeOwner(EMPTY_BYTES, sha3('pls'), baseRegistrar.address)
+    await pns.setSubnodeOwner(EMPTY_BYTES, sha3('pls'), baseRegistrar.address)
 
     const dummyOracle = await deploy('DummyOracle', '100000000')
     priceOracle = await deploy(
@@ -120,14 +120,14 @@ contract('ETHRegistrarController', function () {
       [0, 0, 4, 2, 1],
     )
     controller = await deploy(
-      'ETHRegistrarController',
+      'PLSRegistrarController',
       baseRegistrar.address,
       priceOracle.address,
       600,
       86400,
       reverseRegistrar.address,
       nameWrapper.address,
-      ens.address,
+      pns.address,
     )
     controller2 = controller.connect(signers[1])
     await nameWrapper.setController(controller.address, true)
@@ -136,7 +136,7 @@ contract('ETHRegistrarController', function () {
 
     resolver = await deploy(
       'PublicResolver',
-      ens.address,
+      pns.address,
       nameWrapper.address,
       controller.address,
       reverseRegistrar.address,
@@ -283,8 +283,8 @@ contract('ETHRegistrarController', function () {
     ).to.equal(REGISTRATION_TIME)
 
     var nodehash = namehash('newconfigname.pls')
-    expect(await ens.resolver(nodehash)).to.equal(resolver.address)
-    expect(await ens.owner(nodehash)).to.equal(nameWrapper.address)
+    expect(await pns.resolver(nodehash)).to.equal(resolver.address)
+    expect(await pns.owner(nodehash)).to.equal(nameWrapper.address)
     expect(await baseRegistrar.ownerOf(sha3('newconfigname'))).to.equal(
       nameWrapper.address,
     )
@@ -537,7 +537,7 @@ contract('ETHRegistrarController', function () {
       )
 
     const nodehash = namehash('newconfigname2.pls')
-    expect(await ens.resolver(nodehash)).to.equal(resolver.address)
+    expect(await pns.resolver(nodehash)).to.equal(resolver.address)
     expect(await resolver['addr(bytes32)'](nodehash)).to.equal(NULL_ADDRESS)
     expect(
       (await web3.eth.getBalance(controller.address)) - balanceBefore,
@@ -832,7 +832,7 @@ contract('ETHRegistrarController', function () {
       registrantAccount,
     )
 
-    expect(await ens.owner(namehash(name))).to.equal(nameWrapper.address)
+    expect(await pns.owner(namehash(name))).to.equal(nameWrapper.address)
     expect(await baseRegistrar.ownerOf(sha3(label))).to.equal(
       nameWrapper.address,
     )
@@ -874,7 +874,7 @@ contract('ETHRegistrarController', function () {
     const block = await provider.getBlock(tx.block)
 
     const [, fuses, expiry] = await nameWrapper.getData(namehash(name))
-    expect(fuses).to.equal(PARENT_CANNOT_CONTROL | CANNOT_UNWRAP | IS_DOT_ETH)
+    expect(fuses).to.equal(PARENT_CANNOT_CONTROL | CANNOT_UNWRAP | IS_DOT_PLS)
     expect(expiry).to.equal(REGISTRATION_TIME + GRACE_PERIOD + block.timestamp)
   })
 
@@ -970,7 +970,7 @@ contract('ETHRegistrarController', function () {
     console.log(gasA.toString(), gasB.toString())
 
     expect(await nameWrapper.ownerOf(node)).to.equal(registrantAccount)
-    expect(await ens.owner(namehash(name))).to.equal(nameWrapper.address)
+    expect(await pns.owner(namehash(name))).to.equal(nameWrapper.address)
     expect(await baseRegistrar.ownerOf(sha3(label))).to.equal(
       nameWrapper.address,
     )

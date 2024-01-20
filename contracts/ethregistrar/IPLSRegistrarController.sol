@@ -3,7 +3,7 @@ pragma solidity ~0.8.17;
 
 import "./IPriceOracle.sol";
 
-interface IETHRegistrarController {
+interface IPLSRegistrarController {
     struct Registration {
         string name;
         address owner;

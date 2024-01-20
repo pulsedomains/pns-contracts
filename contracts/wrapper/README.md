@@ -42,7 +42,7 @@ graph TD;
   locked-->|expire|unregistered;
 ```
 
-State transitions are facilitated by functions on the name wrapper and registrar controller contracts. One function can potentially move a name through multiple states - for example, calling `registerAndWrapETH2LD()` will register a .pls second-level name, wrap it, and emancipate it, moving it from `[Unregistered]` to `Emancipated` state in a single call.
+State transitions are facilitated by functions on the name wrapper and registrar controller contracts. One function can potentially move a name through multiple states - for example, calling `registerAndWrapPLS2LD()` will register a .pls second-level name, wrap it, and emancipate it, moving it from `[Unregistered]` to `Emancipated` state in a single call.
 
 Some state transitions are irrevocable; once a name is Emancipated or Locked, it can only return to being Wrapped or Unwrapped after it expires.
 
@@ -108,7 +108,7 @@ In addition, if the name is Emancipated or Locked, the following change happens 
 
 If a name is Wrapped (but not Emancipated or Locked), then the expiry will only cause parent-controlled fuses to reset, and otherwise has no practical effect on the name.
 
-.pls names derive their expiry from the .pls registrar; the wrapper's expiry is set to the end of the name's grace period. A name that is extended using the Name Wrapper aware .pls registrar controller calling `renew()` or wrapped using `wrapETH2LD()`, the name's expiry will **sync** the wrapper expiry to the .pls registrar expiry. At the expiry date, the .pls name will be frozen for the entirety of the grace period. This includes all functionality that checks the owner, but does not affect its subdomains. If the name is renewed by a wrapper unaware .pls registrar controller, the wrapper expiry of the name will remain in the same expired state and will not sync.
+.pls names derive their expiry from the .pls registrar; the wrapper's expiry is set to the end of the name's grace period. A name that is extended using the Name Wrapper aware .pls registrar controller calling `renew()` or wrapped using `wrapPLS2LD()`, the name's expiry will **sync** the wrapper expiry to the .pls registrar expiry. At the expiry date, the .pls name will be frozen for the entirety of the grace period. This includes all functionality that checks the owner, but does not affect its subdomains. If the name is renewed by a wrapper unaware .pls registrar controller, the wrapper expiry of the name will remain in the same expired state and will not sync.
 
 Expiry can be extended using the following functions:
 
@@ -156,7 +156,7 @@ Anything that is not predefined here as a fuse can be also burnt as a custom fus
 
 #### CANNOT_UNWRAP = 1
 
-If this fuse is burned, the name cannot be unwrapped, and calls to unwrap and unwrapETH2LD, as well as other effects that would unwrap a name such as `setSubnodeOwner` will fail.
+If this fuse is burned, the name cannot be unwrapped, and calls to unwrap and unwrapPLS2LD, as well as other effects that would unwrap a name such as `setSubnodeOwner` will fail.
 
 #### CANNOT_BURN_FUSES = 2
 
@@ -186,9 +186,9 @@ If this fuse is burned, `approve()` cannot be called on this name anymore and so
 
 If this fuse is burned, existing subdomains cannot be replaced by the parent name and the parent can no longer burn other fuses on this child. Calls to setSubnodeOwner and setSubnodeRecord will fail if they reference a name that already exists. Attempting to burn fuses in setChildFuses will also fail. This fuse can only be burnt by the parent of a node.
 
-#### IS_DOT_ETH = 131072
+#### IS_DOT_PLS = 131072
 
-If this fuse is burned, it means that the name is a .pls name. This fuse cannot be burned manually and is burned when wrapETH2LD() or onERC721Received() is called.
+If this fuse is burned, it means that the name is a .pls name. This fuse cannot be burned manually and is burned when wrapPLS2LD() or onERC721Received() is called.
 
 #### CAN_EXTEND_EXPIRY = 262144
 
@@ -212,7 +212,7 @@ getData gets the owner, fuses and also the expiry of the name. The fuses it retu
 
 ## Function Reference
 
-### `wrapETH2LD()`
+### `wrapPLS2LD()`
 
 **Start State**: Unwrapped
 **End State**: Emancipated | Locked
@@ -237,14 +237,14 @@ Parent-controlled fuses are retained on unwrap, so if the name was previously Em
 
 Wraps a .pls second-level name by sending the ERC721 NFT to the wrapper contract. Transfers must contain additional data encoding information about the wrapped name such as fuses and expiration, or they will be rejected.
 
-Otherwise behaves identically to `wrapETH2LD`.
+Otherwise behaves identically to `wrapPLS2LD`.
 
-### `registerAndWrapETH2LD()`
+### `registerAndWrapPLS2LD()`
 
 **Start State**: Unregistered
 **End State**: Emancipated | Locked
 
-Allows a registrar controller to register and wrap a name in a single operation. After registering the name, behaves identically to `wrapETH2LD`.
+Allows a registrar controller to register and wrap a name in a single operation. After registering the name, behaves identically to `wrapPLS2LD`.
 
 ### `renew()`
 
@@ -279,7 +279,7 @@ Creates or replaces a subname while updating resolver and TTL records.
 
 Behaves identically to `setSubnodeOwner()`, additionally setting the resolver and TTL for the subname. If the new owner is `address(0)`, resolver and TTL are ignored.
 
-### `unwrapETH2LD()`
+### `unwrapPLS2LD()`
 
 **Start State**: Emancipated
 **End State**: Unwrapped
@@ -383,7 +383,7 @@ Since the NameWrapper does have `onERC721Received` support, the NameWrapper WILL
 
 ## Register wrapped names
 
-Names can be registered as normal using the current .pls registrar controller. However, the new .pls registrar controller will be a controller on the NameWrapper, and have NameWrapper will be a controller on the .pls base registrar. The NameWrapper exposes a `registerAndWrapETH2LD()` function that can be called by the new .pls registrar to directly register wrapped names. This new function removes the need to first transfer the owner to the contract itself before transferring it to the final owner, which saves gas.
+Names can be registered as normal using the current .pls registrar controller. However, the new .pls registrar controller will be a controller on the NameWrapper, and have NameWrapper will be a controller on the .pls base registrar. The NameWrapper exposes a `registerAndWrapPLS2LD()` function that can be called by the new .pls registrar to directly register wrapped names. This new function removes the need to first transfer the owner to the contract itself before transferring it to the final owner, which saves gas.
 
 Both .pls registrar controllers will be active during a deprecation period, giving time for front-end clients to switch their code to point at the new and improved .pls registrar controller.
 
@@ -397,7 +397,7 @@ The NameWrapper is an `Ownable()` contract and this owner has a few limited admi
 
 Controllers can call the following functions
 
-- `registerAndWrapETH2LD()`
+- `registerAndWrapPLS2LD()`
 - `renew()`
 - `setUpgradeContract()`
 
@@ -493,9 +493,9 @@ Wrapped NFT for sub2.wrappertest4.pls is available at https://testnets.opensea.i
 
 ## Notes on upgrading the Name Wrapper
 
-The Name Wrapper has a built-in upgrade function that allows the owner of the Name Wrapper to set a new contract for all names to be migrated to as a last resort migration. Upgrading a name is optional and is only able to be done by the owner of the name in the original NameWrapper. A name can only be migrated when the parent has been migrated to the new registrar. By default the `ROOT_NODE` and `ETH_NODE` should be wrapped in the constructor of the new Name Wrapper.
+The Name Wrapper has a built-in upgrade function that allows the owner of the Name Wrapper to set a new contract for all names to be migrated to as a last resort migration. Upgrading a name is optional and is only able to be done by the owner of the name in the original NameWrapper. A name can only be migrated when the parent has been migrated to the new registrar. By default the `ROOT_NODE` and `PLS_NODE` should be wrapped in the constructor of the new Name Wrapper.
 
-The upgraded namewrapper must include the interface `INameWrapperUpgrade.sol`, which mandates two functions that already exist in the new wrapper: `wrapETH2LD` and `setSubnodeRecord`. The `wrapETH2LD` function can be used as-is, however the `setSubnodeRecord` needs one additional permission, which checks for if the parent of the name you are wrapping has already been wrapped and the `msg.sender` is the old wrapper.
+The upgraded namewrapper must include the interface `INameWrapperUpgrade.sol`, which mandates two functions that already exist in the new wrapper: `wrapPLS2LD` and `setSubnodeRecord`. The `wrapPLS2LD` function can be used as-is, however the `setSubnodeRecord` needs one additional permission, which checks for if the parent of the name you are wrapping has already been wrapped and the `msg.sender` is the old wrapper.
 
 ```solidity
 // Example of that check in solidity
@@ -504,4 +504,4 @@ require(isTokenOwnerOrApproved(parentNode) || msg.sender == oldWrapperAddress &&
 
 It is recommended to have this check after the normal checks, so normal usage in the new wrapper does not cost any additional gas (unless the require actually reverts).
 
-If the function signature of the new NameWrapper changes, there must be an extra function added to the new NameWrapper, that takes the old function signature of `wrap()` and `wrapETH2LD()` and then translates them into the new function signatures to avoid a situation where the old NameWrapper cannot call the new NameWrapper.
+If the function signature of the new NameWrapper changes, there must be an extra function added to the new NameWrapper, that takes the old function signature of `wrap()` and `wrapPLS2LD()` and then translates them into the new function signatures to avoid a situation where the old NameWrapper cannot call the new NameWrapper.

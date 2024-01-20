@@ -13,10 +13,10 @@ import {
   BaseRegistrar,
   BaseRegistrarImplementation,
   BulkRenewal,
-  ENS,
-  ENSRegistry,
-  ENSRegistryWithFallback,
-  ETHRegistrarController,
+  PNS,
+  PNSRegistry,
+  PNSRegistryWithFallback,
+  PLSRegistrarController,
   FIFSRegistrar,
   LinearPremiumPriceOracle,
   PriceOracle,
@@ -32,16 +32,16 @@ import {
 
 ```
 // Registry
-import '@pnsdomains/pns-contracts/contracts/registry/ENS.sol';
-import '@pnsdomains/pns-contracts/contracts/registry/ENSRegistry.sol';
-import '@pnsdomains/pns-contracts/contracts/registry/ENSRegistryWithFallback.sol';
+import '@pnsdomains/pns-contracts/contracts/registry/PNS.sol';
+import '@pnsdomains/pns-contracts/contracts/registry/PNSRegistry.sol';
+import '@pnsdomains/pns-contracts/contracts/registry/PNSRegistryWithFallback.sol';
 import '@pnsdomains/pns-contracts/contracts/registry/ReverseRegistrar.sol';
 import '@pnsdomains/pns-contracts/contracts/registry/TestRegistrar.sol';
 // EthRegistrar
 import '@pnsdomains/pns-contracts/contracts/ethregistrar/BaseRegistrar.sol';
 import '@pnsdomains/pns-contracts/contracts/ethregistrar/BaseRegistrarImplementation.sol';
 import '@pnsdomains/pns-contracts/contracts/ethregistrar/BulkRenewal.sol';
-import '@pnsdomains/pns-contracts/contracts/ethregistrar/ETHRegistrarController.sol';
+import '@pnsdomains/pns-contracts/contracts/ethregistrar/PLSRegistrarController.sol';
 import '@pnsdomains/pns-contracts/contracts/ethregistrar/LinearPremiumPriceOracle.sol';
 import '@pnsdomains/pns-contracts/contracts/ethregistrar/PriceOracle.sol';
 import '@pnsdomains/pns-contracts/contracts/ethregistrar/StablePriceOracle.sol';
@@ -60,17 +60,17 @@ If your environment does not have compiler, you can access to the raw hardhat ar
 
 The PNS registry is the core contract that lies at the heart of PNS resolution. All PNS lookups start by querying the registry. The registry maintains a list of domains, recording the owner, resolver, and TTL for each, and allows the owner of a domain to make changes to that data. It also includes some generic registrars.
 
-### ENS.sol
+### PNS.sol
 
 Interface of the PNS Registry.
 
-### ENSRegistry
+### PNSRegistry
 
 Implementation of the PNS Registry, the central contract used to look up resolvers and owners for domains.
 
-### ENSRegistryWithFallback
+### PNSRegistryWithFallback
 
-The new implementation of the PNS Registry after [the 2020 PNS Registry Migration](https://docs.pulse.domains/ens-migration-february-2020/technical-description#new-ens-deployment).
+The new implementation of the PNS Registry after [the 2020 PNS Registry Migration](https://docs.pulse.domains/pns-migration-february-2020/technical-description#new-pns-deployment).
 
 ### FIFSRegistrar
 
@@ -88,7 +88,7 @@ Implementation of the `.test` registrar facilitates easy testing of PNS on the P
 
 Implements an [PNS](https://pulse.domains/) registrar intended for the .pls TLD.
 
-These contracts were audited by ConsenSys Diligence; the audit report is available [here](https://github.com/ConsenSys/ens-audit-report-2019-02).
+These contracts were audited by ConsenSys Diligence; the audit report is available [here](https://github.com/ConsenSys/pns-audit-report-2019-02).
 
 ### BaseRegistrar
 
@@ -139,7 +139,7 @@ PublicResolver includes the following profiles that implements different EIPs.
 - NameResolver = EIP 181 - Reverse resolution (`name()`).
 - PubkeyResolver = EIP 619 - SECP256k1 public keys (`pubkey()`).
 - TextResolver = EIP 634 - Text records (`text()`).
-- DNSResolver = Experimental support is available for hosting DNS domains on the PulseChain blockchain via PNS. [The more detail](https://veox-ens.readthedocs.io/en/latest/dns.html) is on the old PNS doc.
+- DNSResolver = Experimental support is available for hosting DNS domains on the PulseChain blockchain via PNS. [The more detail](https://veox-pns.readthedocs.io/en/latest/dns.html) is on the old PNS doc.
 
 ## Developer guide
 
@@ -174,7 +174,7 @@ Smart contract development tends to take a long release cycle. To prevent unnece
 ### Deploy
 
 ```bash
-./node_modules/.bin/hardhat deploy --network mainnet --tags ENSRegistry
+./node_modules/.bin/hardhat deploy --network mainnet --tags PNSRegistry
 ./node_modules/.bin/hardhat deploy --network mainnet --tags Root
 ./node_modules/.bin/hardhat deploy --network mainnet --tags StaticMetadataService
 ./node_modules/.bin/hardhat deploy --network mainnet --tags BaseRegistrarImplementation
@@ -183,7 +183,7 @@ Smart contract development tends to take a long release cycle. To prevent unnece
 ./node_modules/.bin/hardhat deploy --network mainnet --tags ExponentialPremiumPriceOracle
 ./node_modules/.bin/hardhat deploy --network mainnet --tags OwnedResolver
 ./node_modules/.bin/hardhat deploy --network mainnet --tags NameWrapper
-./node_modules/.bin/hardhat deploy --network mainnet --tags ETHRegistrarController
+./node_modules/.bin/hardhat deploy --network mainnet --tags PLSRegistrarController
 ./node_modules/.bin/hardhat deploy --network mainnet --tags PublicResolver
 ./node_modules/.bin/hardhat deploy --network mainnet --tags StaticBulkRenewal
 ./node_modules/.bin/hardhat deploy --network mainnet --tags DNSSecOracle

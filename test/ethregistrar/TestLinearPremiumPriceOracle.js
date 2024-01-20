@@ -1,4 +1,4 @@
-const ENS = artifacts.require('./registry/ENSRegistry')
+const PNS = artifacts.require('./registry/PNSRegistry')
 const BaseRegistrar = artifacts.require('./BaseRegistrarImplementation')
 const DummyOracle = artifacts.require('./DummyOracle')
 const LinearPremiumPriceOracle = artifacts.require('./LinearPremiumPriceOracle')
@@ -13,12 +13,12 @@ contract('LinearPremiumPriceOracle', function (accounts) {
   let priceOracle
 
   before(async () => {
-    ens = await ENS.new()
-    registrar = await BaseRegistrar.new(ens.address, namehash.hash('pls'))
-    await ens.setSubnodeOwner('0x0', sha3('pls'), registrar.address)
+    pns = await PNS.new()
+    registrar = await BaseRegistrar.new(pns.address, namehash.hash('pls'))
+    await pns.setSubnodeOwner('0x0', sha3('pls'), registrar.address)
     await registrar.addController(accounts[0])
 
-    // Dummy oracle with 1 ETH == 2 USD
+    // Dummy oracle with 1 PLS == 2 USD
     var dummyOracle = await DummyOracle.new(toBN(200000000))
     // 4 attousd per second for 3 character names, 2 attousd per second for 4 character names,
     // 1 attousd per second for longer names.

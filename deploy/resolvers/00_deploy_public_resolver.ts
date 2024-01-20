@@ -7,9 +7,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments
   const { deployer, owner } = await getNamedAccounts()
 
-  const registry = await ethers.getContract('ENSRegistry', owner)
+  const registry = await ethers.getContract('PNSRegistry', owner)
   const nameWrapper = await ethers.getContract('NameWrapper', owner)
-  const controller = await ethers.getContract('ETHRegistrarController', owner)
+  const controller = await ethers.getContract('PLSRegistrarController', owner)
   const reverseRegistrar = await ethers.getContract('ReverseRegistrar', owner)
 
   const deployArgs = {
@@ -38,8 +38,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 func.id = 'resolver'
 func.tags = ['PublicResolver']
 func.dependencies = [
-  'ENSRegistry',
-  'ETHRegistrarController',
+  'PNSRegistry',
+  'PLSRegistrarController',
   'NameWrapper',
   'ReverseRegistrar',
 ]

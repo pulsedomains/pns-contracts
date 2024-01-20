@@ -4,6 +4,7 @@ import '@nomiclabs/hardhat-ethers'
 import '@nomiclabs/hardhat-solhint'
 import '@nomiclabs/hardhat-truffle5'
 import '@nomiclabs/hardhat-waffle'
+import '@nomicfoundation/hardhat-verify'
 import dotenv from 'dotenv'
 import 'hardhat-abi-exporter'
 import 'hardhat-contract-sizer'
@@ -54,6 +55,7 @@ const config: HardhatUserConfig = {
       tags: ['use_root'],
       chainId: 369,
       accounts: real_accounts,
+      gasPrice: 1000000000000000,
     },
     testnet: {
       url: 'https://rpc.v4.testnet.pulsechain.com',
@@ -107,6 +109,13 @@ const config: HardhatUserConfig = {
         artifacts: [archivedDeploymentPath],
       },
     ],
+  },
+  sourcify: {
+    enabled: true,
+    // Optional: specify a different Sourcify server
+    apiUrl: 'https://sourcify.dev/server',
+    // Optional: specify a different Sourcify repository
+    browserUrl: 'https://repo.sourcify.dev',
   },
 }
 

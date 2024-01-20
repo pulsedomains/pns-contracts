@@ -1,6 +1,6 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
-import "../../registry/ENS.sol";
+import "../../registry/PNS.sol";
 import "../../ethregistrar/IBaseRegistrar.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {BytesUtils} from "../BytesUtils.sol";
@@ -8,15 +8,15 @@ import {BytesUtils} from "../BytesUtils.sol";
 contract TestUnwrap is Ownable {
     using BytesUtils for bytes;
 
-    bytes32 private constant ETH_NODE =
+    bytes32 private constant PLS_NODE =
         0x55fb31aa6f23709345f51ac8d7e4ed79336defe55be2733bc226ed0f1f62f3c8;
 
-    ENS public immutable ens;
+    PNS public immutable pns;
     IBaseRegistrar public immutable registrar;
     mapping(address => bool) public approvedWrapper;
 
-    constructor(ENS _ens, IBaseRegistrar _registrar) {
-        ens = _ens;
+    constructor(PNS _pns, IBaseRegistrar _registrar) {
+        pns = _pns;
         registrar = _registrar;
     }
 
@@ -27,14 +27,14 @@ contract TestUnwrap is Ownable {
         approvedWrapper[wrapper] = approved;
     }
 
-    function wrapETH2LD(
+    function wrapPLS2LD(
         string calldata label,
         address wrappedOwner,
         uint32 fuses,
         uint64 expiry,
         address resolver
     ) public {
-        _unwrapETH2LD(keccak256(bytes(label)), wrappedOwner, msg.sender);
+        _unwrapPLS2LD(keccak256(bytes(label)), wrappedOwner, msg.sender);
     }
 
     function setSubnodeRecord(
@@ -62,14 +62,14 @@ contract TestUnwrap is Ownable {
         bytes32 parentNode = name.namehash(offset);
         bytes32 node = _makeNode(parentNode, labelhash);
 
-        if (parentNode == ETH_NODE) {
-            _unwrapETH2LD(labelhash, wrappedOwner, msg.sender);
+        if (parentNode == PLS_NODE) {
+            _unwrapPLS2LD(labelhash, wrappedOwner, msg.sender);
         } else {
             _unwrapSubnode(node, wrappedOwner, msg.sender);
         }
     }
 
-    function _unwrapETH2LD(
+    function _unwrapPLS2LD(
         bytes32 labelhash,
         address wrappedOwner,
         address sender
@@ -93,16 +93,16 @@ contract TestUnwrap is Ownable {
         address newOwner,
         address sender
     ) private {
-        address owner = ens.owner(node);
+        address owner = pns.owner(node);
 
         require(
             approvedWrapper[sender] &&
                 owner == sender &&
-                ens.isApprovedForAll(owner, address(this)),
+                pns.isApprovedForAll(owner, address(this)),
             "Unauthorised"
         );
 
-        ens.setOwner(node, newOwner);
+        pns.setOwner(node, newOwner);
     }
 
     function _makeNode(

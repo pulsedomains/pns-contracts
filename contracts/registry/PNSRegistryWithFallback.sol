@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.4;
 
-import "./ENS.sol";
-import "./ENSRegistry.sol";
+import "./PNS.sol";
+import "./PNSRegistry.sol";
 
 /**
  * The PNS registry contract.
  */
-contract ENSRegistryWithFallback is ENSRegistry {
-    ENS public old;
+contract PNSRegistryWithFallback is PNSRegistry {
+    PNS public old;
 
     /**
      * @dev Constructs a new PNS registrar.
      */
-    constructor(ENS _old) public ENSRegistry() {
+    constructor(PNS _old) public PNSRegistry() {
         old = _old;
     }
 

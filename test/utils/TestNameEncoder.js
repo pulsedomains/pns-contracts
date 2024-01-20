@@ -1,5 +1,5 @@
 const TestNameEncoder = artifacts.require('TestNameEncoder.sol')
-const { namehash } = require('../test-utils/ens')
+const { namehash } = require('../test-utils/pns')
 const { dns } = require('../test-utils')
 
 contract('UniversalResolver', function () {

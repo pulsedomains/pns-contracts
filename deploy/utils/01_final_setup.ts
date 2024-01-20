@@ -9,13 +9,13 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { getNamedAccounts, deployments } = hre
   const { owner } = await getNamedAccounts()
 
-  const registry = await ethers.getContract('ENSRegistry', owner)
+  const registry = await ethers.getContract('PNSRegistry', owner)
   const registrar = await ethers.getContract(
     'BaseRegistrarImplementation',
     owner,
   )
   const nameWrapper = await ethers.getContract('NameWrapper', owner)
-  const controller = await ethers.getContract('ETHRegistrarController', owner)
+  const controller = await ethers.getContract('PLSRegistrarController', owner)
   const publicResolver = await ethers.getContract('PublicResolver', owner)
   const plsOwnedResolver = await ethers.getContract('OwnedResolver')
   const bulkRenewal = await ethers.getContract('StaticBulkRenewal')
@@ -27,7 +27,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   console.log('ownerOfResolver', ownerOfResolver)
   switch (ownerOfResolver) {
     case nameWrapper.address:
-      tx = await nameWrapper.unwrapETH2LD(
+      tx = await nameWrapper.unwrapPLS2LD(
         '0x' + keccak256('resolver'),
         owner,
         owner,
@@ -97,7 +97,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const iRegistrarController = await computeInterfaceId(
     deployments,
-    'IETHRegistrarController',
+    'IPLSRegistrarController',
   )
   tx = await resolverContract.setInterface(
     namehash('pls'),
@@ -105,7 +105,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     controller.address,
   )
   console.log(
-    `Setting IETHRegistrarController interface ID ${iRegistrarController} on .pls resolver (tx: ${tx.hash})...`,
+    `Setting IPLSRegistrarController interface ID ${iRegistrarController} on .pls resolver (tx: ${tx.hash})...`,
   )
   await tx.wait()
 
@@ -126,10 +126,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 func.id = 'final-setup'
 func.tags = ['FinalSetup']
 func.dependencies = [
-  'ENSRegistry',
+  'PNSRegistry',
   'BaseRegistrarImplementation',
   'NameWrapper',
-  'ETHRegistrarController',
+  'PLSRegistrarController',
   'PublicResolver',
   'OwnedResolver',
   'StaticBulkRenewal',

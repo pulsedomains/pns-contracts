@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ~0.8.17;
 
-import "../registry/ENS.sol";
+import "../registry/PNS.sol";
 import "../ethregistrar/IBaseRegistrar.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "./IMetadataService.sol";
@@ -16,11 +16,11 @@ uint32 constant CANNOT_CREATE_SUBDOMAIN = 32;
 uint32 constant CANNOT_APPROVE = 64;
 //uint16 reserved for parent controlled fuses from bit 17 to bit 32
 uint32 constant PARENT_CANNOT_CONTROL = 1 << 16;
-uint32 constant IS_DOT_ETH = 1 << 17;
+uint32 constant IS_DOT_PLS = 1 << 17;
 uint32 constant CAN_EXTEND_EXPIRY = 1 << 18;
 uint32 constant CAN_DO_EVERYTHING = 0;
 uint32 constant PARENT_CONTROLLED_FUSES = 0xFFFF0000;
-// all fuses apart from IS_DOT_ETH
+// all fuses apart from IS_DOT_PLS
 uint32 constant USER_SETTABLE_FUSES = 0xFFFDFFFF;
 
 interface INameWrapper is IERC1155 {
@@ -37,7 +37,7 @@ interface INameWrapper is IERC1155 {
     event FusesSet(bytes32 indexed node, uint32 fuses);
     event ExpiryExtended(bytes32 indexed node, uint64 expiry);
 
-    function ens() external view returns (ENS);
+    function pns() external view returns (PNS);
 
     function registrar() external view returns (IBaseRegistrar);
 
@@ -57,14 +57,14 @@ interface INameWrapper is IERC1155 {
         address resolver
     ) external;
 
-    function wrapETH2LD(
+    function wrapPLS2LD(
         string calldata label,
         address wrappedOwner,
         uint16 ownerControlledFuses,
         address resolver
     ) external returns (uint64 expires);
 
-    function registerAndWrapETH2LD(
+    function registerAndWrapPLS2LD(
         string calldata label,
         address wrappedOwner,
         uint256 duration,
@@ -79,7 +79,7 @@ interface INameWrapper is IERC1155 {
 
     function unwrap(bytes32 node, bytes32 label, address owner) external;
 
-    function unwrapETH2LD(
+    function unwrapPLS2LD(
         bytes32 label,
         address newRegistrant,
         address newController

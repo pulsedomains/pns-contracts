@@ -7,7 +7,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments
   const { deployer, owner } = await getNamedAccounts()
 
-  const registry = await ethers.getContract('ENSRegistry', owner)
+  const registry = await ethers.getContract('PNSRegistry', owner)
 
   const registrar = await ethers.getContract(
     'BaseRegistrarImplementation',
@@ -33,14 +33,14 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     ],
     log: true,
   }
-  await deploy('ETHRegistrarController', deployArgs)
+  await deploy('PLSRegistrarController', deployArgs)
 
-  const controller = await ethers.getContract('ETHRegistrarController')
+  const controller = await ethers.getContract('PLSRegistrarController')
 
   if (owner !== deployer) {
     const tx = await controller.transferOwnership(owner)
     console.log(
-      `Transferring ownership of ETHRegistrarController to ${owner} (tx: ${tx.hash})...`,
+      `Transferring ownership of PLSRegistrarController to ${owner} (tx: ${tx.hash})...`,
     )
     await tx.wait()
   }
@@ -53,13 +53,13 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const tx1 = await nameWrapper.setController(controller.address, true)
   console.log(
-    `Adding ETHRegistrarController as a controller of NameWrapper (tx: ${tx1.hash})...`,
+    `Adding PLSRegistrarController as a controller of NameWrapper (tx: ${tx1.hash})...`,
   )
   await tx1.wait()
 
   const tx2 = await reverseRegistrar.setController(controller.address, true)
   console.log(
-    `Adding ETHRegistrarController as a controller of ReverseRegistrar (tx: ${tx2.hash})...`,
+    `Adding PLSRegistrarController as a controller of ReverseRegistrar (tx: ${tx2.hash})...`,
   )
   await tx2.wait()
 
@@ -67,9 +67,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 }
 
 func.id = 'eth-registrar'
-func.tags = ['ETHRegistrarController']
+func.tags = ['PLSRegistrarController']
 func.dependencies = [
-  'ENSRegistry',
+  'PNSRegistry',
   'BaseRegistrarImplementation',
   'ExponentialPremiumPriceOracle',
   'ReverseRegistrar',

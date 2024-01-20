@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.4;
 
-import "./ENS.sol";
+import "./PNS.sol";
 
 /**
  * The PNS registry contract.
  */
-contract ENSRegistry is ENS {
+contract PNSRegistry is PNS {
     struct Record {
         address owner;
         address resolver;

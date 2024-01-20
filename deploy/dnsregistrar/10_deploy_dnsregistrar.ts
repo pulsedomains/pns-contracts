@@ -7,7 +7,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments
   const { deployer, owner } = await getNamedAccounts()
 
-  const registry = await ethers.getContract('ENSRegistry')
+  const registry = await ethers.getContract('PNSRegistry')
   const dnssec = await ethers.getContract('DNSSECImpl')
   const resolver = await ethers.getContract('OffchainDNSResolver')
   const root = await ethers.getContract('Root')
@@ -43,7 +43,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 func.id = 'dns-registrar'
 func.tags = ['DNSRegistrar']
 func.dependencies = [
-  'ENSRegistry',
+  'PNSRegistry',
   'DNSSecOracle',
   'OffchainDNSResolver',
   'Root',

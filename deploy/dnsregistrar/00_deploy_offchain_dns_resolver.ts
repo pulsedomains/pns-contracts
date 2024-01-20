@@ -7,7 +7,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments
   const { deployer } = await getNamedAccounts()
 
-  const registry = await ethers.getContract('ENSRegistry')
+  const registry = await ethers.getContract('PNSRegistry')
   const dnssec = await ethers.getContract('DNSSECImpl')
 
   const tx = await deploy('OffchainDNSResolver', {
@@ -26,6 +26,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
 func.id = 'offchain-dns-resolver'
 func.tags = ['OffchainDNSResolver']
-func.dependencies = ['ENSRegistry', 'DNSSecOracle']
+func.dependencies = ['PNSRegistry', 'DNSSecOracle']
 
 export default func
