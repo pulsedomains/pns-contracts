@@ -42,7 +42,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       console.log(
         `Setting resolver for resolver.pls to PublicResolver (tx: ${tx.hash})...`,
       )
-      await tx.wait()
+      await tx.wait(2)
 
       tx = await publicResolver['setAddr(bytes32,address)'](
         resolverHash,
@@ -76,7 +76,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   if (resolver === null) {
     tx = await registrar.setResolver(plsOwnedResolver.address)
     console.log(`Registrar set resolver to OwnedResolver (tx: ${tx.hash})...`)
-    await tx.wait()
+    await tx.wait(2)
   }
 
   const resolverContract = await ethers.getContractAt(
@@ -93,7 +93,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   console.log(
     `Setting NameWrapper interface ID ${iNameWrapper} on .pls resolver (tx: ${tx.hash})...`,
   )
-  await tx.wait()
+  await tx.wait(2)
 
   const iRegistrarController = await computeInterfaceId(
     deployments,
@@ -107,7 +107,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   console.log(
     `Setting IPLSRegistrarController interface ID ${iRegistrarController} on .pls resolver (tx: ${tx.hash})...`,
   )
-  await tx.wait()
+  await tx.wait(2)
 
   const iBulkRenewal = await computeInterfaceId(deployments, 'IBulkRenewal')
   tx = await resolverContract.setInterface(
@@ -118,7 +118,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   console.log(
     `Setting BulkRenewal interface ID ${iBulkRenewal} on .pls resolver (tx: ${tx.hash})...`,
   )
-  await tx.wait()
+  await tx.wait(2)
 
   return true
 }

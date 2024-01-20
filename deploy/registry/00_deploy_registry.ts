@@ -23,7 +23,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         console.log(
           `Setting final owner of root node on registry (tx:${tx.hash})...`,
         )
-        await tx.wait()
+        await tx.wait(2)
         break
       case owner:
         break

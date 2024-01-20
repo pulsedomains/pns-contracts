@@ -29,7 +29,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   console.log(
     `Transferring ownership of registrar to owner (tx: ${tx1.hash})...`,
   )
-  await tx1.wait()
+  await tx1.wait(2)
 
   const tx2 = await root
     .connect(await ethers.getSigner(owner))
@@ -37,7 +37,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   console.log(
     `Setting owner of pls node to registrar on root (tx: ${tx2.hash})...`,
   )
-  await tx2.wait()
+  await tx2.wait(2)
 
   return true
 }

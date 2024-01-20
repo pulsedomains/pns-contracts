@@ -27,14 +27,14 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     console.log(
       `Transferring ownership of NameWrapper to ${owner} (tx: ${tx.hash})...`,
     )
-    await tx.wait()
+    await tx.wait(2)
   }
 
   const tx2 = await registrar.addController(nameWrapper.address)
   console.log(
     `Adding NameWrapper as controller on registrar (tx: ${tx2.hash})...`,
   )
-  await tx2.wait()
+  await tx2.wait(2)
 
   return true
 }

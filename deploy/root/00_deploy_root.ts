@@ -26,7 +26,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   console.log(
     `Setting owner of root node to root contract (tx: ${tx1.hash})...`,
   )
-  await tx1.wait()
+  await tx1.wait(2)
 
   const rootOwner = await root.owner()
   switch (rootOwner) {
@@ -37,7 +37,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       console.log(
         `Transferring root ownership to final owner (tx: ${tx2.hash})...`,
       )
-      await tx2.wait()
+      await tx2.wait(2)
     case owner:
       const controller = await root.controllers(owner)
       if (!controller) {
@@ -47,7 +47,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         console.log(
           `Setting final owner as controller on root contract (tx: ${tx2.hash})...`,
         )
-        await tx2.wait()
+        await tx2.wait(2)
       }
       break
     default:

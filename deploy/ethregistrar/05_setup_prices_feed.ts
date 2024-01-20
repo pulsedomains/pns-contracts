@@ -44,7 +44,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     '0x16Cba421390c883F201fF7EfFB1b540B4ca821f0',
   )
   console.log(`Updating new prices feed on (tx: ${tx.hash})...`)
-  await tx.wait()
+  await tx.wait(2)
 }
 
 func.id = 'setup-prices-feed'

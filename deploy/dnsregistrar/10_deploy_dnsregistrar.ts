@@ -35,7 +35,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     .connect(await ethers.getSigner(owner))
     .setController(dnsRegistrar.address, true)
   console.log(`Set DNSRegistrar as controller of Root (${tx2.hash})...`)
-  await tx2.wait()
+  await tx2.wait(2)
 
   return true
 }

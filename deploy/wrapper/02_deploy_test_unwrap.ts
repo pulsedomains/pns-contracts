@@ -90,7 +90,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         console.log(
           `Setting upgrade contract for ${wrapperAddress} to ${testUnwrap.address} (tx: ${tx.hash})...`,
         )
-        await tx.wait()
+        await tx.wait(2)
       }
       if (isApprovedWrapper) {
         console.log(
@@ -107,7 +107,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     }
     const tx = await testUnwrap.setWrapperApproval(wrapperAddress, true)
     console.log(`Approving wrapper ${wrapperAddress} (tx: ${tx.hash})...`)
-    await tx.wait()
+    await tx.wait(2)
   }
 }
 

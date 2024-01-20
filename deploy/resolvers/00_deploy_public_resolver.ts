@@ -30,7 +30,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   console.log(
     `Setting default resolver on ReverseRegistrar to PublicResolver (tx: ${tx.hash})...`,
   )
-  await tx.wait()
+  await tx.wait(2)
 
   return true
 }

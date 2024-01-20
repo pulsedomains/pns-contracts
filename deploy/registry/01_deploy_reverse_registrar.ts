@@ -25,14 +25,14 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     console.log(
       `Transferring ownership of ReverseRegistrar to ${owner} (tx: ${tx.hash})...`,
     )
-    await tx.wait()
+    await tx.wait(2)
   }
 
   const tx1 = await root
     .connect(await ethers.getSigner(owner))
     .setSubnodeOwner('0x' + keccak256('reverse'), owner)
   console.log(`Setting owner of .reverse to owner on root (tx: ${tx1.hash})...`)
-  await tx1.wait()
+  await tx1.wait(2)
 
   const tx2 = await registry
     .connect(await ethers.getSigner(owner))
@@ -44,7 +44,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   console.log(
     `Setting owner of .addr.reverse to ReverseRegistrar on registry (tx: ${tx2.hash})...`,
   )
-  await tx2.wait()
+  await tx2.wait(2)
 
   return true
 }

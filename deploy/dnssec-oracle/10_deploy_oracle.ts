@@ -109,7 +109,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   console.log(
     `Waiting on ${transactions.length} transactions setting DNSSEC parameters`,
   )
-  await Promise.all(transactions.map((tx) => tx.wait()))
+  await Promise.all(transactions.map((tx) => tx.wait(2)))
 
   return true
 }
