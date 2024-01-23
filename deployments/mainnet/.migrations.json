@@ -16,5 +16,6 @@
   "dnssec-oracle": 1705765700,
   "offchain-dns-resolver": 1705765740,
   "dns-registrar": 1705765820,
-  "final-setup": 1705770710
+  "final-setup": 1705770710,
+  "update-metadata-service": 1705993533
 }
