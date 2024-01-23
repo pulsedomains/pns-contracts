@@ -1,8 +1,8 @@
-const ENS = artifacts.require('./registry/ENSRegistry.sol')
+const PNS = artifacts.require('./registry/PNSRegistry.sol')
 const PublicResolver = artifacts.require('PublicResolver.sol')
 const NameWrapper = artifacts.require('DummyNameWrapper.sol')
 const { deploy } = require('../test-utils/contracts')
-const { labelhash } = require('../test-utils/ens')
+const { labelhash } = require('../test-utils/pns')
 const {
   EMPTY_BYTES32: ROOT_NODE,
   EMPTY_ADDRESS,
@@ -16,7 +16,7 @@ const { exceptions } = require('../test-utils')
 
 contract('PublicResolver', function (accounts) {
   let node
-  let ens, resolver, nameWrapper
+  let pns, resolver, nameWrapper
   let account
   let signers
   let result
@@ -24,23 +24,23 @@ contract('PublicResolver', function (accounts) {
   beforeEach(async () => {
     signers = await ethers.getSigners()
     account = await signers[0].getAddress()
-    node = namehash.hash('eth')
-    ens = await ENS.new()
+    node = namehash.hash('pls')
+    pns = await PNS.new()
     nameWrapper = await NameWrapper.new()
 
     //setup reverse registrar
 
-    const ReverseRegistrar = await deploy('ReverseRegistrar', ens.address)
+    const ReverseRegistrar = await deploy('ReverseRegistrar', pns.address)
 
-    await ens.setSubnodeOwner(ROOT_NODE, labelhash('reverse'), account)
-    await ens.setSubnodeOwner(
+    await pns.setSubnodeOwner(ROOT_NODE, labelhash('reverse'), account)
+    await pns.setSubnodeOwner(
       namehash.hash('reverse'),
       labelhash('addr'),
       ReverseRegistrar.address,
     )
 
     resolver = await PublicResolver.new(
-      ens.address,
+      pns.address,
       nameWrapper.address,
       accounts[9], // trusted contract
       ReverseRegistrar.address, //ReverseRegistrar.address,
@@ -48,7 +48,7 @@ contract('PublicResolver', function (accounts) {
 
     await ReverseRegistrar.setDefaultResolver(resolver.address)
 
-    await ens.setSubnodeOwner('0x0', sha3('eth'), accounts[0], {
+    await pns.setSubnodeOwner('0x0', sha3('pls'), accounts[0], {
       from: accounts[0],
     })
   })
@@ -198,7 +198,7 @@ contract('PublicResolver', function (accounts) {
       )
     })
 
-    it('returns ETH address for coin type 60', async () => {
+    it('returns PLS address for coin type 1028', async () => {
       var tx = await resolver.methods['setAddr(bytes32,address)'](
         node,
         accounts[1],
@@ -212,15 +212,15 @@ contract('PublicResolver', function (accounts) {
       assert.equal(tx.logs[1].args.node, node)
       assert.equal(tx.logs[1].args.a, accounts[1])
       assert.equal(
-        await resolver.methods['addr(bytes32,uint256)'](node, 60),
+        await resolver.methods['addr(bytes32,uint256)'](node, 1028),
         accounts[1].toLowerCase(),
       )
     })
 
-    it('setting coin type 60 updates ETH address', async () => {
+    it('setting coin type 1028 updates PLS address', async () => {
       var tx = await resolver.methods['setAddr(bytes32,uint256,bytes)'](
         node,
-        60,
+        1028,
         accounts[2],
         { from: accounts[0] },
       )
@@ -341,7 +341,7 @@ contract('PublicResolver', function (accounts) {
       )
     })
 
-    it('returns ETH address for coin type 60', async () => {
+    it('returns PLS address for coin type 1028', async () => {
       var tx = await resolver.methods['setAddr(bytes32,address)'](
         node,
         accounts[1],
@@ -355,15 +355,15 @@ contract('PublicResolver', function (accounts) {
       assert.equal(tx.logs[1].args.node, node)
       assert.equal(tx.logs[1].args.a, accounts[1])
       assert.equal(
-        await resolver.methods['addr(bytes32,uint256)'](node, 60),
+        await resolver.methods['addr(bytes32,uint256)'](node, 1028),
         accounts[1].toLowerCase(),
       )
     })
 
-    it('setting coin type 60 updates ETH address', async () => {
+    it('setting coin type 1028 updates PLS address', async () => {
       var tx = await resolver.methods['setAddr(bytes32,uint256,bytes)'](
         node,
-        60,
+        1028,
         accounts[2],
         { from: accounts[0] },
       )
@@ -591,8 +591,8 @@ contract('PublicResolver', function (accounts) {
   })
 
   describe('text', async () => {
-    var url = 'https://ethereum.org'
-    var url2 = 'https://github.com/ethereum'
+    var url = 'https://pulsechain.org'
+    var url2 = 'https://github.com/pulsechain'
 
     const basicSetText = async () => {
       await resolver.setText(node, 'url', url, { from: accounts[0] })
@@ -736,57 +736,57 @@ contract('PublicResolver', function (accounts) {
 
   describe('dns', async () => {
     const basicSetDNSRecords = async () => {
-      // a.eth. 3600 IN A 1.2.3.4
-      const arec = '016103657468000001000100000e10000401020304'
-      // b.eth. 3600 IN A 2.3.4.5
-      const b1rec = '016203657468000001000100000e10000402030405'
-      // b.eth. 3600 IN A 3.4.5.6
-      const b2rec = '016203657468000001000100000e10000403040506'
-      // eth. 86400 IN SOA ns1.ethdns.xyz. hostmaster.test.eth. 2018061501 15620 1800 1814400 14400
+      // a.pls. 3600 IN A 1.2.3.4
+      const arec = '016103706c73000001000100000e10000401020304'
+      // b.pls. 3600 IN A 2.3.4.5
+      const b1rec = '016203706c73000001000100000e10000402030405'
+      // b.pls. 3600 IN A 3.4.5.6
+      const b2rec = '016203706c73000001000100000e10000403040506'
+      // pls. 86400 IN SOA ns1.plsdns.xyz. hostmaster.test.pls. 2018061501 15620 1800 1814400 14400
       const soarec =
-        '03657468000006000100015180003a036e733106657468646e730378797a000a686f73746d6173746572057465737431036574680078492cbd00003d0400000708001baf8000003840'
+        '03706c73000006000100015180003a036e733106706c73646e730378797a000a686f73746d617374657205746573743103706c730078492cbd00003d0400000708001baf8000003840'
       const rec = '0x' + arec + b1rec + b2rec + soarec
 
       await resolver.setDNSRecords(node, rec, { from: accounts[0] })
 
       assert.equal(
-        await resolver.dnsRecord(node, sha3(dnsName('a.eth.')), 1),
-        '0x016103657468000001000100000e10000401020304',
+        await resolver.dnsRecord(node, sha3(dnsName('a.pls.')), 1),
+        '0x016103706c73000001000100000e10000401020304',
       )
       assert.equal(
-        await resolver.dnsRecord(node, sha3(dnsName('b.eth.')), 1),
-        '0x016203657468000001000100000e10000402030405016203657468000001000100000e10000403040506',
+        await resolver.dnsRecord(node, sha3(dnsName('b.pls.')), 1),
+        '0x016203706c73000001000100000e10000402030405016203706c73000001000100000e10000403040506',
       )
       assert.equal(
-        await resolver.dnsRecord(node, sha3(dnsName('eth.')), 6),
-        '0x03657468000006000100015180003a036e733106657468646e730378797a000a686f73746d6173746572057465737431036574680078492cbd00003d0400000708001baf8000003840',
+        await resolver.dnsRecord(node, sha3(dnsName('pls.')), 6),
+        '0x03706c73000006000100015180003a036e733106706c73646e730378797a000a686f73746d617374657205746573743103706c730078492cbd00003d0400000708001baf8000003840',
       )
     }
     it('permits setting name by owner', basicSetDNSRecords)
 
     it('should update existing records', async () => {
-      // a.eth. 3600 IN A 4.5.6.7
-      const arec = '016103657468000001000100000e10000404050607'
-      // eth. 86400 IN SOA ns1.ethdns.xyz. hostmaster.test.eth. 2018061502 15620 1800 1814400 14400
+      // a.pls. 3600 IN A 4.5.6.7
+      const arec = '016103706c73000001000100000e10000404050607'
+      // pls. 86400 IN SOA ns1.plsdns.xyz. hostmaster.test.pls. 2018061502 15620 1800 1814400 14400
       const soarec =
-        '03657468000006000100015180003a036e733106657468646e730378797a000a686f73746d6173746572057465737431036574680078492cbe00003d0400000708001baf8000003840'
+        '03706c73000006000100015180003a036e733106706c73646e730378797a000a686f73746d617374657205746573743103706c730078492cbe00003d0400000708001baf8000003840'
       const rec = '0x' + arec + soarec
 
       await resolver.setDNSRecords(node, rec, { from: accounts[0] })
 
       assert.equal(
-        await resolver.dnsRecord(node, sha3(dnsName('a.eth.')), 1),
-        '0x016103657468000001000100000e10000404050607',
+        await resolver.dnsRecord(node, sha3(dnsName('a.pls.')), 1),
+        '0x016103706c73000001000100000e10000404050607',
       )
       assert.equal(
-        await resolver.dnsRecord(node, sha3(dnsName('eth.')), 6),
-        '0x03657468000006000100015180003a036e733106657468646e730378797a000a686f73746d6173746572057465737431036574680078492cbe00003d0400000708001baf8000003840',
+        await resolver.dnsRecord(node, sha3(dnsName('pls.')), 6),
+        '0x03706c73000006000100015180003a036e733106706c73646e730378797a000a686f73746d617374657205746573743103706c730078492cbe00003d0400000708001baf8000003840',
       )
     })
 
     it('should keep track of entries', async () => {
-      // c.eth. 3600 IN A 1.2.3.4
-      const crec = '016303657468000001000100000e10000401020304'
+      // c.pls. 3600 IN A 1.2.3.4
+      const crec = '016303706c73000001000100000e10000401020304'
       const rec = '0x' + crec
 
       await resolver.setDNSRecords(node, rec, { from: accounts[0] })
@@ -794,44 +794,44 @@ contract('PublicResolver', function (accounts) {
       // Initial check
       var hasEntries = await resolver.hasDNSRecords(
         node,
-        sha3(dnsName('c.eth.')),
+        sha3(dnsName('c.pls.')),
       )
       assert.equal(hasEntries, true)
-      hasEntries = await resolver.hasDNSRecords(node, sha3(dnsName('d.eth.')))
+      hasEntries = await resolver.hasDNSRecords(node, sha3(dnsName('d.pls.')))
       assert.equal(hasEntries, false)
 
       // Update with no new data makes no difference
       await resolver.setDNSRecords(node, rec, { from: accounts[0] })
-      hasEntries = await resolver.hasDNSRecords(node, sha3(dnsName('c.eth.')))
+      hasEntries = await resolver.hasDNSRecords(node, sha3(dnsName('c.pls.')))
       assert.equal(hasEntries, true)
 
-      // c.eth. 3600 IN A
-      const crec2 = '016303657468000001000100000e100000'
+      // c.pls. 3600 IN A
+      const crec2 = '016303706c73000001000100000e100000'
       const rec2 = '0x' + crec2
 
       await resolver.setDNSRecords(node, rec2, { from: accounts[0] })
 
       // Removal returns to 0
-      hasEntries = await resolver.hasDNSRecords(node, sha3(dnsName('c.eth.')))
+      hasEntries = await resolver.hasDNSRecords(node, sha3(dnsName('c.pls.')))
       assert.equal(hasEntries, false)
     })
 
     it('should handle single-record updates', async () => {
-      // e.eth. 3600 IN A 1.2.3.4
-      const erec = '016503657468000001000100000e10000401020304'
+      // e.pls. 3600 IN A 1.2.3.4
+      const erec = '016503706c73000001000100000e10000401020304'
       const rec = '0x' + erec
 
       await resolver.setDNSRecords(node, rec, { from: accounts[0] })
 
       assert.equal(
-        await resolver.dnsRecord(node, sha3(dnsName('e.eth.')), 1),
-        '0x016503657468000001000100000e10000401020304',
+        await resolver.dnsRecord(node, sha3(dnsName('e.pls.')), 1),
+        '0x016503706c73000001000100000e10000401020304',
       )
     })
 
     it('forbids setting DNS records by non-owners', async () => {
-      // f.eth. 3600 IN A 1.2.3.4
-      const frec = '016603657468000001000100000e10000401020304'
+      // f.pls. 3600 IN A 1.2.3.4
+      const frec = '016603706c73000001000100000e10000401020304'
       const rec = '0x' + frec
       await exceptions.expectFailure(
         resolver.setDNSRecords(node, rec, { from: accounts[1] }),
@@ -980,15 +980,15 @@ contract('PublicResolver', function (accounts) {
       await basicSetDNSRecords()
       await resolver.clearRecords(node)
       assert.equal(
-        await resolver.dnsRecord(node, sha3(dnsName('a.eth.')), 1),
+        await resolver.dnsRecord(node, sha3(dnsName('a.pls.')), 1),
         null,
       )
       assert.equal(
-        await resolver.dnsRecord(node, sha3(dnsName('b.eth.')), 1),
+        await resolver.dnsRecord(node, sha3(dnsName('b.pls.')), 1),
         null,
       )
       assert.equal(
-        await resolver.dnsRecord(node, sha3(dnsName('eth.')), 6),
+        await resolver.dnsRecord(node, sha3(dnsName('pls.')), 6),
         null,
       )
     })
@@ -1063,8 +1063,8 @@ contract('PublicResolver', function (accounts) {
     })
 
     it('returns 0 on fallback when target contract does not support implementsInterface', async () => {
-      // Set addr to the ENS registry, which doesn't implement supportsInterface.
-      await resolver.methods['setAddr(bytes32,address)'](node, ens.address, {
+      // Set addr to the PNS registry, which doesn't implement supportsInterface.
+      await resolver.methods['setAddr(bytes32,address)'](node, pns.address, {
         from: accounts[0],
       })
       // Check the ID for `supportsInterface(bytes4)`
@@ -1112,7 +1112,7 @@ contract('PublicResolver', function (accounts) {
         from: accounts[0],
       })
       assert.equal(
-        await resolver.isApprovedForAll(await ens.owner(node), accounts[1]),
+        await resolver.isApprovedForAll(await pns.owner(node), accounts[1]),
         true,
       )
       await resolver.methods['setAddr(bytes32,address)'](node, accounts[1], {
@@ -1149,7 +1149,7 @@ contract('PublicResolver', function (accounts) {
       await resolver.setApprovalForAll(accounts[2], true, {
         from: accounts[1],
       })
-      await ens.setOwner(node, accounts[1], { from: accounts[0] })
+      await pns.setOwner(node, accounts[1], { from: accounts[0] })
 
       await resolver.methods['setAddr(bytes32,address)'](node, accounts[0], {
         from: accounts[2],
@@ -1184,14 +1184,14 @@ contract('PublicResolver', function (accounts) {
     })
 
     it('permits name wrapper owner to make changes if owner is set to name wrapper address', async () => {
-      var owner = await ens.owner(node)
+      var owner = await pns.owner(node)
       var operator = accounts[2]
       await exceptions.expectFailure(
         resolver.methods['setAddr(bytes32,address)'](node, owner, {
           from: operator,
         }),
       )
-      await ens.setOwner(node, nameWrapper.address, { from: owner })
+      await pns.setOwner(node, nameWrapper.address, { from: owner })
       await expect(
         resolver.methods['setAddr(bytes32,address)'](node, owner, {
           from: operator,
@@ -1216,7 +1216,7 @@ contract('PublicResolver', function (accounts) {
         from: accounts[0],
       })
       assert.equal(
-        await resolver.isApprovedFor(await ens.owner(node), node, accounts[1]),
+        await resolver.isApprovedFor(await pns.owner(node), node, accounts[1]),
         true,
       )
       await resolver.methods['setAddr(bytes32,address)'](node, accounts[1], {
@@ -1253,7 +1253,7 @@ contract('PublicResolver', function (accounts) {
       await resolver.approve(node, accounts[2], true, {
         from: accounts[1],
       })
-      await ens.setOwner(node, accounts[1], { from: accounts[0] })
+      await pns.setOwner(node, accounts[1], { from: accounts[0] })
 
       await resolver.methods['setAddr(bytes32,address)'](node, accounts[0], {
         from: accounts[2],
@@ -1289,7 +1289,7 @@ contract('PublicResolver', function (accounts) {
         accounts[1],
       ).encodeABI()
       var textSet = resolver.contract.methods
-        .setText(node, 'url', 'https://ethereum.org/')
+        .setText(node, 'url', 'https://pulsechain.org/')
         .encodeABI()
       var tx = await resolver.multicall([addrSet, textSet], {
         from: accounts[0],
@@ -1307,14 +1307,14 @@ contract('PublicResolver', function (accounts) {
       assert.equal(tx.logs[2].args.key, 'url')
 
       assert.equal(await resolver.methods['addr(bytes32)'](node), accounts[1])
-      assert.equal(await resolver.text(node, 'url'), 'https://ethereum.org/')
+      assert.equal(await resolver.text(node, 'url'), 'https://pulsechain.org/')
     })
 
     it('allows reading multiple fields', async () => {
       await resolver.methods['setAddr(bytes32,address)'](node, accounts[1], {
         from: accounts[0],
       })
-      await resolver.setText(node, 'url', 'https://ethereum.org/', {
+      await resolver.setText(node, 'url', 'https://pulsechain.org/', {
         from: accounts[0],
       })
       var results = await resolver.multicall.call([
@@ -1327,7 +1327,7 @@ contract('PublicResolver', function (accounts) {
       )
       assert.equal(
         web3.eth.abi.decodeParameters(['string'], results[1])[0],
-        'https://ethereum.org/',
+        'https://pulsechain.org/',
       )
     })
   })

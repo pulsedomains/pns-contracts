@@ -1,4 +1,4 @@
-const ENS = artifacts.require('./registry/ENSRegistry')
+const PNS = artifacts.require('./registry/PNSRegistry')
 const BaseRegistrar = artifacts.require('./BaseRegistrarImplementation')
 const DummyOracle = artifacts.require('./DummyOracle')
 const LinearPremiumPriceOracle = artifacts.require('./LinearPremiumPriceOracle')
@@ -13,12 +13,12 @@ contract('LinearPremiumPriceOracle', function (accounts) {
   let priceOracle
 
   before(async () => {
-    ens = await ENS.new()
-    registrar = await BaseRegistrar.new(ens.address, namehash.hash('eth'))
-    await ens.setSubnodeOwner('0x0', sha3('eth'), registrar.address)
+    pns = await PNS.new()
+    registrar = await BaseRegistrar.new(pns.address, namehash.hash('pls'))
+    await pns.setSubnodeOwner('0x0', sha3('pls'), registrar.address)
     await registrar.addController(accounts[0])
 
-    // Dummy oracle with 1 ETH == 2 USD
+    // Dummy oracle with 1 PLS == 2 USD
     var dummyOracle = await DummyOracle.new(toBN(200000000))
     // 4 attousd per second for 3 character names, 2 attousd per second for 4 character names,
     // 1 attousd per second for longer names.
@@ -73,7 +73,7 @@ contract('LinearPremiumPriceOracle', function (accounts) {
   })
 
   it('should specify the maximum premium at the moment of expiration', async () => {
-    const ts = (await web3.eth.getBlock('latest')).timestamp - 90 * DAY
+    const ts = (await web3.eth.getBlock('latest')).timestamp - 30 * DAY
     assert.equal(
       (await priceOracle.premium('foobar', ts, 0)).toString(),
       '50000000000000000000',
@@ -86,7 +86,7 @@ contract('LinearPremiumPriceOracle', function (accounts) {
 
   it('should specify half the premium after half the interval', async () => {
     const ts =
-      (await web3.eth.getBlock('latest')).timestamp - (90 * DAY + 50000)
+      (await web3.eth.getBlock('latest')).timestamp - (30 * DAY + 50000)
     assert.equal(
       (await priceOracle.premium('foobar', ts, 0)).toString(),
       '25000000000000000000',
@@ -100,8 +100,8 @@ contract('LinearPremiumPriceOracle', function (accounts) {
   it('should return correct times for price queries', async () => {
     const initialPremiumWei = toBN('50000000000000000000')
     const ts = await priceOracle.timeUntilPremium(0, initialPremiumWei)
-    assert.equal(ts.toNumber(), 90 * DAY)
+    assert.equal(ts.toNumber(), 30 * DAY)
     const ts2 = await priceOracle.timeUntilPremium(0, 0)
-    assert.equal(ts2.toNumber(), 90 * DAY + 100000)
+    assert.equal(ts2.toNumber(), 30 * DAY + 100000)
   })
 })

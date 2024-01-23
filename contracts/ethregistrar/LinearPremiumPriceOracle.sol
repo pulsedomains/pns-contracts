@@ -1,4 +1,4 @@
-//SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: MIT
 pragma solidity ~0.8.17;
 
 import "./SafeMath.sol";
@@ -7,7 +7,7 @@ import "./StablePriceOracle.sol";
 contract LinearPremiumPriceOracle is StablePriceOracle {
     using SafeMath for *;
 
-    uint256 immutable GRACE_PERIOD = 90 days;
+    uint256 immutable GRACE_PERIOD = 30 days;
 
     uint256 public immutable initialPremium;
     uint256 public immutable premiumDecreaseRate;

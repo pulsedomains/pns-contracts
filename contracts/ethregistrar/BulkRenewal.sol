@@ -1,9 +1,9 @@
-//SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: MIT
 pragma solidity ~0.8.17;
 
-import "../registry/ENS.sol";
-import "./ETHRegistrarController.sol";
-import "./IETHRegistrarController.sol";
+import "../registry/PNS.sol";
+import "./PLSRegistrarController.sol";
+import "./IPLSRegistrarController.sol";
 import "../resolvers/Resolver.sol";
 import "./IBulkRenewal.sol";
 import "./IPriceOracle.sol";
@@ -11,22 +11,22 @@ import "./IPriceOracle.sol";
 import "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 
 contract BulkRenewal is IBulkRenewal {
-    bytes32 private constant ETH_NAMEHASH =
-        0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae;
+    bytes32 private constant PLS_NAMEHASH =
+        0x55fb31aa6f23709345f51ac8d7e4ed79336defe55be2733bc226ed0f1f62f3c8;
 
-    ENS public immutable ens;
+    PNS public immutable pns;
 
-    constructor(ENS _ens) {
-        ens = _ens;
+    constructor(PNS _pns) {
+        pns = _pns;
     }
 
-    function getController() internal view returns (ETHRegistrarController) {
-        Resolver r = Resolver(ens.resolver(ETH_NAMEHASH));
+    function getController() internal view returns (PLSRegistrarController) {
+        Resolver r = Resolver(pns.resolver(PLS_NAMEHASH));
         return
-            ETHRegistrarController(
+            PLSRegistrarController(
                 r.interfaceImplementer(
-                    ETH_NAMEHASH,
-                    type(IETHRegistrarController).interfaceId
+                    PLS_NAMEHASH,
+                    type(IPLSRegistrarController).interfaceId
                 )
             );
     }
@@ -35,7 +35,7 @@ contract BulkRenewal is IBulkRenewal {
         string[] calldata names,
         uint256 duration
     ) external view override returns (uint256 total) {
-        ETHRegistrarController controller = getController();
+        PLSRegistrarController controller = getController();
         uint256 length = names.length;
         for (uint256 i = 0; i < length; ) {
             IPriceOracle.Price memory price = controller.rentPrice(
@@ -53,7 +53,7 @@ contract BulkRenewal is IBulkRenewal {
         string[] calldata names,
         uint256 duration
     ) external payable override {
-        ETHRegistrarController controller = getController();
+        PLSRegistrarController controller = getController();
         uint256 length = names.length;
         uint256 total;
         for (uint256 i = 0; i < length; ) {

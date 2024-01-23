@@ -10,8 +10,8 @@ interface ITextResolver {
     );
 
     /**
-     * Returns the text data associated with an ENS node and key.
-     * @param node The ENS node to query.
+     * Returns the text data associated with an PNS node and key.
+     * @param node The PNS node to query.
      * @param key The text data key to query.
      * @return The associated text data.
      */

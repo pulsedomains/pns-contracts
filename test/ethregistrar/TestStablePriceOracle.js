@@ -7,7 +7,7 @@ contract('StablePriceOracle', function (accounts) {
   let priceOracle
 
   before(async () => {
-    // Dummy oracle with 1 ETH == 10 USD
+    // Dummy oracle with 1 PLS == 10 USD
     var dummyOracle = await DummyOracle.new(1000000000n)
     // 4 attousd per second for 3 character names, 2 attousd per second for 4 character names,
     // 1 attousd per second for longer names.

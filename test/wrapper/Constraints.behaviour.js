@@ -5,7 +5,7 @@ const {
   encodeName,
   FUSES,
   MAX_EXPIRY,
-} = require('../test-utils/ens')
+} = require('../test-utils/pns')
 
 const { advanceTime, mine } = require('../test-utils/evm')
 const { EMPTY_ADDRESS } = require('../test-utils/constants')
@@ -30,11 +30,11 @@ const {
   CANNOT_SET_RESOLVER,
   PARENT_CANNOT_CONTROL,
   CAN_DO_EVERYTHING,
-  IS_DOT_ETH,
+  IS_DOT_PLS,
 } = FUSES
 
 const DAY = 86400
-const GRACE_PERIOD = 90 * DAY
+const GRACE_PERIOD = 30 * DAY
 
 function shouldRespectConstraints(contracts, getSigners) {
   let account
@@ -42,13 +42,13 @@ function shouldRespectConstraints(contracts, getSigners) {
   let BaseRegistrar
   let NameWrapper
   let NameWrapper2
-  let EnsRegistry
-  let EnsRegistry2
+  let PnsRegistry
+  let PnsRegistry2
 
   let parentLabel = 'test1'
   let parentLabelHash = labelhash(parentLabel)
-  let parentNode = namehash('test1.eth')
-  let childNode = namehash('sub.test1.eth')
+  let parentNode = namehash('test1.pls')
+  let childNode = namehash('sub.test1.pls')
   let childLabel = 'sub'
   let childLabelHash = labelhash(childLabel)
 
@@ -56,7 +56,7 @@ function shouldRespectConstraints(contracts, getSigners) {
     const signers = getSigners()
     account = await signers[0].getAddress()
     account2 = await signers[1].getAddress()
-    ;({ BaseRegistrar, NameWrapper, NameWrapper2, EnsRegistry, EnsRegistry2 } =
+    ;({ BaseRegistrar, NameWrapper, NameWrapper2, PnsRegistry, PnsRegistry2 } =
       contracts())
     await BaseRegistrar.setApprovalForAll(NameWrapper.address, true)
   })
@@ -72,7 +72,7 @@ function shouldRespectConstraints(contracts, getSigners) {
     childExpiry,
   }) {
     await BaseRegistrar.register(labelhash(parentLabel), account, 84600)
-    await NameWrapper.wrapETH2LD(
+    await NameWrapper.wrapPLS2LD(
       parentLabel,
       account,
       parentFuses,
@@ -99,7 +99,7 @@ function shouldRespectConstraints(contracts, getSigners) {
       childExpiry: 0,
     })
     const [, parentFuses] = await NameWrapper.getData(parentNode)
-    expect(parentFuses).to.equal(PARENT_CANNOT_CONTROL | IS_DOT_ETH)
+    expect(parentFuses).to.equal(PARENT_CANNOT_CONTROL | IS_DOT_PLS)
     const [, childFuses, childExpiry] = await NameWrapper.getData(childNode)
     expect(childFuses).to.equal(CAN_DO_EVERYTHING)
     expect(childExpiry).to.equal(0)
@@ -117,7 +117,7 @@ function shouldRespectConstraints(contracts, getSigners) {
     })
     const [, parentFuses] = await NameWrapper.getData(parentNode)
     expect(parentFuses).to.equal(
-      CANNOT_UNWRAP | PARENT_CANNOT_CONTROL | IS_DOT_ETH,
+      CANNOT_UNWRAP | PARENT_CANNOT_CONTROL | IS_DOT_PLS,
     )
     const [, childFuses, childExpiry] = await NameWrapper.getData(childNode)
     expect(childFuses).to.equal(CAN_DO_EVERYTHING)
@@ -133,7 +133,7 @@ function shouldRespectConstraints(contracts, getSigners) {
   }) {
     await BaseRegistrar.register(labelhash(parentLabel), account, DAY * 2)
     const parentExpiry = await BaseRegistrar.nameExpires(labelhash(parentLabel))
-    await NameWrapper.wrapETH2LD(
+    await NameWrapper.wrapPLS2LD(
       parentLabel,
       account,
       parentFuses,
@@ -159,7 +159,7 @@ function shouldRespectConstraints(contracts, getSigners) {
     })
 
     const [, parentFuses, parentExpiry] = await NameWrapper.getData(parentNode)
-    expect(parentFuses).to.equal(PARENT_CANNOT_CONTROL | IS_DOT_ETH)
+    expect(parentFuses).to.equal(PARENT_CANNOT_CONTROL | IS_DOT_PLS)
     const [, childFuses, childExpiry] = await NameWrapper.getData(childNode)
     expect(childFuses).to.equal(CAN_DO_EVERYTHING)
     expect(childExpiry).to.equal(parentExpiry - 86400 - GRACE_PERIOD)
@@ -176,7 +176,7 @@ function shouldRespectConstraints(contracts, getSigners) {
 
     const [, parentFuses, parentExpiry] = await NameWrapper.getData(parentNode)
     expect(parentFuses).to.equal(
-      CANNOT_UNWRAP | PARENT_CANNOT_CONTROL | IS_DOT_ETH,
+      CANNOT_UNWRAP | PARENT_CANNOT_CONTROL | IS_DOT_PLS,
     )
     const [, childFuses, childExpiry] = await NameWrapper.getData(childNode)
     expect(childFuses).to.equal(CAN_DO_EVERYTHING)
@@ -198,7 +198,7 @@ function shouldRespectConstraints(contracts, getSigners) {
 
     const [, parentFuses, parentExpiry] = await NameWrapper.getData(parentNode)
     expect(parentFuses).to.equal(
-      CANNOT_UNWRAP | PARENT_CANNOT_CONTROL | IS_DOT_ETH,
+      CANNOT_UNWRAP | PARENT_CANNOT_CONTROL | IS_DOT_PLS,
     )
     const [, childFuses, childExpiry] = await NameWrapper.getData(childNode)
     expect(childFuses).to.equal(PARENT_CANNOT_CONTROL)
@@ -220,7 +220,7 @@ function shouldRespectConstraints(contracts, getSigners) {
 
     const [, parentFuses, parentExpiry] = await NameWrapper.getData(parentNode)
     expect(parentFuses).to.equal(
-      CANNOT_UNWRAP | PARENT_CANNOT_CONTROL | IS_DOT_ETH,
+      CANNOT_UNWRAP | PARENT_CANNOT_CONTROL | IS_DOT_PLS,
     )
     const [, childFuses, childExpiry] = await NameWrapper.getData(childNode)
     expect(childFuses).to.equal(PARENT_CANNOT_CONTROL | CANNOT_UNWRAP)
@@ -380,7 +380,7 @@ function shouldRespectConstraints(contracts, getSigners) {
     it('Parent can unwrap owner with setSubnodeRecord() and then unwrap', async () => {
       //check previous owners
       expect(await NameWrapper.ownerOf(childNode)).to.equal(account2)
-      expect(await EnsRegistry.owner(childNode)).to.equal(NameWrapper.address)
+      expect(await PnsRegistry.owner(childNode)).to.equal(NameWrapper.address)
 
       await NameWrapper.setSubnodeRecord(
         parentNode,
@@ -394,7 +394,7 @@ function shouldRespectConstraints(contracts, getSigners) {
 
       await NameWrapper.unwrap(parentNode, childLabelHash, account)
       expect(await NameWrapper.ownerOf(childNode)).to.equal(EMPTY_ADDRESS)
-      expect(await EnsRegistry.owner(childNode)).to.equal(account)
+      expect(await PnsRegistry.owner(childNode)).to.equal(account)
     })
   }
 
@@ -732,7 +732,7 @@ function shouldRespectConstraints(contracts, getSigners) {
   }) {
     it('Parent cannot unwrap itself', async () => {
       await expect(
-        NameWrapper.unwrapETH2LD(parentLabelHash, account, account),
+        NameWrapper.unwrapPLS2LD(parentLabelHash, account, account),
       ).to.be.revertedWith(`OperationProhibited("${parentNode}")`)
     })
 
@@ -742,8 +742,8 @@ function shouldRespectConstraints(contracts, getSigners) {
       ).to.be.revertedWith(`Unauthorised("${childNode}", "${account}")`)
     })
 
-    it('Parent cannot call ens.subnodeOwner to forcefully unwrap', async () => {
-      await expect(EnsRegistry.setSubnodeOwner(parentNode, childNode, account))
+    it('Parent cannot call pns.subnodeOwner to forcefully unwrap', async () => {
+      await expect(PnsRegistry.setSubnodeOwner(parentNode, childNode, account))
         .to.be.reverted
     })
   }
@@ -810,7 +810,7 @@ function shouldRespectConstraints(contracts, getSigners) {
           0,
         ),
       ).to.be.revertedWith(
-        `OperationProhibited("0x40e4b5d9555b6f20c264b5922e90f08889074195ec29c4256db06da93d187ce0")`,
+        `OperationProhibited("0xbbfc5977efa6590c5b92becdf2b363e7141059ae414f877b9f9f30a1a416fefb")`,
       )
     })
     it('1000 => 1010 - Parent cannot burn PCC with setSubnodeOwner()', async () => {
@@ -896,7 +896,7 @@ function shouldRespectConstraints(contracts, getSigners) {
 
     beforeEach(async () => {
       await BaseRegistrar.register(labelhash('test1'), account, 84600)
-      await NameWrapper.wrapETH2LD(
+      await NameWrapper.wrapPLS2LD(
         'test1',
         account,
         CANNOT_UNWRAP, // Parent's CU is burned
@@ -959,7 +959,7 @@ function shouldRespectConstraints(contracts, getSigners) {
 
     it('Parent cannot unwrap itself', async () => {
       await expect(
-        NameWrapper.unwrapETH2LD(parentLabelHash, account, account),
+        NameWrapper.unwrapPLS2LD(parentLabelHash, account, account),
       ).to.be.revertedWith(`OperationProhibited("${parentNode}")`)
     })
 
@@ -989,7 +989,7 @@ function shouldRespectConstraints(contracts, getSigners) {
           0,
         ),
       ).to.be.revertedWith(
-        `OperationProhibited("0x40e4b5d9555b6f20c264b5922e90f08889074195ec29c4256db06da93d187ce0")`,
+        `OperationProhibited("0xbbfc5977efa6590c5b92becdf2b363e7141059ae414f877b9f9f30a1a416fefb")`,
       )
       // TODO: this should revert
     })
@@ -1037,7 +1037,7 @@ function shouldRespectConstraints(contracts, getSigners) {
       await expect(
         NameWrapper.setChildFuses(parentNode, childLabelHash, CANNOT_UNWRAP, 0),
       ).to.be.revertedWith(
-        `OperationProhibited("0x40e4b5d9555b6f20c264b5922e90f08889074195ec29c4256db06da93d187ce0")`,
+        `OperationProhibited("0xbbfc5977efa6590c5b92becdf2b363e7141059ae414f877b9f9f30a1a416fefb")`,
       )
     })
 
@@ -1045,7 +1045,7 @@ function shouldRespectConstraints(contracts, getSigners) {
       await expect(
         NameWrapper2.setFuses(childNode, CANNOT_UNWRAP),
       ).to.be.revertedWith(
-        `OperationProhibited("0x40e4b5d9555b6f20c264b5922e90f08889074195ec29c4256db06da93d187ce0")`,
+        `OperationProhibited("0xbbfc5977efa6590c5b92becdf2b363e7141059ae414f877b9f9f30a1a416fefb")`,
       )
     })
   })
@@ -1065,7 +1065,7 @@ function shouldRespectConstraints(contracts, getSigners) {
       await expect(
         NameWrapper.setChildFuses(parentNode, childLabelHash, CANNOT_UNWRAP, 0),
       ).to.be.revertedWith(
-        `OperationProhibited("0x40e4b5d9555b6f20c264b5922e90f08889074195ec29c4256db06da93d187ce0")`,
+        `OperationProhibited("0xbbfc5977efa6590c5b92becdf2b363e7141059ae414f877b9f9f30a1a416fefb")`,
       )
     })
 
@@ -1073,7 +1073,7 @@ function shouldRespectConstraints(contracts, getSigners) {
       await expect(
         NameWrapper2.setFuses(childNode, CANNOT_UNWRAP),
       ).to.be.revertedWith(
-        `OperationProhibited("0x40e4b5d9555b6f20c264b5922e90f08889074195ec29c4256db06da93d187ce0")`,
+        `OperationProhibited("0xbbfc5977efa6590c5b92becdf2b363e7141059ae414f877b9f9f30a1a416fefb")`,
       )
     })
   })
@@ -1098,7 +1098,7 @@ function shouldRespectConstraints(contracts, getSigners) {
           0,
         ),
       ).to.be.revertedWith(
-        `OperationProhibited("0x40e4b5d9555b6f20c264b5922e90f08889074195ec29c4256db06da93d187ce0")`,
+        `OperationProhibited("0xbbfc5977efa6590c5b92becdf2b363e7141059ae414f877b9f9f30a1a416fefb")`,
       )
       //TODO should revert
     })
@@ -1288,9 +1288,9 @@ function shouldRespectConstraints(contracts, getSigners) {
       const [, fusesBefore] = await NameWrapper2.getData(childNode)
       expect(fusesBefore).to.equal(PARENT_CANNOT_CONTROL)
       await NameWrapper2.unwrap(parentNode, childLabelHash, account2)
-      await EnsRegistry2.setApprovalForAll(NameWrapper2.address, true)
+      await PnsRegistry2.setApprovalForAll(NameWrapper2.address, true)
       await NameWrapper2.wrap(
-        encodeName(`${childLabel}.${parentLabel}.eth`),
+        encodeName(`${childLabel}.${parentLabel}.pls`),
         account2,
         EMPTY_ADDRESS,
       )
@@ -1309,7 +1309,7 @@ function shouldRespectConstraints(contracts, getSigners) {
       await expect(
         NameWrapper.setChildFuses(parentNode, childLabelHash, CANNOT_UNWRAP, 0),
       ).to.be.revertedWith(
-        `OperationProhibited("0x40e4b5d9555b6f20c264b5922e90f08889074195ec29c4256db06da93d187ce0")`,
+        `OperationProhibited("0xbbfc5977efa6590c5b92becdf2b363e7141059ae414f877b9f9f30a1a416fefb")`,
       )
     })
 
@@ -1324,7 +1324,7 @@ function shouldRespectConstraints(contracts, getSigners) {
           0,
         ),
       ).to.be.revertedWith(
-        `OperationProhibited("0x40e4b5d9555b6f20c264b5922e90f08889074195ec29c4256db06da93d187ce0")`,
+        `OperationProhibited("0xbbfc5977efa6590c5b92becdf2b363e7141059ae414f877b9f9f30a1a416fefb")`,
       )
     })
 
@@ -1341,7 +1341,7 @@ function shouldRespectConstraints(contracts, getSigners) {
           0,
         ),
       ).to.be.revertedWith(
-        `OperationProhibited("0x40e4b5d9555b6f20c264b5922e90f08889074195ec29c4256db06da93d187ce0")`,
+        `OperationProhibited("0xbbfc5977efa6590c5b92becdf2b363e7141059ae414f877b9f9f30a1a416fefb")`,
       )
     })
 
@@ -1359,7 +1359,7 @@ function shouldRespectConstraints(contracts, getSigners) {
       await expect(
         NameWrapper.setChildFuses(parentNode, childLabelHash, CANNOT_UNWRAP, 0),
       ).to.be.revertedWith(
-        `OperationProhibited("0x40e4b5d9555b6f20c264b5922e90f08889074195ec29c4256db06da93d187ce0")`,
+        `OperationProhibited("0xbbfc5977efa6590c5b92becdf2b363e7141059ae414f877b9f9f30a1a416fefb")`,
       )
     })
 
@@ -1374,7 +1374,7 @@ function shouldRespectConstraints(contracts, getSigners) {
           0,
         ),
       ).to.be.revertedWith(
-        `OperationProhibited("0x40e4b5d9555b6f20c264b5922e90f08889074195ec29c4256db06da93d187ce0")`,
+        `OperationProhibited("0xbbfc5977efa6590c5b92becdf2b363e7141059ae414f877b9f9f30a1a416fefb")`,
       )
     })
 
@@ -1391,7 +1391,7 @@ function shouldRespectConstraints(contracts, getSigners) {
           0,
         ),
       ).to.be.revertedWith(
-        `OperationProhibited("0x40e4b5d9555b6f20c264b5922e90f08889074195ec29c4256db06da93d187ce0")`,
+        `OperationProhibited("0xbbfc5977efa6590c5b92becdf2b363e7141059ae414f877b9f9f30a1a416fefb")`,
       )
     })
 

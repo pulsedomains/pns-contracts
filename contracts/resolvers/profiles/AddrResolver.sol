@@ -10,13 +10,13 @@ abstract contract AddrResolver is
     IAddressResolver,
     ResolverBase
 {
-    uint256 private constant COIN_TYPE_ETH = 60;
+    uint256 private constant COIN_TYPE_PLS = 1028;
 
     mapping(uint64 => mapping(bytes32 => mapping(uint256 => bytes))) versionable_addresses;
 
     /**
-     * Sets the address associated with an ENS node.
-     * May only be called by the owner of that node in the ENS registry.
+     * Sets the address associated with an PNS node.
+     * May only be called by the owner of that node in the PNS registry.
      * @param node The node to update.
      * @param a The address to set.
      */
@@ -24,18 +24,18 @@ abstract contract AddrResolver is
         bytes32 node,
         address a
     ) external virtual authorised(node) {
-        setAddr(node, COIN_TYPE_ETH, addressToBytes(a));
+        setAddr(node, COIN_TYPE_PLS, addressToBytes(a));
     }
 
     /**
-     * Returns the address associated with an ENS node.
-     * @param node The ENS node to query.
+     * Returns the address associated with an PNS node.
+     * @param node The PNS node to query.
      * @return The associated address.
      */
     function addr(
         bytes32 node
     ) public view virtual override returns (address payable) {
-        bytes memory a = addr(node, COIN_TYPE_ETH);
+        bytes memory a = addr(node, COIN_TYPE_PLS);
         if (a.length == 0) {
             return payable(0);
         }
@@ -48,7 +48,7 @@ abstract contract AddrResolver is
         bytes memory a
     ) public virtual authorised(node) {
         emit AddressChanged(node, coinType, a);
-        if (coinType == COIN_TYPE_ETH) {
+        if (coinType == COIN_TYPE_PLS) {
             emit AddrChanged(node, bytesToAddress(a));
         }
         versionable_addresses[recordVersions[node]][node][coinType] = a;

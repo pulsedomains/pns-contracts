@@ -1,6 +1,7 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.4;
 
-import "../registry/ENS.sol";
+import "../registry/PNS.sol";
 import "./IReverseRegistrar.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "../root/Controllable.sol";
@@ -16,7 +17,7 @@ bytes32 constant ADDR_REVERSE_NODE = 0x91d1777781884d03a6757a803996e38de2a42967f
 // namehash('addr.reverse')
 
 contract ReverseRegistrar is Ownable, Controllable, IReverseRegistrar {
-    ENS public immutable ens;
+    PNS public immutable pns;
     NameResolver public defaultResolver;
 
     event ReverseClaimed(address indexed addr, bytes32 indexed node);
@@ -24,14 +25,14 @@ contract ReverseRegistrar is Ownable, Controllable, IReverseRegistrar {
 
     /**
      * @dev Constructor
-     * @param ensAddr The address of the ENS registry.
+     * @param pnsAddr The address of the PNS registry.
      */
-    constructor(ENS ensAddr) {
-        ens = ensAddr;
+    constructor(PNS pnsAddr) {
+        pns = pnsAddr;
 
         // Assign ownership of the reverse record to our deployer
         ReverseRegistrar oldRegistrar = ReverseRegistrar(
-            ensAddr.owner(ADDR_REVERSE_NODE)
+            pnsAddr.owner(ADDR_REVERSE_NODE)
         );
         if (address(oldRegistrar) != address(0x0)) {
             oldRegistrar.claim(msg.sender);
@@ -42,7 +43,7 @@ contract ReverseRegistrar is Ownable, Controllable, IReverseRegistrar {
         require(
             addr == msg.sender ||
                 controllers[msg.sender] ||
-                ens.isApprovedForAll(addr, msg.sender) ||
+                pns.isApprovedForAll(addr, msg.sender) ||
                 ownsContract(addr),
             "ReverseRegistrar: Caller is not a controller or authorised by address or the address itself"
         );
@@ -59,22 +60,22 @@ contract ReverseRegistrar is Ownable, Controllable, IReverseRegistrar {
     }
 
     /**
-     * @dev Transfers ownership of the reverse ENS record associated with the
+     * @dev Transfers ownership of the reverse PNS record associated with the
      *      calling account.
-     * @param owner The address to set as the owner of the reverse record in ENS.
-     * @return The ENS node hash of the reverse record.
+     * @param owner The address to set as the owner of the reverse record in PNS.
+     * @return The PNS node hash of the reverse record.
      */
     function claim(address owner) public override returns (bytes32) {
         return claimForAddr(msg.sender, owner, address(defaultResolver));
     }
 
     /**
-     * @dev Transfers ownership of the reverse ENS record associated with the
+     * @dev Transfers ownership of the reverse PNS record associated with the
      *      calling account.
      * @param addr The reverse record to set
-     * @param owner The address to set as the owner of the reverse record in ENS.
+     * @param owner The address to set as the owner of the reverse record in PNS.
      * @param resolver The resolver of the reverse node
-     * @return The ENS node hash of the reverse record.
+     * @return The PNS node hash of the reverse record.
      */
     function claimForAddr(
         address addr,
@@ -86,16 +87,16 @@ contract ReverseRegistrar is Ownable, Controllable, IReverseRegistrar {
             abi.encodePacked(ADDR_REVERSE_NODE, labelHash)
         );
         emit ReverseClaimed(addr, reverseNode);
-        ens.setSubnodeRecord(ADDR_REVERSE_NODE, labelHash, owner, resolver, 0);
+        pns.setSubnodeRecord(ADDR_REVERSE_NODE, labelHash, owner, resolver, 0);
         return reverseNode;
     }
 
     /**
-     * @dev Transfers ownership of the reverse ENS record associated with the
+     * @dev Transfers ownership of the reverse PNS record associated with the
      *      calling account.
-     * @param owner The address to set as the owner of the reverse record in ENS.
+     * @param owner The address to set as the owner of the reverse record in PNS.
      * @param resolver The address of the resolver to set; 0 to leave unchanged.
-     * @return The ENS node hash of the reverse record.
+     * @return The PNS node hash of the reverse record.
      */
     function claimWithResolver(
         address owner,
@@ -105,11 +106,11 @@ contract ReverseRegistrar is Ownable, Controllable, IReverseRegistrar {
     }
 
     /**
-     * @dev Sets the `name()` record for the reverse ENS record associated with
+     * @dev Sets the `name()` record for the reverse PNS record associated with
      * the calling account. First updates the resolver to the default reverse
      * resolver if necessary.
      * @param name The name to set for this address.
-     * @return The ENS node hash of the reverse record.
+     * @return The PNS node hash of the reverse record.
      */
     function setName(string memory name) public override returns (bytes32) {
         return
@@ -122,14 +123,14 @@ contract ReverseRegistrar is Ownable, Controllable, IReverseRegistrar {
     }
 
     /**
-     * @dev Sets the `name()` record for the reverse ENS record associated with
+     * @dev Sets the `name()` record for the reverse PNS record associated with
      * the account provided. Updates the resolver to a designated resolver
      * Only callable by controllers and authorised users
      * @param addr The reverse record to set
      * @param owner The owner of the reverse node
      * @param resolver The resolver of the reverse node
      * @param name The name to set for this address.
-     * @return The ENS node hash of the reverse record.
+     * @return The PNS node hash of the reverse record.
      */
     function setNameForAddr(
         address addr,
@@ -145,7 +146,7 @@ contract ReverseRegistrar is Ownable, Controllable, IReverseRegistrar {
     /**
      * @dev Returns the node hash for a given account's reverse records.
      * @param addr The address to hash
-     * @return The ENS node hash.
+     * @return The PNS node hash.
      */
     function node(address addr) public pure override returns (bytes32) {
         return
@@ -156,7 +157,7 @@ contract ReverseRegistrar is Ownable, Controllable, IReverseRegistrar {
 
     /**
      * @dev An optimised function to compute the sha3 of the lower-case
-     *      hexadecimal representation of an Ethereum address.
+     *      hexadecimal representation of an PulseChain address.
      * @param addr The address to hash
      * @return ret The SHA3 hash of the lower-case hexadecimal encoding of the
      *         input address.

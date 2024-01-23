@@ -1,4 +1,4 @@
-const ENSRegistry = artifacts.require('./ENSRegistry.sol')
+const PNSRegistry = artifacts.require('./PNSRegistry.sol')
 const Root = artifacts.require('/Root.sol')
 const IDNSGateway = artifacts.require('./IDNSGateway.sol')
 const SimplePublixSuffixList = artifacts.require('./SimplePublicSuffixList.sol')
@@ -23,7 +23,7 @@ const { ethers } = require('hardhat')
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 contract('OffchainDNSResolver', function (accounts) {
-  var ens = null
+  var pns = null
   var root = null
   var dnssec = null
   var suffixes = null
@@ -64,10 +64,10 @@ contract('OffchainDNSResolver', function (accounts) {
   })
 
   beforeEach(async function () {
-    ens = await ENSRegistry.new()
+    pns = await PNSRegistry.new()
 
-    root = await Root.new(ens.address)
-    await ens.setOwner('0x0', root.address)
+    root = await Root.new(pns.address)
+    await pns.setOwner('0x0', root.address)
 
     dnssec = await DNSSECImpl.deployed()
 
@@ -78,7 +78,7 @@ contract('OffchainDNSResolver', function (accounts) {
     ])
 
     offchainResolver = await OffchainDNSResolver.new(
-      ens.address,
+      pns.address,
       dnssec.address,
       'https://localhost:8000/query',
     )
@@ -89,7 +89,7 @@ contract('OffchainDNSResolver', function (accounts) {
       offchainResolver.address,
       dnssec.address,
       suffixes.address,
-      ens.address,
+      pns.address,
     )
     await root.setController(registrar.address, true)
     await root.setController(accounts[0], true)
@@ -153,7 +153,7 @@ contract('OffchainDNSResolver', function (accounts) {
     ).encodeABI()
     const result = await doResolveCallback(
       name,
-      [`ENS1 ${ownedResolver.address}`],
+      [`PNS1 ${ownedResolver.address}`],
       callData,
     )
     expect(
@@ -171,7 +171,7 @@ contract('OffchainDNSResolver', function (accounts) {
     ).encodeABI()
     const result = await doResolveCallback(
       name,
-      [`ENS1 ${ownedResolver.address} blah`],
+      [`PNS1 ${ownedResolver.address} blah`],
       callData,
     )
     expect(
@@ -180,19 +180,19 @@ contract('OffchainDNSResolver', function (accounts) {
   })
 
   it('handles calls to resolveCallback() with valid DNS TXT records containing a name', async function () {
-    // Configure dnsresolver.eth to resolve to the ownedResolver so we can use it in the test
-    await root.setSubnodeOwner(ethers.utils.id('eth'), accounts[0])
-    await ens.setSubnodeOwner(
-      namehash.hash('eth'),
+    // Configure dnsresolver.pls to resolve to the ownedResolver so we can use it in the test
+    await root.setSubnodeOwner(ethers.utils.id('pls'), accounts[0])
+    await pns.setSubnodeOwner(
+      namehash.hash('pls'),
       ethers.utils.id('dnsresolver'),
       accounts[0],
     )
-    await ens.setResolver(
-      namehash.hash('dnsresolver.eth'),
+    await pns.setResolver(
+      namehash.hash('dnsresolver.pls'),
       ownedResolver.address,
     )
     await ownedResolver.setAddr(
-      namehash.hash('dnsresolver.eth'),
+      namehash.hash('dnsresolver.pls'),
       ownedResolver.address,
     )
 
@@ -205,7 +205,7 @@ contract('OffchainDNSResolver', function (accounts) {
     ).encodeABI()
     const result = await doResolveCallback(
       name,
-      [`ENS1 dnsresolver.eth`],
+      [`PNS1 dnsresolver.pls`],
       callData,
     )
     expect(
@@ -236,7 +236,7 @@ contract('OffchainDNSResolver', function (accounts) {
     ).encodeABI()
     const result = await doResolveCallback(
       name,
-      ['foo', `ENS1 ${ownedResolver.address}`],
+      ['foo', `PNS1 ${ownedResolver.address}`],
       callData,
     )
     expect(
@@ -254,7 +254,7 @@ contract('OffchainDNSResolver', function (accounts) {
     ).encodeABI()
     const result = await doResolveCallback(
       name,
-      ['ENS1 nonexistent.eth', 'ENS1 0x1234', `ENS1 ${ownedResolver.address}`],
+      ['PNS1 nonexistent.pls', 'PNS1 0x1234', `PNS1 ${ownedResolver.address}`],
       callData,
     )
     expect(
@@ -272,7 +272,7 @@ contract('OffchainDNSResolver', function (accounts) {
     ).encodeABI()
     const result = await doResolveCallback(
       name,
-      [`ENS1 ${resolver.address} foobie bletch`],
+      [`PNS1 ${resolver.address} foobie bletch`],
       callData,
     )
     expect(ethers.utils.defaultAbiCoder.decode(['string'], result)[0]).to.equal(
@@ -289,7 +289,7 @@ contract('OffchainDNSResolver', function (accounts) {
     ).encodeABI()
     const result = await doResolveCallback(
       name,
-      [`ENS1 ${resolver.address} foobie bletch`],
+      [`PNS1 ${resolver.address} foobie bletch`],
       callData,
     )
     expect(ethers.utils.defaultAbiCoder.decode(['string'], result)[0]).to.equal(

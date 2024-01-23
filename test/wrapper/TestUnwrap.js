@@ -1,7 +1,7 @@
 const { ethers } = require('hardhat')
 const { use, expect } = require('chai')
 const { solidity } = require('ethereum-waffle')
-const { labelhash, namehash, encodeName, FUSES } = require('../test-utils/ens')
+const { labelhash, namehash, encodeName, FUSES } = require('../test-utils/pns')
 const { deploy } = require('../test-utils/contracts')
 const { EMPTY_BYTES32, EMPTY_ADDRESS } = require('../test-utils/constants')
 
@@ -14,7 +14,7 @@ const DAY = 86400
 const { CANNOT_UNWRAP, CAN_DO_EVERYTHING } = FUSES
 
 describe('TestUnwrap', () => {
-  let EnsRegistry
+  let PnsRegistry
   let BaseRegistrar
   let NameWrapper
   let TestUnwrap
@@ -30,12 +30,12 @@ describe('TestUnwrap', () => {
     account2 = await signers[1].getAddress()
     hacker = await signers[2].getAddress()
 
-    EnsRegistry = await deploy('ENSRegistry')
+    PnsRegistry = await deploy('PNSRegistry')
 
     BaseRegistrar = await deploy(
       'BaseRegistrarImplementation',
-      EnsRegistry.address,
-      namehash('eth'),
+      PnsRegistry.address,
+      namehash('pls'),
     )
 
     await BaseRegistrar.addController(account)
@@ -43,11 +43,11 @@ describe('TestUnwrap', () => {
 
     const ReverseRegistrar = await deploy(
       'ReverseRegistrar',
-      EnsRegistry.address,
+      PnsRegistry.address,
     )
 
-    await EnsRegistry.setSubnodeOwner(ROOT_NODE, labelhash('reverse'), account)
-    await EnsRegistry.setSubnodeOwner(
+    await PnsRegistry.setSubnodeOwner(ROOT_NODE, labelhash('reverse'), account)
+    await PnsRegistry.setSubnodeOwner(
       namehash('reverse'),
       labelhash('addr'),
       ReverseRegistrar.address,
@@ -55,31 +55,31 @@ describe('TestUnwrap', () => {
 
     MetaDataservice = await deploy(
       'StaticMetadataService',
-      'https://ens.domains',
+      'https://pulse.domains',
     )
 
     NameWrapper = await deploy(
       'NameWrapper',
-      EnsRegistry.address,
+      PnsRegistry.address,
       BaseRegistrar.address,
       MetaDataservice.address,
     )
 
     TestUnwrap = await deploy(
       'TestUnwrap',
-      EnsRegistry.address,
+      PnsRegistry.address,
       BaseRegistrar.address,
     )
 
-    // setup .eth
-    await EnsRegistry.setSubnodeOwner(
+    // setup .pls
+    await PnsRegistry.setSubnodeOwner(
       ROOT_NODE,
-      labelhash('eth'),
+      labelhash('pls'),
       BaseRegistrar.address,
     )
 
-    //make sure base registrar is owner of eth TLD
-    expect(await EnsRegistry.owner(namehash('eth'))).to.equal(
+    //make sure base registrar is owner of pls TLD
+    expect(await PnsRegistry.owner(namehash('pls'))).to.equal(
       BaseRegistrar.address,
     )
   })
@@ -92,11 +92,11 @@ describe('TestUnwrap', () => {
   })
 
   describe('wrapFromUpgrade()', () => {
-    describe('.eth', () => {
-      const encodedName = encodeName('wrapped.eth')
+    describe('.pls', () => {
+      const encodedName = encodeName('wrapped.pls')
       const label = 'wrapped'
       const labelHash = labelhash(label)
-      const nameHash = namehash(label + '.eth')
+      const nameHash = namehash(label + '.pls')
 
       it('allows unwrapping from an approved NameWrapper', async () => {
         await BaseRegistrar.register(labelHash, account, 1 * DAY)
@@ -104,7 +104,7 @@ describe('TestUnwrap', () => {
 
         expect(await NameWrapper.ownerOf(nameHash)).to.equal(EMPTY_ADDRESS)
 
-        await NameWrapper.wrapETH2LD(
+        await NameWrapper.wrapPLS2LD(
           label,
           account,
           CAN_DO_EVERYTHING,
@@ -113,7 +113,7 @@ describe('TestUnwrap', () => {
 
         //make sure reclaim claimed ownership for the wrapper in registry
 
-        expect(await EnsRegistry.owner(nameHash)).to.equal(NameWrapper.address)
+        expect(await PnsRegistry.owner(nameHash)).to.equal(NameWrapper.address)
         expect(await NameWrapper.ownerOf(nameHash)).to.equal(account)
         expect(await BaseRegistrar.ownerOf(labelHash)).to.equal(
           NameWrapper.address,
@@ -125,7 +125,7 @@ describe('TestUnwrap', () => {
 
         await NameWrapper.upgrade(encodedName, 0)
 
-        expect(await EnsRegistry.owner(nameHash)).to.equal(account)
+        expect(await PnsRegistry.owner(nameHash)).to.equal(account)
         expect(await BaseRegistrar.ownerOf(labelHash)).to.equal(account)
         expect(await NameWrapper.ownerOf(nameHash)).to.equal(EMPTY_ADDRESS)
       })
@@ -136,7 +136,7 @@ describe('TestUnwrap', () => {
 
         expect(await NameWrapper.ownerOf(nameHash)).to.equal(EMPTY_ADDRESS)
 
-        await NameWrapper.wrapETH2LD(
+        await NameWrapper.wrapPLS2LD(
           label,
           account,
           CAN_DO_EVERYTHING,
@@ -145,7 +145,7 @@ describe('TestUnwrap', () => {
 
         //make sure reclaim claimed ownership for the wrapper in registry
 
-        expect(await EnsRegistry.owner(nameHash)).to.equal(NameWrapper.address)
+        expect(await PnsRegistry.owner(nameHash)).to.equal(NameWrapper.address)
         expect(await NameWrapper.ownerOf(nameHash)).to.equal(account)
         expect(await BaseRegistrar.ownerOf(labelHash)).to.equal(
           NameWrapper.address,
@@ -165,7 +165,7 @@ describe('TestUnwrap', () => {
 
         expect(await NameWrapper.ownerOf(nameHash)).to.equal(EMPTY_ADDRESS)
 
-        await NameWrapper.wrapETH2LD(
+        await NameWrapper.wrapPLS2LD(
           label,
           account,
           CAN_DO_EVERYTHING,
@@ -174,7 +174,7 @@ describe('TestUnwrap', () => {
 
         //make sure reclaim claimed ownership for the wrapper in registry
 
-        expect(await EnsRegistry.owner(nameHash)).to.equal(NameWrapper.address)
+        expect(await PnsRegistry.owner(nameHash)).to.equal(NameWrapper.address)
         expect(await NameWrapper.ownerOf(nameHash)).to.equal(account)
         expect(await BaseRegistrar.ownerOf(labelHash)).to.equal(
           NameWrapper.address,
@@ -199,16 +199,16 @@ describe('TestUnwrap', () => {
     describe('other', () => {
       const label = 'to-upgrade'
       const parentLabel = 'wrapped2'
-      const name = label + '.' + parentLabel + '.eth'
+      const name = label + '.' + parentLabel + '.pls'
       const parentLabelHash = labelhash(parentLabel)
-      const parentHash = namehash(parentLabel + '.eth')
+      const parentHash = namehash(parentLabel + '.pls')
       const nameHash = namehash(name)
       const encodedName = encodeName(name)
       it('allows unwrapping from an approved NameWrapper', async () => {
-        await EnsRegistry.setApprovalForAll(NameWrapper.address, true)
+        await PnsRegistry.setApprovalForAll(NameWrapper.address, true)
         await BaseRegistrar.setApprovalForAll(NameWrapper.address, true)
         await BaseRegistrar.register(parentLabelHash, account, 1 * DAY)
-        await NameWrapper.wrapETH2LD(
+        await NameWrapper.wrapPLS2LD(
           parentLabel,
           account,
           CANNOT_UNWRAP,
@@ -230,13 +230,13 @@ describe('TestUnwrap', () => {
 
         await NameWrapper.upgrade(encodedName, 0)
 
-        expect(await EnsRegistry.owner(nameHash)).to.equal(account)
+        expect(await PnsRegistry.owner(nameHash)).to.equal(account)
       })
       it('does not allow unwrapping from an unapproved NameWrapper', async () => {
-        await EnsRegistry.setApprovalForAll(NameWrapper.address, true)
+        await PnsRegistry.setApprovalForAll(NameWrapper.address, true)
         await BaseRegistrar.setApprovalForAll(NameWrapper.address, true)
         await BaseRegistrar.register(parentLabelHash, account, 1 * DAY)
-        await NameWrapper.wrapETH2LD(
+        await NameWrapper.wrapPLS2LD(
           parentLabel,
           account,
           CANNOT_UNWRAP,
@@ -260,10 +260,10 @@ describe('TestUnwrap', () => {
         )
       })
       it('does not allow unwrapping from an unapproved sender', async () => {
-        await EnsRegistry.setApprovalForAll(NameWrapper.address, true)
+        await PnsRegistry.setApprovalForAll(NameWrapper.address, true)
         await BaseRegistrar.setApprovalForAll(NameWrapper.address, true)
         await BaseRegistrar.register(parentLabelHash, account, 1 * DAY)
-        await NameWrapper.wrapETH2LD(
+        await NameWrapper.wrapPLS2LD(
           parentLabel,
           account,
           CANNOT_UNWRAP,

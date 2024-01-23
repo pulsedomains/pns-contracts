@@ -1,9 +1,7 @@
 import { ethers } from 'hardhat'
 import { DeployFunction } from 'hardhat-deploy/types'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
-
-const ZERO_HASH =
-  '0x0000000000000000000000000000000000000000000000000000000000000000'
+import { ZERO_HASH } from '../constants'
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { getNamedAccounts, deployments, network } = hre
@@ -14,7 +12,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     return true
   }
 
-  const registry = await ethers.getContract('ENSRegistry')
+  const registry = await ethers.getContract('PNSRegistry')
 
   await deploy('Root', {
     from: deployer,
@@ -28,10 +26,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   console.log(
     `Setting owner of root node to root contract (tx: ${tx1.hash})...`,
   )
-  await tx1.wait()
+  await tx1.wait(2)
 
   const rootOwner = await root.owner()
-
   switch (rootOwner) {
     case deployer:
       const tx2 = await root
@@ -40,16 +37,17 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       console.log(
         `Transferring root ownership to final owner (tx: ${tx2.hash})...`,
       )
-      await tx2.wait()
+      await tx2.wait(2)
     case owner:
-      if (!(await root.controllers(owner))) {
+      const controller = await root.controllers(owner)
+      if (!controller) {
         const tx2 = await root
           .connect(await ethers.getSigner(owner))
           .setController(owner, true)
         console.log(
           `Setting final owner as controller on root contract (tx: ${tx2.hash})...`,
         )
-        await tx2.wait()
+        await tx2.wait(2)
       }
       break
     default:
@@ -62,7 +60,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 }
 
 func.id = 'root'
-func.tags = ['root', 'Root']
-func.dependencies = ['ENSRegistry']
+func.tags = ['Root']
+func.dependencies = ['PNSRegistry']
 
 export default func

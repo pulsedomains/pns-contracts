@@ -1,3 +1,4 @@
+import { ethers } from 'hardhat'
 import { DeployFunction } from 'hardhat-deploy/types'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
@@ -6,30 +7,42 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments
   const { deployer } = await getNamedAccounts()
 
-  let oracleAddress = '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419'
-  if (network.name !== 'mainnet') {
-    const dummyOracle = await deploy('DummyOracle', {
-      from: deployer,
-      args: ['160000000000'],
-      log: true,
-    })
-    oracleAddress = dummyOracle.address
+  let fetchFlexAddress = ''
+  if (network.name === 'mainnet') {
+    fetchFlexAddress = '0x6f390b99201bb43A05757019efe9C99651e04584'
+  } else {
+    fetchFlexAddress = '0x252eC80dEa7F3eD0CC57e0f1112d6f56Ae9523fb'
   }
 
+  await deploy('FetchFlexOracle', {
+    from: deployer,
+    args: [fetchFlexAddress],
+    log: true,
+  })
+
+  const fetchFlexOracle = await ethers.getContract('FetchFlexOracle')
+
+  /**
+   * 3 characters: $555/year
+   * 4 characters: $169/year
+   * 5+ characters: $5/year
+   */
   await deploy('ExponentialPremiumPriceOracle', {
     from: deployer,
     args: [
-      oracleAddress,
-      [0, 0, '20294266869609', '5073566717402', '158548959919'],
+      fetchFlexOracle.address,
+      [0, 0, '17598934550989', '5358954845256', '158548959919'],
       '100000000000000000000000000',
       21,
     ],
     log: true,
   })
+
+  return true
 }
 
 func.id = 'price-oracle'
-func.tags = ['ethregistrar', 'ExponentialPremiumPriceOracle', 'DummyOracle']
-func.dependencies = ['registry']
+func.tags = ['ExponentialPremiumPriceOracle']
+func.dependencies = []
 
 export default func

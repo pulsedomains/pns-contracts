@@ -1,4 +1,4 @@
-//SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
 import "../dnssec-oracle/DNSSEC.sol";
@@ -20,10 +20,10 @@ library DNSClaimChecker {
         bytes memory name,
         bytes memory data
     ) internal pure returns (address, bool) {
-        // Add "_ens." to the front of the name.
+        // Add "_pns." to the front of the name.
         Buffer.buffer memory buf;
         buf.init(name.length + 5);
-        buf.append("\x04_ens");
+        buf.append("\x04_pns");
         buf.append(name);
 
         for (

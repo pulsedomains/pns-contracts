@@ -25,8 +25,11 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       log: true,
     })
   }
+
+  return true
 }
 
-func.tags = ['dnssec-digests']
+func.id = 'dnssec-digests'
+func.tags = ['DNSSecDigest']
 
 export default func

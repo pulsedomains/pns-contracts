@@ -7,9 +7,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments
   const { deployer, owner } = await getNamedAccounts()
 
-  const registry = await ethers.getContract('ENSRegistry', owner)
+  const registry = await ethers.getContract('PNSRegistry', owner)
   const nameWrapper = await ethers.getContract('NameWrapper', owner)
-  const controller = await ethers.getContract('ETHRegistrarController', owner)
+  const controller = await ethers.getContract('PLSRegistrarController', owner)
   const reverseRegistrar = await ethers.getContract('ReverseRegistrar', owner)
 
   const deployArgs = {
@@ -22,43 +22,24 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     ],
     log: true,
   }
-  const publicResolver = await deploy('PublicResolver', deployArgs)
-  if (!publicResolver.newlyDeployed) return
+  await deploy('PublicResolver', deployArgs)
+
+  const publicResolver = await ethers.getContract('PublicResolver')
 
   const tx = await reverseRegistrar.setDefaultResolver(publicResolver.address)
   console.log(
     `Setting default resolver on ReverseRegistrar to PublicResolver (tx: ${tx.hash})...`,
   )
-  await tx.wait()
+  await tx.wait(2)
 
-  if ((await registry.owner(ethers.utils.namehash('resolver.eth'))) === owner) {
-    const pr = (await ethers.getContract('PublicResolver')).connect(
-      await ethers.getSigner(owner),
-    )
-    const resolverHash = ethers.utils.namehash('resolver.eth')
-    const tx2 = await registry.setResolver(resolverHash, pr.address)
-    console.log(
-      `Setting resolver for resolver.eth to PublicResolver (tx: ${tx2.hash})...`,
-    )
-    await tx2.wait()
-
-    const tx3 = await pr['setAddr(bytes32,address)'](resolverHash, pr.address)
-    console.log(
-      `Setting address for resolver.eth to PublicResolver (tx: ${tx3.hash})...`,
-    )
-    await tx3.wait()
-  } else {
-    console.log(
-      'resolver.eth is not owned by the owner address, not setting resolver',
-    )
-  }
+  return true
 }
 
 func.id = 'resolver'
-func.tags = ['resolvers', 'PublicResolver']
+func.tags = ['PublicResolver']
 func.dependencies = [
-  'registry',
-  'ETHRegistrarController',
+  'PNSRegistry',
+  'PLSRegistrarController',
   'NameWrapper',
   'ReverseRegistrar',
 ]
