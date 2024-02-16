@@ -38,6 +38,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
    * MAINNET: 0x376D7eA5422ee63C5F3b717fCe63359Fc4cd4BeD (normal cost fee) $555/$169/$$5
    * MAINNET: 0x672689EBdBC24876F670B4FaBC69F413c038a700 (super high fee) $5550/$555/$555
    * MAINNET: 0x9bcaa2483E6d9083b510d86ce2D2c1F56fdaF2c7 (super low fee) $5 for all
+   * MAINNET: 0x25b85317E3681098100C01f925DAb69DdF28184F (normal cost fee) (backup)
    */
   const tx = await controller.changePricesFeed(
     priceFeeds.address,
