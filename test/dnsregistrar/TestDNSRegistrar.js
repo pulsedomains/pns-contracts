@@ -1,4 +1,4 @@
-const ENSRegistry = artifacts.require('./ENSRegistry.sol')
+const PNSRegistry = artifacts.require('./PNSRegistry.sol')
 const Root = artifacts.require('/Root.sol')
 const SimplePublixSuffixList = artifacts.require('./SimplePublicSuffixList.sol')
 const DNSRegistrarContract = artifacts.require('./DNSRegistrar.sol')
@@ -11,13 +11,13 @@ const { assert } = require('chai')
 const { deploy } = require('../test-utils/contracts')
 const { rootKeys, hexEncodeSignedSet } = require('../utils/dnsutils.js')
 const { EMPTY_BYTES32 } = require('../test-utils/constants')
-const { labelhash } = require('../test-utils/ens')
+const { labelhash } = require('../test-utils/pns')
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 contract('DNSRegistrar', function (accounts) {
   var registrar = null
-  var ens = null
+  var pns = null
   var root = null
   var dnssec = null
   var suffixes = null
@@ -47,7 +47,7 @@ contract('DNSRegistrar', function (accounts) {
     },
     rrs: [
       {
-        name: `_ens.${name}`,
+        name: `_pns.${name}`,
         type: 'TXT',
         class: 'IN',
         ttl: 3600,
@@ -57,17 +57,17 @@ contract('DNSRegistrar', function (accounts) {
   })
 
   beforeEach(async function () {
-    ens = await ENSRegistry.new()
-    const ReverseRegistrar = await deploy('ReverseRegistrar', ens.address)
-    await ens.setSubnodeOwner(EMPTY_BYTES32, labelhash('reverse'), accounts[0])
-    await ens.setSubnodeOwner(
+    pns = await PNSRegistry.new()
+    const ReverseRegistrar = await deploy('ReverseRegistrar', pns.address)
+    await pns.setSubnodeOwner(EMPTY_BYTES32, labelhash('reverse'), accounts[0])
+    await pns.setSubnodeOwner(
       namehash.hash('reverse'),
       labelhash('addr'),
       ReverseRegistrar.address,
     )
 
-    root = await Root.new(ens.address)
-    await ens.setOwner('0x0', root.address)
+    root = await Root.new(pns.address)
+    await pns.setOwner('0x0', root.address)
 
     dnssec = await DNSSECImpl.deployed()
 
@@ -82,14 +82,14 @@ contract('DNSRegistrar', function (accounts) {
       ZERO_ADDRESS, // Resolver
       dnssec.address,
       suffixes.address,
-      ens.address,
+      pns.address,
     )
     await root.setController(registrar.address, true)
   })
 
-  it('allows anyone to claim on behalf of the owner of an ENS name', async function () {
+  it('allows anyone to claim on behalf of the owner of an PNS name', async function () {
     assert.equal(await registrar.oracle(), dnssec.address)
-    assert.equal(await registrar.ens(), ens.address)
+    assert.equal(await registrar.pns(), pns.address)
 
     const proof = [
       hexEncodeSignedSet(rootKeys(expiration, inception)),
@@ -100,7 +100,7 @@ contract('DNSRegistrar', function (accounts) {
       from: accounts[1],
     })
 
-    assert.equal(await ens.owner(namehash.hash('foo.test')), accounts[0])
+    assert.equal(await pns.owner(namehash.hash('foo.test')), accounts[0])
   })
 
   it('allows claims on names that are not TLDs', async function () {
@@ -111,7 +111,7 @@ contract('DNSRegistrar', function (accounts) {
 
     await registrar.proveAndClaim(utils.hexEncodeName('foo.co.nz'), proof)
 
-    assert.equal(await ens.owner(namehash.hash('foo.co.nz')), accounts[0])
+    assert.equal(await pns.owner(namehash.hash('foo.co.nz')), accounts[0])
   })
 
   it('allows anyone to update a DNSSEC referenced name', async function () {
@@ -126,7 +126,7 @@ contract('DNSRegistrar', function (accounts) {
 
     await registrar.proveAndClaim(utils.hexEncodeName('foo.test'), proof)
 
-    assert.equal(await ens.owner(namehash.hash('foo.test')), accounts[1])
+    assert.equal(await pns.owner(namehash.hash('foo.test')), accounts[1])
   })
 
   it('rejects proofs with earlier inceptions', async function () {
@@ -173,8 +173,8 @@ contract('DNSRegistrar', function (accounts) {
       ZERO_ADDRESS,
     )
 
-    assert.equal(await ens.owner(namehash.hash('foo.test')), accounts[0])
-    assert.equal(await ens.resolver(namehash.hash('foo.test')), accounts[1])
+    assert.equal(await pns.owner(namehash.hash('foo.test')), accounts[0])
+    assert.equal(await pns.resolver(namehash.hash('foo.test')), accounts[1])
   })
 
   it('does not allow anyone else to claim and set a resolver', async () => {
@@ -195,7 +195,7 @@ contract('DNSRegistrar', function (accounts) {
 
   it('sets an address on the resolver if provided', async () => {
     var resolver = await PublicResolver.new(
-      ens.address,
+      pns.address,
       ZERO_ADDRESS,
       ZERO_ADDRESS,
       ZERO_ADDRESS,
@@ -241,7 +241,7 @@ contract('DNSRegistrar', function (accounts) {
 })
 
 contract('DNSRegistrar', function (accounts) {
-  let registrar, ens, root, dnssec, suffixes
+  let registrar, pns, root, dnssec, suffixes
   const validityPeriod = 2419200
   const inception = Date.now() / 1000 - 15 * 60
   const expiration = inception + validityPeriod
@@ -268,7 +268,7 @@ contract('DNSRegistrar', function (accounts) {
     },
     rrs: [
       {
-        name: `_ens.${name}`,
+        name: `_pns.${name}`,
         type: 'TXT',
         class: 'IN',
         ttl: 3600,
@@ -278,10 +278,10 @@ contract('DNSRegistrar', function (accounts) {
   })
 
   beforeEach(async function () {
-    ens = await ENSRegistry.new()
+    pns = await PNSRegistry.new()
 
-    root = await Root.new(ens.address)
-    await ens.setOwner('0x0', root.address)
+    root = await Root.new(pns.address)
+    await pns.setOwner('0x0', root.address)
 
     dnssec = await DNSSECImpl.deployed()
 
@@ -293,7 +293,7 @@ contract('DNSRegistrar', function (accounts) {
       ZERO_ADDRESS, // Resolver
       dnssec.address,
       suffixes.address,
-      ens.address,
+      pns.address,
     )
     await root.setController(registrar.address, true)
   })
@@ -301,7 +301,7 @@ contract('DNSRegistrar', function (accounts) {
   it('cannot claim multiple names using single unrelated proof', async function () {
     const alice = accounts[1]
 
-    // Build sample proof for a DNS record with name `poc.test` that alice owns
+    // Build sample proof for a DNS record with name `alice.test` that alice owns
     const proofForAliceDotTest = [
       hexEncodeSignedSet(rootKeys(expiration, inception)),
       hexEncodeSignedSet(testRrset('alice.test', alice)),
@@ -309,22 +309,22 @@ contract('DNSRegistrar', function (accounts) {
 
     // This is the expected use case.
     // Using the proof for `alice.test`, can claim `alice.test`
-    assert.equal(await ens.owner(namehash.hash('alice.test')), ZERO_ADDRESS)
+    assert.equal(await pns.owner(namehash.hash('alice.test')), ZERO_ADDRESS)
     await registrar.proveAndClaim(
       utils.hexEncodeName('alice.test'),
       proofForAliceDotTest,
     )
-    assert.equal(await ens.owner(namehash.hash('alice.test')), alice)
+    assert.equal(await pns.owner(namehash.hash('alice.test')), alice)
 
     // Now using the same proof for `alice.test`, alice can also claim `foo.test`. Without a proof involving `foo.test`
-    assert.equal(await ens.owner(namehash.hash('foo.test')), ZERO_ADDRESS)
+    assert.equal(await pns.owner(namehash.hash('foo.test')), ZERO_ADDRESS)
     await expect(
       registrar.proveAndClaim(
         utils.hexEncodeName('foo.test'),
         proofForAliceDotTest,
       ),
     ).to.be.revertedWith('NoOwnerRecordFound')
-    assert.equal(await ens.owner(namehash.hash('foo.test')), ZERO_ADDRESS)
+    assert.equal(await pns.owner(namehash.hash('foo.test')), ZERO_ADDRESS)
   })
 
   it('cannot takeover claimed DNS domains using unrelated proof', async function () {
@@ -338,12 +338,12 @@ contract('DNSRegistrar', function (accounts) {
     ]
 
     // Alice claims her domain
-    assert.equal(await ens.owner(namehash.hash('alice.test')), ZERO_ADDRESS)
+    assert.equal(await pns.owner(namehash.hash('alice.test')), ZERO_ADDRESS)
     await registrar.proveAndClaim(
       utils.hexEncodeName('alice.test'),
       proofForAliceDotTest,
     )
-    assert.equal(await ens.owner(namehash.hash('alice.test')), alice)
+    assert.equal(await pns.owner(namehash.hash('alice.test')), alice)
 
     // Build sample proof for a DNS record with name `bob.test` that bob owns
     const proofForBobDotTest = [
@@ -352,13 +352,13 @@ contract('DNSRegistrar', function (accounts) {
     ]
 
     // Bob claims alice's domain
-    assert.equal(await ens.owner(namehash.hash('alice.test')), alice)
+    assert.equal(await pns.owner(namehash.hash('alice.test')), alice)
     await expect(
       registrar.proveAndClaim(
         utils.hexEncodeName('alice.test'),
         proofForBobDotTest,
       ),
     ).to.be.revertedWith('NoOwnerRecordFound')
-    assert.equal(await ens.owner(namehash.hash('alice.test')), alice)
+    assert.equal(await pns.owner(namehash.hash('alice.test')), alice)
   })
 })

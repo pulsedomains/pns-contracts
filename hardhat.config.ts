@@ -4,6 +4,7 @@ import '@nomiclabs/hardhat-ethers'
 import '@nomiclabs/hardhat-solhint'
 import '@nomiclabs/hardhat-truffle5'
 import '@nomiclabs/hardhat-waffle'
+import '@nomicfoundation/hardhat-verify'
 import dotenv from 'dotenv'
 import 'hardhat-abi-exporter'
 import 'hardhat-contract-sizer'
@@ -41,36 +42,25 @@ const config: HardhatUserConfig = {
   networks: {
     hardhat: {
       saveDeployments: false,
-      tags: ['test', 'legacy', 'use_root'],
+      tags: ['test', 'use_root'],
       allowUnlimitedContractSize: false,
     },
     localhost: {
       url: 'http://127.0.0.1:8545',
       saveDeployments: false,
-      tags: ['test', 'legacy', 'use_root'],
-    },
-    rinkeby: {
-      url: `https://rinkeby.infura.io/v3/${process.env.INFURA_API_KEY}`,
-      tags: ['test', 'legacy', 'use_root'],
-      chainId: 4,
-      accounts: real_accounts,
-    },
-    ropsten: {
-      url: `https://ropsten.infura.io/v3/${process.env.INFURA_API_KEY}`,
-      tags: ['test', 'legacy', 'use_root'],
-      chainId: 3,
-      accounts: real_accounts,
-    },
-    goerli: {
-      url: `https://goerli.infura.io/v3/${process.env.INFURA_API_KEY}`,
-      tags: ['test', 'legacy', 'use_root'],
-      chainId: 5,
-      accounts: real_accounts,
+      tags: ['test', 'use_root'],
     },
     mainnet: {
-      url: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
-      tags: ['legacy', 'use_root'],
-      chainId: 1,
+      url: 'https://rpc.pulsechain.com',
+      tags: ['use_root'],
+      chainId: 369,
+      accounts: real_accounts,
+      gasPrice: 2000000000000000,
+    },
+    testnet: {
+      url: 'https://rpc.v4.testnet.pulsechain.com',
+      tags: ['use_root'],
+      chainId: 943,
       accounts: real_accounts,
     },
   },
@@ -82,17 +72,7 @@ const config: HardhatUserConfig = {
         settings: {
           optimizer: {
             enabled: true,
-            runs: 1300,
-          },
-        },
-      },
-      // for DummyOldResolver contract
-      {
-        version: '0.4.11',
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 200,
+            runs: 1200,
           },
         },
       },
@@ -129,6 +109,13 @@ const config: HardhatUserConfig = {
         artifacts: [archivedDeploymentPath],
       },
     ],
+  },
+  sourcify: {
+    enabled: true,
+    // Optional: specify a different Sourcify server
+    apiUrl: 'https://sourcify.dev/server',
+    // Optional: specify a different Sourcify repository
+    browserUrl: 'https://repo.sourcify.dev',
   },
 }
 

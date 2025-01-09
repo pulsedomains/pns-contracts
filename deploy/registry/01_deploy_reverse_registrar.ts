@@ -9,35 +9,30 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments
   const { deployer, owner } = await getNamedAccounts()
 
-  const registry = await ethers.getContract('ENSRegistry')
+  const registry = await ethers.getContract('PNSRegistry')
+  const root = await ethers.getContract('Root')
 
-  const deployArgs = {
+  await deploy('ReverseRegistrar', {
     from: deployer,
     args: [registry.address],
     log: true,
-  }
-  const reverseRegistrar = await deploy('ReverseRegistrar', deployArgs)
-  if (!reverseRegistrar.newlyDeployed) return
+  })
+
+  const reverseRegistrar = await ethers.getContract('ReverseRegistrar')
 
   if (owner !== deployer) {
-    const r = await ethers.getContract('ReverseRegistrar', deployer)
-    const tx = await r.transferOwnership(owner)
+    const tx = await reverseRegistrar.transferOwnership(owner)
     console.log(
       `Transferring ownership of ReverseRegistrar to ${owner} (tx: ${tx.hash})...`,
     )
-    await tx.wait()
+    await tx.wait(2)
   }
-
-  // Only attempt to make controller etc changes directly on testnets
-  if (network.name === 'mainnet') return
-
-  const root = await ethers.getContract('Root')
 
   const tx1 = await root
     .connect(await ethers.getSigner(owner))
     .setSubnodeOwner('0x' + keccak256('reverse'), owner)
   console.log(`Setting owner of .reverse to owner on root (tx: ${tx1.hash})...`)
-  await tx1.wait()
+  await tx1.wait(2)
 
   const tx2 = await registry
     .connect(await ethers.getSigner(owner))
@@ -49,11 +44,13 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   console.log(
     `Setting owner of .addr.reverse to ReverseRegistrar on registry (tx: ${tx2.hash})...`,
   )
-  await tx2.wait()
+  await tx2.wait(2)
+
+  return true
 }
 
 func.id = 'reverse-registrar'
 func.tags = ['ReverseRegistrar']
-func.dependencies = ['root']
+func.dependencies = ['PNSRegistry', 'Root']
 
 export default func

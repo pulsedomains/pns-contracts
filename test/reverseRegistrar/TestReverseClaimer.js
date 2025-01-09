@@ -1,7 +1,7 @@
 const { ethers } = require('hardhat')
 const { use, expect } = require('chai')
 const { solidity } = require('ethereum-waffle')
-const { labelhash, namehash } = require('../test-utils/ens')
+const { labelhash, namehash } = require('../test-utils/pns')
 const { deploy } = require('../test-utils/contracts')
 const { EMPTY_BYTES32 } = require('../test-utils/constants')
 
@@ -10,7 +10,7 @@ use(solidity)
 const ROOT_NODE = EMPTY_BYTES32
 
 describe('ReverseClaimer', () => {
-  let EnsRegistry
+  let PnsRegistry
   let BaseRegistrar
   let NameWrapper
   let MetaDataservice
@@ -25,11 +25,11 @@ describe('ReverseClaimer', () => {
     account2 = await signers[1].getAddress()
     hacker = await signers[2].getAddress()
 
-    EnsRegistry = await deploy('ENSRegistry')
+    PnsRegistry = await deploy('PNSRegistry')
     BaseRegistrar = await deploy(
       'BaseRegistrarImplementation',
-      EnsRegistry.address,
-      namehash('eth'),
+      PnsRegistry.address,
+      namehash('pls'),
     )
 
     await BaseRegistrar.addController(account)
@@ -37,11 +37,11 @@ describe('ReverseClaimer', () => {
 
     const ReverseRegistrar = await deploy(
       'ReverseRegistrar',
-      EnsRegistry.address,
+      PnsRegistry.address,
     )
 
-    await EnsRegistry.setSubnodeOwner(ROOT_NODE, labelhash('reverse'), account)
-    await EnsRegistry.setSubnodeOwner(
+    await PnsRegistry.setSubnodeOwner(ROOT_NODE, labelhash('reverse'), account)
+    await PnsRegistry.setSubnodeOwner(
       namehash('reverse'),
       labelhash('addr'),
       ReverseRegistrar.address,
@@ -49,12 +49,12 @@ describe('ReverseClaimer', () => {
 
     MetaDataservice = await deploy(
       'StaticMetadataService',
-      'https://ens.domains',
+      'https://pns.domains',
     )
 
     NameWrapper = await deploy(
       'NameWrapper',
-      EnsRegistry.address,
+      PnsRegistry.address,
       BaseRegistrar.address,
       MetaDataservice.address,
     )
@@ -69,7 +69,7 @@ describe('ReverseClaimer', () => {
 
   it('Claims a reverse node to the msg.sender of the deployer', async () => {
     expect(
-      await EnsRegistry.owner(
+      await PnsRegistry.owner(
         namehash(`${NameWrapper.address.slice(2)}.addr.reverse`),
       ),
     ).to.equal(account)
@@ -77,11 +77,11 @@ describe('ReverseClaimer', () => {
   it('Claims a reverse node to an address specified by the deployer', async () => {
     const MockReverseClaimerImplementer = await deploy(
       'MockReverseClaimerImplementer',
-      EnsRegistry.address,
+      PnsRegistry.address,
       account2,
     )
     expect(
-      await EnsRegistry.owner(
+      await PnsRegistry.owner(
         namehash(
           `${MockReverseClaimerImplementer.address.slice(2)}.addr.reverse`,
         ),

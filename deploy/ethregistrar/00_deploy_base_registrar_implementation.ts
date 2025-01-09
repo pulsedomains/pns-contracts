@@ -1,29 +1,27 @@
-import namehash from 'eth-ens-namehash'
 import { ethers } from 'hardhat'
 import { DeployFunction } from 'hardhat-deploy/types'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
+
+import namehash from 'eth-ens-namehash'
 import { keccak256 } from 'js-sha3'
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { getNamedAccounts, deployments, network } = hre
-  const { deploy, fetchIfDifferent } = deployments
+  const { deploy } = deployments
   const { deployer, owner } = await getNamedAccounts()
 
   if (!network.tags.use_root) {
     return true
   }
 
-  const registry = await ethers.getContract('ENSRegistry')
+  const registry = await ethers.getContract('PNSRegistry')
   const root = await ethers.getContract('Root')
 
-  const deployArgs = {
+  await deploy('BaseRegistrarImplementation', {
     from: deployer,
-    args: [registry.address, namehash.hash('eth')],
+    args: [registry.address, namehash.hash('pls')],
     log: true,
-  }
-
-  const bri = await deploy('BaseRegistrarImplementation', deployArgs)
-  if (!bri.newlyDeployed) return
+  })
 
   const registrar = await ethers.getContract('BaseRegistrarImplementation')
 
@@ -31,19 +29,21 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   console.log(
     `Transferring ownership of registrar to owner (tx: ${tx1.hash})...`,
   )
-  await tx1.wait()
+  await tx1.wait(2)
 
   const tx2 = await root
     .connect(await ethers.getSigner(owner))
-    .setSubnodeOwner('0x' + keccak256('eth'), registrar.address)
+    .setSubnodeOwner('0x' + keccak256('pls'), registrar.address)
   console.log(
-    `Setting owner of eth node to registrar on root (tx: ${tx2.hash})...`,
+    `Setting owner of pls node to registrar on root (tx: ${tx2.hash})...`,
   )
-  await tx2.wait()
+  await tx2.wait(2)
+
+  return true
 }
 
 func.id = 'registrar'
-func.tags = ['ethregistrar', 'BaseRegistrarImplementation']
-func.dependencies = ['registry', 'root']
+func.tags = ['BaseRegistrarImplementation']
+func.dependencies = ['PNSRegistry', 'Root']
 
 export default func

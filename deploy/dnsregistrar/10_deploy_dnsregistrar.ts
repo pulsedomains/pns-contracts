@@ -7,10 +7,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments
   const { deployer, owner } = await getNamedAccounts()
 
-  const registry = await hre.deployments.get('ENSRegistry')
-  const dnssec = await hre.deployments.get('DNSSECImpl')
-  const resolver = await hre.deployments.get('OffchainDNSResolver')
-  const oldregistrar = await hre.deployments.getOrNull('DNSRegistrar')
+  const registry = await ethers.getContract('PNSRegistry')
+  const dnssec = await ethers.getContract('DNSSECImpl')
+  const resolver = await ethers.getContract('OffchainDNSResolver')
   const root = await ethers.getContract('Root')
 
   const publicSuffixList = await deploy('TLDPublicSuffixList', {
@@ -19,10 +18,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     log: true,
   })
 
-  const tx = await deploy('DNSRegistrar', {
+  const dnsRegistrar = await deploy('DNSRegistrar', {
     from: deployer,
     args: [
-      oldregistrar?.address || '0x0000000000000000000000000000000000000000',
+      '0x0000000000000000000000000000000000000000',
       resolver.address,
       dnssec.address,
       publicSuffixList.address,
@@ -30,15 +29,24 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     ],
     log: true,
   })
-  console.log(`Deployed DNSRegistrar to ${tx.address}`)
+  console.log(`Deployed DNSRegistrar to ${dnsRegistrar.address}`)
 
   const tx2 = await root
     .connect(await ethers.getSigner(owner))
-    .setController(tx.address, true)
-  console.log(`Set DNSRegistrar as controller of Root (${tx2.hash})`)
+    .setController(dnsRegistrar.address, true)
+  console.log(`Set DNSRegistrar as controller of Root (${tx2.hash})...`)
+  await tx2.wait(2)
+
+  return true
 }
 
+func.id = 'dns-registrar'
 func.tags = ['DNSRegistrar']
-func.dependencies = ['registry', 'dnssec-oracle', 'OffchainDNSResolver', 'Root']
+func.dependencies = [
+  'PNSRegistry',
+  'DNSSecOracle',
+  'OffchainDNSResolver',
+  'Root',
+]
 
 export default func

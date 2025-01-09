@@ -1,0 +1,35 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/dexoracle/PulseXOracle.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ~0.8.17;\n\nerror PriceOutdated();\nerror ZeroValue();\n\ninterface IPulseXPair {\n    function token0() external view returns (address);\n\n    function token1() external view returns (address);\n\n    function getReserves()\n        external\n        view\n        returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast);\n}\n\ncontract PulseXOracle {\n    address public constant WPLS = address(0xA1077a294dDE1B09bB078844df40758a5D0f9a27);\n\n    address immutable token0;\n    address immutable token1;\n    IPulseXPair public immutable PLS_DAI_PAIR;\n\n    constructor() {\n        PLS_DAI_PAIR = IPulseXPair(0xE56043671df55dE5CDf8459710433C10324DE0aE);\n\n        token0 = PLS_DAI_PAIR.token0();\n        token1 = PLS_DAI_PAIR.token1();\n    }\n\n    function latestAnswer() public view returns (int256) {\n        (uint112 reserve0, uint112 reserve1, ) = PLS_DAI_PAIR.getReserves();\n        int256 price;\n        if (token0 == WPLS) {\n            price = (int256(uint(reserve1)) * 1e8) / 1e18 / (int256(uint(reserve0)) / 1e18);\n        } else {\n            price = (int256(uint(reserve0)) * 1e8) / 1e18 / (int256(uint(reserve1)) / 1e18);\n        }\n\n        if (price == 0) {\n            revert ZeroValue();\n        }\n\n        return price;\n    }\n}"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": true,
+      "runs": 1200
+    },
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}

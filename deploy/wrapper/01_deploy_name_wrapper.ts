@@ -1,89 +1,51 @@
-import { Interface } from 'ethers/lib/utils'
 import { ethers } from 'hardhat'
 import { DeployFunction } from 'hardhat-deploy/types'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
-const { makeInterfaceId } = require('@openzeppelin/test-helpers')
-
-function computeInterfaceId(iface: Interface) {
-  return makeInterfaceId.ERC165(
-    Object.values(iface.functions).map((frag) => frag.format('sighash')),
-  )
-}
-
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  const { getNamedAccounts, deployments, network } = hre
+  const { getNamedAccounts, deployments } = hre
   const { deploy } = deployments
   const { deployer, owner } = await getNamedAccounts()
 
-  const registry = await ethers.getContract('ENSRegistry', owner)
+  const registry = await ethers.getContract('PNSRegistry', owner)
   const registrar = await ethers.getContract(
     'BaseRegistrarImplementation',
     owner,
   )
   const metadata = await ethers.getContract('StaticMetadataService', owner)
 
-  const deployArgs = {
+  await deploy('NameWrapper', {
     from: deployer,
     args: [registry.address, registrar.address, metadata.address],
     log: true,
-  }
+  })
 
-  const nameWrapper = await deploy('NameWrapper', deployArgs)
-  if (!nameWrapper.newlyDeployed) return
+  const nameWrapper = await ethers.getContract('NameWrapper')
 
   if (owner !== deployer) {
-    const wrapper = await ethers.getContract('NameWrapper', deployer)
-    const tx = await wrapper.transferOwnership(owner)
+    const tx = await nameWrapper.transferOwnership(owner)
     console.log(
       `Transferring ownership of NameWrapper to ${owner} (tx: ${tx.hash})...`,
     )
-    await tx.wait()
+    await tx.wait(2)
   }
-
-  // Only attempt to make controller etc changes directly on testnets
-  if (network.name === 'mainnet') return
 
   const tx2 = await registrar.addController(nameWrapper.address)
   console.log(
     `Adding NameWrapper as controller on registrar (tx: ${tx2.hash})...`,
   )
-  await tx2.wait()
+  await tx2.wait(2)
 
-  const artifact = await deployments.getArtifact('INameWrapper')
-  const interfaceId = computeInterfaceId(new Interface(artifact.abi))
-  const providerWithEns = new ethers.providers.StaticJsonRpcProvider(
-    ethers.provider.connection.url,
-    { ...ethers.provider.network, ensAddress: registry.address },
-  )
-  const resolver = await providerWithEns.getResolver('eth')
-  if (resolver === null) {
-    console.log(
-      `No resolver set for .eth; not setting interface ${interfaceId} for NameWrapper`,
-    )
-    return
-  }
-  const resolverContract = await ethers.getContractAt(
-    'PublicResolver',
-    resolver.address,
-  )
-  const tx3 = await resolverContract.setInterface(
-    ethers.utils.namehash('eth'),
-    interfaceId,
-    nameWrapper.address,
-  )
-  console.log(
-    `Setting NameWrapper interface ID ${interfaceId} on .eth resolver (tx: ${tx3.hash})...`,
-  )
-  await tx3.wait()
+  return true
 }
 
 func.id = 'name-wrapper'
-func.tags = ['wrapper', 'NameWrapper']
+func.tags = ['NameWrapper']
 func.dependencies = [
-  'BaseRegistrarImplementation',
   'StaticMetadataService',
-  'registry',
+  'PNSRegistry',
+  'ReverseRegistrar',
+  'OwnedResolver',
 ]
 
 export default func

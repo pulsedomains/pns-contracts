@@ -4,7 +4,7 @@ const ENS = require('./build/contracts/ENS')
 const ENSRegistry = require('./build/contracts/ENSRegistry')
 const ENSRegistryWithFallback = require('./build/contracts/ENSRegistryWithFallback')
 const ExponentialPremiumPriceOracle = require('./build/contracts/ExponentialPremiumPriceOracle')
-const ETHRegistrarController = require('./build/contracts/ETHRegistrarController')
+const PLSRegistrarController = require('./build/contracts/PLSRegistrarController')
 const FIFSRegistrar = require('./build/contracts/FIFSRegistrar')
 const IBaseRegistrar = require('./build/contracts/IBaseRegistrar')
 const IPriceOracle = require('./build/contracts/IPriceOracle')
@@ -33,7 +33,7 @@ module.exports = {
   ENSRegistry,
   ENSRegistryWithFallback,
   ExponentialPremiumPriceOracle,
-  ETHRegistrarController,
+  PLSRegistrarController,
   FIFSRegistrar,
   IBaseRegistrar,
   IPriceOracle,

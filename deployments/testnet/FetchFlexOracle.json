@@ -1,0 +1,567 @@
+{
+  "address": "0xA2a0CFc7d3eAecd233B94CcCD2BA0f8895727904",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address payable",
+          "name": "_fetchAddress",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "PriceOutdated",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ZeroValue",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "fetch",
+      "outputs": [
+        {
+          "internalType": "contract IFetch",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_queryId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_timestamp",
+          "type": "uint256"
+        }
+      ],
+      "name": "getDataAfter",
+      "outputs": [
+        {
+          "internalType": "bytes",
+          "name": "_value",
+          "type": "bytes"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_timestampRetrieved",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_queryId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_timestamp",
+          "type": "uint256"
+        }
+      ],
+      "name": "getDataBefore",
+      "outputs": [
+        {
+          "internalType": "bytes",
+          "name": "_value",
+          "type": "bytes"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_timestampRetrieved",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_queryId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_timestamp",
+          "type": "uint256"
+        }
+      ],
+      "name": "getIndexForDataAfter",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "_found",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_index",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_queryId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_timestamp",
+          "type": "uint256"
+        }
+      ],
+      "name": "getIndexForDataBefore",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "_found",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_index",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_queryId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_timestamp",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_maxAge",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_maxCount",
+          "type": "uint256"
+        }
+      ],
+      "name": "getMultipleValuesBefore",
+      "outputs": [
+        {
+          "internalType": "bytes[]",
+          "name": "_values",
+          "type": "bytes[]"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "_timestamps",
+          "type": "uint256[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_queryId",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getNewValueCountbyQueryId",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_queryId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_timestamp",
+          "type": "uint256"
+        }
+      ],
+      "name": "getReporterByTimestamp",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_queryId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_index",
+          "type": "uint256"
+        }
+      ],
+      "name": "getTimestampbyQueryIdandIndex",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "idMappingContract",
+      "outputs": [
+        {
+          "internalType": "contract IMappingContract",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_queryId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_timestamp",
+          "type": "uint256"
+        }
+      ],
+      "name": "isInDispute",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "latestAnswer",
+      "outputs": [
+        {
+          "internalType": "int256",
+          "name": "",
+          "type": "int256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_queryId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_timestamp",
+          "type": "uint256"
+        }
+      ],
+      "name": "retrieveData",
+      "outputs": [
+        {
+          "internalType": "bytes",
+          "name": "",
+          "type": "bytes"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_addy",
+          "type": "address"
+        }
+      ],
+      "name": "setIdMappingContract",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_id",
+          "type": "bytes32"
+        }
+      ],
+      "name": "valueFor",
+      "outputs": [
+        {
+          "internalType": "int256",
+          "name": "_value",
+          "type": "int256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_timestamp",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_statusCode",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0xd6b77920b53971b7d3bb7870e60d4177dd189270cf153904e3eaa61c27983ea9",
+  "receipt": {
+    "to": null,
+    "from": "0x84631c1E9D354db44147fe9C1b4E0AD590839Afc",
+    "contractAddress": "0xA2a0CFc7d3eAecd233B94CcCD2BA0f8895727904",
+    "transactionIndex": 0,
+    "gasUsed": "1152306",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0xba9ca0a82040ef9c1d4f77265ae941ca4fa0c3fcf4f4015c70ca02d4743fd945",
+    "transactionHash": "0xd6b77920b53971b7d3bb7870e60d4177dd189270cf153904e3eaa61c27983ea9",
+    "logs": [],
+    "blockNumber": 18358176,
+    "cumulativeGasUsed": "1152306",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [
+    "0x252eC80dEa7F3eD0CC57e0f1112d6f56Ae9523fb"
+  ],
+  "numDeployments": 1,
+  "solcInputHash": "5d99bad3859fc8056bafe9457a9bb336",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.17+commit.8df45f5f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address payable\",\"name\":\"_fetchAddress\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"PriceOutdated\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ZeroValue\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"fetch\",\"outputs\":[{\"internalType\":\"contract IFetch\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_queryId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"_timestamp\",\"type\":\"uint256\"}],\"name\":\"getDataAfter\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"_value\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"_timestampRetrieved\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_queryId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"_timestamp\",\"type\":\"uint256\"}],\"name\":\"getDataBefore\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"_value\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"_timestampRetrieved\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_queryId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"_timestamp\",\"type\":\"uint256\"}],\"name\":\"getIndexForDataAfter\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_found\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"_index\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_queryId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"_timestamp\",\"type\":\"uint256\"}],\"name\":\"getIndexForDataBefore\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"_found\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"_index\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_queryId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"_timestamp\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_maxAge\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_maxCount\",\"type\":\"uint256\"}],\"name\":\"getMultipleValuesBefore\",\"outputs\":[{\"internalType\":\"bytes[]\",\"name\":\"_values\",\"type\":\"bytes[]\"},{\"internalType\":\"uint256[]\",\"name\":\"_timestamps\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_queryId\",\"type\":\"bytes32\"}],\"name\":\"getNewValueCountbyQueryId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_queryId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"_timestamp\",\"type\":\"uint256\"}],\"name\":\"getReporterByTimestamp\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_queryId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"_index\",\"type\":\"uint256\"}],\"name\":\"getTimestampbyQueryIdandIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"idMappingContract\",\"outputs\":[{\"internalType\":\"contract IMappingContract\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_queryId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"_timestamp\",\"type\":\"uint256\"}],\"name\":\"isInDispute\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"latestAnswer\",\"outputs\":[{\"internalType\":\"int256\",\"name\":\"\",\"type\":\"int256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_queryId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"_timestamp\",\"type\":\"uint256\"}],\"name\":\"retrieveData\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_addy\",\"type\":\"address\"}],\"name\":\"setIdMappingContract\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_id\",\"type\":\"bytes32\"}],\"name\":\"valueFor\",\"outputs\":[{\"internalType\":\"int256\",\"name\":\"_value\",\"type\":\"int256\"},{\"internalType\":\"uint256\",\"name\":\"_timestamp\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_statusCode\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"getDataAfter(bytes32,uint256)\":{\"details\":\"Retrieves the next value for the queryId after the specified timestamp\",\"params\":{\"_queryId\":\"is the queryId to look up the value for\",\"_timestamp\":\"after which to search for next value\"},\"returns\":{\"_timestampRetrieved\":\"the value's timestamp\",\"_value\":\"the value retrieved\"}},\"getDataBefore(bytes32,uint256)\":{\"details\":\"Retrieves the latest value for the queryId before the specified timestamp\",\"params\":{\"_queryId\":\"is the queryId to look up the value for\",\"_timestamp\":\"before which to search for latest value\"},\"returns\":{\"_timestampRetrieved\":\"the value's timestamp\",\"_value\":\"the value retrieved\"}},\"getIndexForDataAfter(bytes32,uint256)\":{\"details\":\"Retrieves latest array index of data before the specified timestamp for the queryId\",\"params\":{\"_queryId\":\"is the queryId to look up the index for\",\"_timestamp\":\"is the timestamp before which to search for the latest index\"},\"returns\":{\"_found\":\"whether the index was found\",\"_index\":\"the latest index found before the specified timestamp\"}},\"getIndexForDataBefore(bytes32,uint256)\":{\"details\":\"Retrieves latest array index of data before the specified timestamp for the queryId\",\"params\":{\"_queryId\":\"is the queryId to look up the index for\",\"_timestamp\":\"is the timestamp before which to search for the latest index\"},\"returns\":{\"_found\":\"whether the index was found\",\"_index\":\"the latest index found before the specified timestamp\"}},\"getMultipleValuesBefore(bytes32,uint256,uint256,uint256)\":{\"details\":\"Retrieves multiple uint256 values before the specified timestamp\",\"params\":{\"_maxAge\":\"the maximum number of seconds before the _timestamp to search for values\",\"_maxCount\":\"the maximum number of values to return\",\"_queryId\":\"the unique id of the data query\",\"_timestamp\":\"the timestamp before which to search for values\"},\"returns\":{\"_timestamps\":\"the timestamps of the values retrieved\",\"_values\":\"the values retrieved, ordered from oldest to newest\"}},\"getNewValueCountbyQueryId(bytes32)\":{\"details\":\"Counts the number of values that have been submitted for the queryId\",\"params\":{\"_queryId\":\"the id to look up\"},\"returns\":{\"_0\":\"uint256 count of the number of values received for the queryId\"}},\"getReporterByTimestamp(bytes32,uint256)\":{\"details\":\"Returns the address of the reporter who submitted a value for a data ID at a specific time\",\"params\":{\"_queryId\":\"is ID of the specific data feed\",\"_timestamp\":\"is the timestamp to find a corresponding reporter for\"},\"returns\":{\"_0\":\"address of the reporter who reported the value for the data ID at the given timestamp\"}},\"getTimestampbyQueryIdandIndex(bytes32,uint256)\":{\"details\":\"Gets the timestamp for the value based on their index\",\"params\":{\"_index\":\"is the value index to look up\",\"_queryId\":\"is the id to look up\"},\"returns\":{\"_0\":\"uint256 timestamp\"}},\"isInDispute(bytes32,uint256)\":{\"details\":\"Determines whether a value with a given queryId and timestamp has been disputed\",\"params\":{\"_queryId\":\"is the value id to look up\",\"_timestamp\":\"is the timestamp of the value to look up\"},\"returns\":{\"_0\":\"bool true if queryId/timestamp is under dispute\"}},\"retrieveData(bytes32,uint256)\":{\"details\":\"Retrieve value from oracle based on queryId/timestamp\",\"params\":{\"_queryId\":\"being requested\",\"_timestamp\":\"to retrieve data/value from\"},\"returns\":{\"_0\":\"bytes value for query/timestamp submitted\"}},\"setIdMappingContract(address)\":{\"details\":\"allows dev to set mapping contract for valueFor (EIP2362)\",\"params\":{\"_addy\":\"address of mapping contract\"}},\"valueFor(bytes32)\":{\"details\":\"Retrieve most recent int256 value from oracle based on queryId\",\"params\":{\"_id\":\"being requested\"},\"returns\":{\"_statusCode\":\"200 if value found, 404 if not found\",\"_timestamp\":\"timestamp of most recent value\",\"_value\":\"most recent value submitted\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/fetchoracle/FetchFlexOracle.sol\":\"FetchFlexOracle\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":1200},\"remappings\":[]},\"sources\":{\"contracts/fetchoracle/FetchFlexOracle.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ~0.8.17;\\n\\nimport {UsingFetch} from \\\"./UsingFetch.sol\\\";\\n\\nerror PriceOutdated();\\nerror ZeroValue();\\n\\ncontract FetchFlexOracle is UsingFetch {\\n    constructor(address payable _fetchAddress) UsingFetch(_fetchAddress) {}\\n\\n    function latestAnswer() public view returns (int256) {\\n        bytes memory _plsQueryId = abi.encode(\\n            \\\"SpotPrice\\\",\\n            abi.encode(\\\"pls\\\", \\\"usd\\\")\\n        );\\n        bytes32 _queryId = keccak256(_plsQueryId);\\n\\n        (bytes memory _value, uint256 _timestampRetrieved) = getDataBefore(\\n            _queryId,\\n            block.timestamp - 20 minutes\\n        );\\n        if (_timestampRetrieved == 0) {\\n            revert ZeroValue();\\n        }\\n        if (block.timestamp - _timestampRetrieved > 24 hours) {\\n            revert PriceOutdated();\\n        }\\n\\n        uint256 price = abi.decode(_value, (uint256));\\n        // convert value to chainlink oracle format\\n        int256 oraclePrice = int256((price * 1e8) / 1e18);\\n        if (oraclePrice == 0) {\\n            revert ZeroValue();\\n        }\\n\\n        return oraclePrice;\\n    }\\n}\\n\",\"keccak256\":\"0x70578ea08b1e2476fd3b10a2f886347e5f449522196a643c014bf14ad96a9a77\",\"license\":\"MIT\"},\"contracts/fetchoracle/IERC2362.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity >=0.8.0;\\n\\n/**\\n * @dev EIP2362 Interface for pull oracles\\n * https://github.com/tellor-io/EIP-2362\\n */\\ninterface IERC2362 {\\n    /**\\n     * @dev Exposed function pertaining to EIP standards\\n     * @param _id bytes32 ID of the query\\n     * @return int,uint,uint returns the value, timestamp, and status code of query\\n     */\\n    function valueFor(\\n        bytes32 _id\\n    ) external view returns (int256, uint256, uint256);\\n}\\n\",\"keccak256\":\"0xa929d6c54a70e0b1ab2b50b9ba6e91081f9286d52c44aa418c892ad1a87ac78a\",\"license\":\"MIT\"},\"contracts/fetchoracle/IFetch.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity >=0.8.0;\\n\\ninterface IFetch {\\n    //Controller\\n    function addresses(bytes32) external view returns (address);\\n\\n    function uints(bytes32) external view returns (uint256);\\n\\n    function burn(uint256 _amount) external;\\n\\n    function changeDeity(address _newDeity) external;\\n\\n    function changeOwner(address _newOwner) external;\\n\\n    function changeUint(bytes32 _target, uint256 _amount) external;\\n\\n    function migrate() external;\\n\\n    function mint(address _reciever, uint256 _amount) external;\\n\\n    function init() external;\\n\\n    function getAllDisputeVars(\\n        uint256 _disputeId\\n    )\\n        external\\n        view\\n        returns (\\n            bytes32,\\n            bool,\\n            bool,\\n            bool,\\n            address,\\n            address,\\n            address,\\n            uint256[9] memory,\\n            int256\\n        );\\n\\n    function getDisputeIdByDisputeHash(\\n        bytes32 _hash\\n    ) external view returns (uint256);\\n\\n    function getDisputeUintVars(\\n        uint256 _disputeId,\\n        bytes32 _data\\n    ) external view returns (uint256);\\n\\n    function getLastNewValueById(\\n        uint256 _requestId\\n    ) external view returns (uint256, bool);\\n\\n    function retrieveData(\\n        uint256 _requestId,\\n        uint256 _timestamp\\n    ) external view returns (uint256);\\n\\n    function getNewValueCountbyRequestId(\\n        uint256 _requestId\\n    ) external view returns (uint256);\\n\\n    function getAddressVars(bytes32 _data) external view returns (address);\\n\\n    function getUintVar(bytes32 _data) external view returns (uint256);\\n\\n    function totalSupply() external view returns (uint256);\\n\\n    function name() external pure returns (string memory);\\n\\n    function symbol() external pure returns (string memory);\\n\\n    function decimals() external pure returns (uint8);\\n\\n    function isMigrated(address _addy) external view returns (bool);\\n\\n    function allowance(\\n        address _user,\\n        address _spender\\n    ) external view returns (uint256);\\n\\n    function allowedToTrade(\\n        address _user,\\n        uint256 _amount\\n    ) external view returns (bool);\\n\\n    function approve(address _spender, uint256 _amount) external returns (bool);\\n\\n    function approveAndTransferFrom(\\n        address _from,\\n        address _to,\\n        uint256 _amount\\n    ) external returns (bool);\\n\\n    function balanceOf(address _user) external view returns (uint256);\\n\\n    function balanceOfAt(\\n        address _user,\\n        uint256 _blockNumber\\n    ) external view returns (uint256);\\n\\n    function transfer(\\n        address _to,\\n        uint256 _amount\\n    ) external returns (bool success);\\n\\n    function transferFrom(\\n        address _from,\\n        address _to,\\n        uint256 _amount\\n    ) external returns (bool success);\\n\\n    function depositStake() external;\\n\\n    function requestStakingWithdraw() external;\\n\\n    function withdrawStake() external;\\n\\n    function changeStakingStatus(address _reporter, uint256 _status) external;\\n\\n    function slashReporter(address _reporter, address _disputer) external;\\n\\n    function getStakerInfo(\\n        address _staker\\n    ) external view returns (uint256, uint256);\\n\\n    function getTimestampbyRequestIDandIndex(\\n        uint256 _requestId,\\n        uint256 _index\\n    ) external view returns (uint256);\\n\\n    function getNewCurrentVariables()\\n        external\\n        view\\n        returns (bytes32 _c, uint256[5] memory _r, uint256 _d, uint256 _t);\\n\\n    function getNewValueCountbyQueryId(\\n        bytes32 _queryId\\n    ) external view returns (uint256);\\n\\n    function getTimestampbyQueryIdandIndex(\\n        bytes32 _queryId,\\n        uint256 _index\\n    ) external view returns (uint256);\\n\\n    function retrieveData(\\n        bytes32 _queryId,\\n        uint256 _timestamp\\n    ) external view returns (bytes memory);\\n\\n    //Governance\\n    enum VoteResult {\\n        FAILED,\\n        PASSED,\\n        INVALID\\n    }\\n\\n    function setApprovedFunction(bytes4 _func, bool _val) external;\\n\\n    function beginDispute(bytes32 _queryId, uint256 _timestamp) external;\\n\\n    function delegate(address _delegate) external;\\n\\n    function delegateOfAt(\\n        address _user,\\n        uint256 _blockNumber\\n    ) external view returns (address);\\n\\n    function executeVote(uint256 _disputeId) external;\\n\\n    function proposeVote(\\n        address _contract,\\n        bytes4 _function,\\n        bytes calldata _data,\\n        uint256 _timestamp\\n    ) external;\\n\\n    function tallyVotes(uint256 _disputeId) external;\\n\\n    function governance() external view returns (address);\\n\\n    function updateMinDisputeFee() external;\\n\\n    function verify() external pure returns (uint256);\\n\\n    function vote(\\n        uint256 _disputeId,\\n        bool _supports,\\n        bool _invalidQuery\\n    ) external;\\n\\n    function voteFor(\\n        address[] calldata _addys,\\n        uint256 _disputeId,\\n        bool _supports,\\n        bool _invalidQuery\\n    ) external;\\n\\n    function getDelegateInfo(\\n        address _holder\\n    ) external view returns (address, uint256);\\n\\n    function isFunctionApproved(bytes4 _func) external view returns (bool);\\n\\n    function isApprovedGovernanceContract(\\n        address _contract\\n    ) external returns (bool);\\n\\n    function getVoteRounds(\\n        bytes32 _hash\\n    ) external view returns (uint256[] memory);\\n\\n    function getVoteCount() external view returns (uint256);\\n\\n    function getVoteInfo(\\n        uint256 _disputeId\\n    )\\n        external\\n        view\\n        returns (\\n            bytes32,\\n            uint256[9] memory,\\n            bool[2] memory,\\n            VoteResult,\\n            bytes memory,\\n            bytes4,\\n            address[2] memory\\n        );\\n\\n    function getDisputeInfo(\\n        uint256 _disputeId\\n    ) external view returns (uint256, uint256, bytes memory, address);\\n\\n    function getOpenDisputesOnId(\\n        bytes32 _queryId\\n    ) external view returns (uint256);\\n\\n    function didVote(\\n        uint256 _disputeId,\\n        address _voter\\n    ) external view returns (bool);\\n\\n    //Oracle\\n    function getReportTimestampByIndex(\\n        bytes32 _queryId,\\n        uint256 _index\\n    ) external view returns (uint256);\\n\\n    function getValueByTimestamp(\\n        bytes32 _queryId,\\n        uint256 _timestamp\\n    ) external view returns (bytes memory);\\n\\n    function getBlockNumberByTimestamp(\\n        bytes32 _queryId,\\n        uint256 _timestamp\\n    ) external view returns (uint256);\\n\\n    function getReportingLock() external view returns (uint256);\\n\\n    function getReporterByTimestamp(\\n        bytes32 _queryId,\\n        uint256 _timestamp\\n    ) external view returns (address);\\n\\n    function reportingLock() external view returns (uint256);\\n\\n    function removeValue(bytes32 _queryId, uint256 _timestamp) external;\\n\\n    function getTipsByUser(address _user) external view returns (uint256);\\n\\n    function tipQuery(\\n        bytes32 _queryId,\\n        uint256 _tip,\\n        bytes memory _queryData\\n    ) external;\\n\\n    function submitValue(\\n        bytes32 _queryId,\\n        bytes calldata _value,\\n        uint256 _nonce,\\n        bytes memory _queryData\\n    ) external;\\n\\n    function burnTips() external;\\n\\n    function changeReportingLock(uint256 _newReportingLock) external;\\n\\n    function getReportsSubmittedByAddress(\\n        address _reporter\\n    ) external view returns (uint256);\\n\\n    function changeTimeBasedReward(uint256 _newTimeBasedReward) external;\\n\\n    function getReporterLastTimestamp(\\n        address _reporter\\n    ) external view returns (uint256);\\n\\n    function getTipsById(bytes32 _queryId) external view returns (uint256);\\n\\n    function getTimeBasedReward() external view returns (uint256);\\n\\n    function getTimestampCountById(\\n        bytes32 _queryId\\n    ) external view returns (uint256);\\n\\n    function getTimestampIndexByTimestamp(\\n        bytes32 _queryId,\\n        uint256 _timestamp\\n    ) external view returns (uint256);\\n\\n    function getCurrentReward(\\n        bytes32 _queryId\\n    ) external view returns (uint256, uint256);\\n\\n    function getCurrentValue(\\n        bytes32 _queryId\\n    ) external view returns (bytes memory);\\n\\n    function getDataBefore(\\n        bytes32 _queryId,\\n        uint256 _timestamp\\n    )\\n        external\\n        view\\n        returns (\\n            bool _ifRetrieve,\\n            bytes memory _value,\\n            uint256 _timestampRetrieved\\n        );\\n\\n    function getTimeOfLastNewValue() external view returns (uint256);\\n\\n    function depositStake(uint256 _amount) external;\\n\\n    function requestStakingWithdraw(uint256 _amount) external;\\n\\n    //Test functions\\n    function changeAddressVar(bytes32 _id, address _addy) external;\\n\\n    //parachute functions\\n    function killContract() external;\\n\\n    function migrateFor(address _destination, uint256 _amount) external;\\n\\n    function rescue51PercentAttack(address _tokenHolder) external;\\n\\n    function rescueBrokenDataReporting() external;\\n\\n    function rescueFailedUpdate() external;\\n\\n    //Fetch 360\\n    function addStakingRewards(uint256 _amount) external;\\n\\n    function _sliceUint(\\n        bytes memory _b\\n    ) external pure returns (uint256 _number);\\n\\n    function claimOneTimeTip(\\n        bytes32 _queryId,\\n        uint256[] memory _timestamps\\n    ) external;\\n\\n    function claimTip(\\n        bytes32 _feedId,\\n        bytes32 _queryId,\\n        uint256[] memory _timestamps\\n    ) external;\\n\\n    function fee() external view returns (uint256);\\n\\n    function feedsWithFunding(uint256) external view returns (bytes32);\\n\\n    function fundFeed(\\n        bytes32 _feedId,\\n        bytes32 _queryId,\\n        uint256 _amount\\n    ) external;\\n\\n    function getCurrentFeeds(\\n        bytes32 _queryId\\n    ) external view returns (bytes32[] memory);\\n\\n    function getCurrentTip(bytes32 _queryId) external view returns (uint256);\\n\\n    function getDataAfter(\\n        bytes32 _queryId,\\n        uint256 _timestamp\\n    ) external view returns (bytes memory _value, uint256 _timestampRetrieved);\\n\\n    function getDataFeed(\\n        bytes32 _feedId\\n    ) external view returns (Autopay.FeedDetails memory);\\n\\n    function getFundedFeeds() external view returns (bytes32[] memory);\\n\\n    function getFundedQueryIds() external view returns (bytes32[] memory);\\n\\n    function getIndexForDataAfter(\\n        bytes32 _queryId,\\n        uint256 _timestamp\\n    ) external view returns (bool _found, uint256 _index);\\n\\n    function getIndexForDataBefore(\\n        bytes32 _queryId,\\n        uint256 _timestamp\\n    ) external view returns (bool _found, uint256 _index);\\n\\n    function getMultipleValuesBefore(\\n        bytes32 _queryId,\\n        uint256 _timestamp,\\n        uint256 _maxAge,\\n        uint256 _maxCount\\n    )\\n        external\\n        view\\n        returns (uint256[] memory _values, uint256[] memory _timestamps);\\n\\n    function getPastTipByIndex(\\n        bytes32 _queryId,\\n        uint256 _index\\n    ) external view returns (Autopay.Tip memory);\\n\\n    function getPastTipCount(bytes32 _queryId) external view returns (uint256);\\n\\n    function getPastTips(\\n        bytes32 _queryId\\n    ) external view returns (Autopay.Tip[] memory);\\n\\n    function getQueryIdFromFeedId(\\n        bytes32 _feedId\\n    ) external view returns (bytes32);\\n\\n    function getRewardAmount(\\n        bytes32 _feedId,\\n        bytes32 _queryId,\\n        uint256[] memory _timestamps\\n    ) external view returns (uint256 _cumulativeReward);\\n\\n    function getRewardClaimedStatus(\\n        bytes32 _feedId,\\n        bytes32 _queryId,\\n        uint256 _timestamp\\n    ) external view returns (bool);\\n\\n    function getTipsByAddress(address _user) external view returns (uint256);\\n\\n    function isInDispute(\\n        bytes32 _queryId,\\n        uint256 _timestamp\\n    ) external view returns (bool);\\n\\n    function queryIdFromDataFeedId(bytes32) external view returns (bytes32);\\n\\n    function queryIdsWithFunding(uint256) external view returns (bytes32);\\n\\n    function queryIdsWithFundingIndex(bytes32) external view returns (uint256);\\n\\n    function setupDataFeed(\\n        bytes32 _queryId,\\n        uint256 _reward,\\n        uint256 _startTime,\\n        uint256 _interval,\\n        uint256 _window,\\n        uint256 _priceThreshold,\\n        uint256 _rewardIncreasePerSecond,\\n        bytes memory _queryData,\\n        uint256 _amount\\n    ) external;\\n\\n    function fetch() external view returns (address);\\n\\n    function tip(\\n        bytes32 _queryId,\\n        uint256 _amount,\\n        bytes memory _queryData\\n    ) external;\\n\\n    function tips(\\n        bytes32,\\n        uint256\\n    ) external view returns (uint256 amount, uint256 timestamp);\\n\\n    function token() external view returns (address);\\n\\n    function userTipsTotal(address) external view returns (uint256);\\n\\n    function valueFor(\\n        bytes32 _id\\n    )\\n        external\\n        view\\n        returns (int256 _value, uint256 _timestamp, uint256 _statusCode);\\n}\\n\\ninterface Autopay {\\n    struct FeedDetails {\\n        uint256 reward;\\n        uint256 balance;\\n        uint256 startTime;\\n        uint256 interval;\\n        uint256 window;\\n        uint256 priceThreshold;\\n        uint256 rewardIncreasePerSecond;\\n        uint256 feedsWithFundingIndex;\\n    }\\n\\n    struct Tip {\\n        uint256 amount;\\n        uint256 timestamp;\\n    }\\n\\n    function getStakeAmount() external view returns (uint256);\\n\\n    function stakeAmount() external view returns (uint256);\\n\\n    function token() external view returns (address);\\n}\\n\",\"keccak256\":\"0xe6e8567fbbeb1208ec5a994fc63bfa6aaa11a2d7d3fc3758da07f32b81d83b1b\",\"license\":\"MIT\"},\"contracts/fetchoracle/IMappingContract.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.0;\\n\\ninterface IMappingContract {\\n    function getFetchID(bytes32 _id) external view returns (bytes32);\\n}\\n\",\"keccak256\":\"0x3b93518e1e8d3e556094c4212c3df1dcf8923a1d745cc553e3a2f90083998b68\",\"license\":\"MIT\"},\"contracts/fetchoracle/UsingFetch.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.0;\\n\\nimport \\\"./IFetch.sol\\\";\\nimport \\\"./IERC2362.sol\\\";\\nimport \\\"./IMappingContract.sol\\\";\\n\\n/**\\n @author Fetch Inc\\n @title UsingFetch\\n @dev This contract helps smart contracts read data from Fetch\\n */\\ncontract UsingFetch is IERC2362 {\\n    IFetch public fetch;\\n    IMappingContract public idMappingContract;\\n\\n    /*Constructor*/\\n    /**\\n     * @dev the constructor sets the oracle address in storage\\n     * @param _fetch is the Fetch Oracle address\\n     */\\n    constructor(address payable _fetch) {\\n        fetch = IFetch(_fetch);\\n    }\\n\\n    /*Getters*/\\n    /**\\n     * @dev Retrieves the next value for the queryId after the specified timestamp\\n     * @param _queryId is the queryId to look up the value for\\n     * @param _timestamp after which to search for next value\\n     * @return _value the value retrieved\\n     * @return _timestampRetrieved the value's timestamp\\n     */\\n    function getDataAfter(\\n        bytes32 _queryId,\\n        uint256 _timestamp\\n    ) public view returns (bytes memory _value, uint256 _timestampRetrieved) {\\n        (bool _found, uint256 _index) = getIndexForDataAfter(\\n            _queryId,\\n            _timestamp\\n        );\\n        if (!_found) {\\n            return (\\\"\\\", 0);\\n        }\\n        _timestampRetrieved = getTimestampbyQueryIdandIndex(_queryId, _index);\\n        _value = retrieveData(_queryId, _timestampRetrieved);\\n        return (_value, _timestampRetrieved);\\n    }\\n\\n    /**\\n     * @dev Retrieves the latest value for the queryId before the specified timestamp\\n     * @param _queryId is the queryId to look up the value for\\n     * @param _timestamp before which to search for latest value\\n     * @return _value the value retrieved\\n     * @return _timestampRetrieved the value's timestamp\\n     */\\n    function getDataBefore(\\n        bytes32 _queryId,\\n        uint256 _timestamp\\n    ) public view returns (bytes memory _value, uint256 _timestampRetrieved) {\\n        (, _value, _timestampRetrieved) = fetch.getDataBefore(\\n            _queryId,\\n            _timestamp\\n        );\\n    }\\n\\n    /**\\n     * @dev Retrieves latest array index of data before the specified timestamp for the queryId\\n     * @param _queryId is the queryId to look up the index for\\n     * @param _timestamp is the timestamp before which to search for the latest index\\n     * @return _found whether the index was found\\n     * @return _index the latest index found before the specified timestamp\\n     */\\n    // slither-disable-next-line calls-loop\\n    function getIndexForDataAfter(\\n        bytes32 _queryId,\\n        uint256 _timestamp\\n    ) public view returns (bool _found, uint256 _index) {\\n        uint256 _count = getNewValueCountbyQueryId(_queryId);\\n        if (_count == 0) return (false, 0);\\n        _count--;\\n        bool _search = true; // perform binary search\\n        uint256 _middle = 0;\\n        uint256 _start = 0;\\n        uint256 _end = _count;\\n        uint256 _timestampRetrieved;\\n        // checking boundaries to short-circuit the algorithm\\n        _timestampRetrieved = getTimestampbyQueryIdandIndex(_queryId, _end);\\n        if (_timestampRetrieved <= _timestamp) return (false, 0);\\n        _timestampRetrieved = getTimestampbyQueryIdandIndex(_queryId, _start);\\n        if (_timestampRetrieved > _timestamp) {\\n            // candidate found, check for disputes\\n            _search = false;\\n        }\\n        // since the value is within our boundaries, do a binary search\\n        while (_search) {\\n            _middle = (_end + _start) / 2;\\n            _timestampRetrieved = getTimestampbyQueryIdandIndex(\\n                _queryId,\\n                _middle\\n            );\\n            if (_timestampRetrieved > _timestamp) {\\n                // get immediate previous value\\n                uint256 _prevTime = getTimestampbyQueryIdandIndex(\\n                    _queryId,\\n                    _middle - 1\\n                );\\n                if (_prevTime <= _timestamp) {\\n                    // candidate found, check for disputes\\n                    _search = false;\\n                } else {\\n                    // look from start to middle -1(prev value)\\n                    _end = _middle - 1;\\n                }\\n            } else {\\n                // get immediate next value\\n                uint256 _nextTime = getTimestampbyQueryIdandIndex(\\n                    _queryId,\\n                    _middle + 1\\n                );\\n                if (_nextTime > _timestamp) {\\n                    // candidate found, check for disputes\\n                    _search = false;\\n                    _middle++;\\n                    _timestampRetrieved = _nextTime;\\n                } else {\\n                    // look from middle + 1(next value) to end\\n                    _start = _middle + 1;\\n                }\\n            }\\n        }\\n        // candidate found, check for disputed values\\n        if (!isInDispute(_queryId, _timestampRetrieved)) {\\n            // _timestampRetrieved is correct\\n            return (true, _middle);\\n        } else {\\n            // iterate forward until we find a non-disputed value\\n            while (\\n                isInDispute(_queryId, _timestampRetrieved) && _middle < _count\\n            ) {\\n                _middle++;\\n                _timestampRetrieved = getTimestampbyQueryIdandIndex(\\n                    _queryId,\\n                    _middle\\n                );\\n            }\\n            if (\\n                _middle == _count && isInDispute(_queryId, _timestampRetrieved)\\n            ) {\\n                return (false, 0);\\n            }\\n            // _timestampRetrieved is correct\\n            return (true, _middle);\\n        }\\n    }\\n\\n    /**\\n     * @dev Retrieves latest array index of data before the specified timestamp for the queryId\\n     * @param _queryId is the queryId to look up the index for\\n     * @param _timestamp is the timestamp before which to search for the latest index\\n     * @return _found whether the index was found\\n     * @return _index the latest index found before the specified timestamp\\n     */\\n    // slither-disable-next-line calls-loop\\n    function getIndexForDataBefore(\\n        bytes32 _queryId,\\n        uint256 _timestamp\\n    ) public view returns (bool _found, uint256 _index) {\\n        return fetch.getIndexForDataBefore(_queryId, _timestamp);\\n    }\\n\\n    /**\\n     * @dev Retrieves multiple uint256 values before the specified timestamp\\n     * @param _queryId the unique id of the data query\\n     * @param _timestamp the timestamp before which to search for values\\n     * @param _maxAge the maximum number of seconds before the _timestamp to search for values\\n     * @param _maxCount the maximum number of values to return\\n     * @return _values the values retrieved, ordered from oldest to newest\\n     * @return _timestamps the timestamps of the values retrieved\\n     */\\n    function getMultipleValuesBefore(\\n        bytes32 _queryId,\\n        uint256 _timestamp,\\n        uint256 _maxAge,\\n        uint256 _maxCount\\n    )\\n        public\\n        view\\n        returns (bytes[] memory _values, uint256[] memory _timestamps)\\n    {\\n        // get index of first possible value\\n        (bool _ifRetrieve, uint256 _startIndex) = getIndexForDataAfter(\\n            _queryId,\\n            _timestamp - _maxAge\\n        );\\n        // no value within range\\n        if (!_ifRetrieve) {\\n            return (new bytes[](0), new uint256[](0));\\n        }\\n        uint256 _endIndex;\\n        // get index of last possible value\\n        (_ifRetrieve, _endIndex) = getIndexForDataBefore(_queryId, _timestamp);\\n        // no value before _timestamp\\n        if (!_ifRetrieve) {\\n            return (new bytes[](0), new uint256[](0));\\n        }\\n        uint256 _valCount = 0;\\n        uint256 _index = 0;\\n        uint256[] memory _timestampsArrayTemp = new uint256[](_maxCount);\\n        // generate array of non-disputed timestamps within range\\n        while (_valCount < _maxCount && _endIndex + 1 - _index > _startIndex) {\\n            uint256 _timestampRetrieved = getTimestampbyQueryIdandIndex(\\n                _queryId,\\n                _endIndex - _index\\n            );\\n            if (!isInDispute(_queryId, _timestampRetrieved)) {\\n                _timestampsArrayTemp[_valCount] = _timestampRetrieved;\\n                _valCount++;\\n            }\\n            _index++;\\n        }\\n\\n        bytes[] memory _valuesArray = new bytes[](_valCount);\\n        uint256[] memory _timestampsArray = new uint256[](_valCount);\\n        // retrieve values and reverse timestamps order\\n        for (uint256 _i = 0; _i < _valCount; _i++) {\\n            _timestampsArray[_i] = _timestampsArrayTemp[_valCount - 1 - _i];\\n            _valuesArray[_i] = retrieveData(_queryId, _timestampsArray[_i]);\\n        }\\n        return (_valuesArray, _timestampsArray);\\n    }\\n\\n    /**\\n     * @dev Counts the number of values that have been submitted for the queryId\\n     * @param _queryId the id to look up\\n     * @return uint256 count of the number of values received for the queryId\\n     */\\n    function getNewValueCountbyQueryId(\\n        bytes32 _queryId\\n    ) public view returns (uint256) {\\n        return fetch.getNewValueCountbyQueryId(_queryId);\\n    }\\n\\n    /**\\n     * @dev Returns the address of the reporter who submitted a value for a data ID at a specific time\\n     * @param _queryId is ID of the specific data feed\\n     * @param _timestamp is the timestamp to find a corresponding reporter for\\n     * @return address of the reporter who reported the value for the data ID at the given timestamp\\n     */\\n    function getReporterByTimestamp(\\n        bytes32 _queryId,\\n        uint256 _timestamp\\n    ) public view returns (address) {\\n        return fetch.getReporterByTimestamp(_queryId, _timestamp);\\n    }\\n\\n    /**\\n     * @dev Gets the timestamp for the value based on their index\\n     * @param _queryId is the id to look up\\n     * @param _index is the value index to look up\\n     * @return uint256 timestamp\\n     */\\n    function getTimestampbyQueryIdandIndex(\\n        bytes32 _queryId,\\n        uint256 _index\\n    ) public view returns (uint256) {\\n        return fetch.getTimestampbyQueryIdandIndex(_queryId, _index);\\n    }\\n\\n    /**\\n     * @dev Determines whether a value with a given queryId and timestamp has been disputed\\n     * @param _queryId is the value id to look up\\n     * @param _timestamp is the timestamp of the value to look up\\n     * @return bool true if queryId/timestamp is under dispute\\n     */\\n    function isInDispute(\\n        bytes32 _queryId,\\n        uint256 _timestamp\\n    ) public view returns (bool) {\\n        return fetch.isInDispute(_queryId, _timestamp);\\n    }\\n\\n    /**\\n     * @dev Retrieve value from oracle based on queryId/timestamp\\n     * @param _queryId being requested\\n     * @param _timestamp to retrieve data/value from\\n     * @return bytes value for query/timestamp submitted\\n     */\\n    function retrieveData(\\n        bytes32 _queryId,\\n        uint256 _timestamp\\n    ) public view returns (bytes memory) {\\n        return fetch.retrieveData(_queryId, _timestamp);\\n    }\\n\\n    /**\\n     * @dev allows dev to set mapping contract for valueFor (EIP2362)\\n     * @param _addy address of mapping contract\\n     */\\n    function setIdMappingContract(address _addy) external {\\n        require(address(idMappingContract) == address(0));\\n        idMappingContract = IMappingContract(_addy);\\n    }\\n\\n    /**\\n     * @dev Retrieve most recent int256 value from oracle based on queryId\\n     * @param _id being requested\\n     * @return _value most recent value submitted\\n     * @return _timestamp timestamp of most recent value\\n     * @return _statusCode 200 if value found, 404 if not found\\n     */\\n    function valueFor(\\n        bytes32 _id\\n    )\\n        external\\n        view\\n        override\\n        returns (int256 _value, uint256 _timestamp, uint256 _statusCode)\\n    {\\n        bytes32 _queryId = idMappingContract.getFetchID(_id);\\n        bytes memory _valueBytes;\\n        (_valueBytes, _timestamp) = getDataBefore(\\n            _queryId,\\n            block.timestamp + 1\\n        );\\n        if (_timestamp == 0) {\\n            return (0, 0, 404);\\n        }\\n        uint256 _valueUint = _sliceUint(_valueBytes);\\n        _value = int256(_valueUint);\\n        return (_value, _timestamp, 200);\\n    }\\n\\n    // Internal functions\\n    /**\\n     * @dev Convert bytes to uint256\\n     * @param _b bytes value to convert to uint256\\n     * @return _number uint256 converted from bytes\\n     */\\n    function _sliceUint(\\n        bytes memory _b\\n    ) internal pure returns (uint256 _number) {\\n        for (uint256 _i = 0; _i < _b.length; _i++) {\\n            _number = _number * 256 + uint8(_b[_i]);\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0x737931805e78b1f128345d432668d170dbacb166071cf3be127ee14936da22c8\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5060405161141638038061141683398101604081905261002f91610054565b600080546001600160a01b0319166001600160a01b0392909216919091179055610084565b60006020828403121561006657600080fd5b81516001600160a01b038116811461007d57600080fd5b9392505050565b611383806100936000396000f3fe608060405234801561001057600080fd5b50600436106100f55760003560e01c8063a792765f11610097578063e07c548611610066578063e07c54861461022f578063f66f49c314610242578063f78eea8314610255578063fcd4a5461461028357600080fd5b8063a792765f146101d6578063a95c372d146101e9578063c5958af9146101fc578063ce5e11bf1461021c57600080fd5b806344e87f91116100d357806344e87f911461016957806350d25bcd1461018c57806364ee3c6d146101a257806377b03e0d146101c357600080fd5b8063193b505b146100fa578063294490851461010f5780632af8aae01461013e575b600080fd5b61010d610108366004610ee0565b6102a4565b005b61012261011d366004610f04565b6102f4565b6040805192151583526020830191909152015b60405180910390f35b600154610151906001600160a01b031681565b6040516001600160a01b039091168152602001610135565b61017c610177366004610f04565b61038d565b6040519015158152602001610135565b610194610424565b604051908152602001610135565b6101b56101b0366004610f04565b6105b9565b604051610135929190610f76565b6101946101d1366004610f98565b610612565b6101b56101e4366004610f04565b610699565b600054610151906001600160a01b031681565b61020f61020a366004610f04565b610739565b6040516101359190610fb1565b61019461022a366004610f04565b6107cb565b61015161023d366004610f04565b610859565b610122610250366004610f04565b6108e7565b610268610263366004610f98565b610aa4565b60408051938452602084019290925290820152606001610135565b610296610291366004610fc4565b610b82565b604051610135929190610ff6565b6001546001600160a01b0316156102ba57600080fd5b600180547fffffffffffffffffffffffff0000000000000000000000000000000000000000166001600160a01b0392909216919091179055565b600080546040517f29449085000000000000000000000000000000000000000000000000000000008152600481018590526024810184905282916001600160a01b0316906329449085906044016040805180830381865afa15801561035d573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061038191906110a6565b915091505b9250929050565b600080546040517f44e87f9100000000000000000000000000000000000000000000000000000000815260048101859052602481018490526001600160a01b03909116906344e87f9190604401602060405180830381865afa1580156103f7573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061041b91906110d2565b90505b92915050565b60008060405160200161049c90604080825260039082018190527f706c73000000000000000000000000000000000000000000000000000000000060608301526080602083018190528201527f757364000000000000000000000000000000000000000000000000000000000060a082015260c00190565b60408051601f19818403018152908290526104b9916020016110ed565b60408051601f19818403018152919052805160208201209091506000806104e6836101e46104b04261114a565b915091508060000361050b57604051637c946ed760e01b815260040160405180910390fd5b62015180610519824261114a565b1115610551576040517f3baab38100000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600082806020019051810190610567919061115d565b90506000670de0b6b3a7640000610582836305f5e100611176565b61058c919061118d565b9050806000036105af57604051637c946ed760e01b815260040160405180910390fd5b9695505050505050565b606060008060006105ca86866108e7565b91509150816105f15760006040518060200160405280600081525090935093505050610386565b6105fb86826107cb565b92506106078684610739565b935050509250929050565b600080546040517f77b03e0d000000000000000000000000000000000000000000000000000000008152600481018490526001600160a01b03909116906377b03e0d90602401602060405180830381865afa158015610675573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061041e919061115d565b600080546040517fa792765f0000000000000000000000000000000000000000000000000000000081526004810185905260248101849052606092916001600160a01b03169063a792765f90604401600060405180830381865afa158015610705573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f1916820160405261072d9190810190611243565b90969095509350505050565b6000546040517fc5958af900000000000000000000000000000000000000000000000000000000815260048101849052602481018390526060916001600160a01b03169063c5958af990604401600060405180830381865afa1580156107a3573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f1916820160405261041b919081019061129a565b600080546040517fce5e11bf00000000000000000000000000000000000000000000000000000000815260048101859052602481018490526001600160a01b039091169063ce5e11bf90604401602060405180830381865afa158015610835573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061041b919061115d565b600080546040517fe07c548600000000000000000000000000000000000000000000000000000000815260048101859052602481018490526001600160a01b039091169063e07c548690604401602060405180830381865afa1580156108c3573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061041b91906112d7565b60008060006108f585610612565b90508060000361090c576000809250925050610386565b80610916816112f4565b915060019050600080838161092b8a836107cb565b90508881116109465760008097509750505050505050610386565b6109508a846107cb565b90508881111561095f57600094505b8415610a0f576002610971848461130b565b61097b919061118d565b93506109878a856107cb565b9050888111156109c85760006109a28b61022a60018861114a565b90508981116109b457600095506109c2565b6109bf60018661114a565b92505b5061095f565b60006109d98b61022a87600161130b565b9050898111156109fc5760009550846109f18161131e565b9550508091506109c2565b610a0785600161130b565b93505061095f565b610a198a8261038d565b610a2f5760018497509750505050505050610386565b610a398a8261038d565b8015610a4457508584105b15610a675783610a538161131e565b945050610a608a856107cb565b9050610a2f565b8584148015610a7b5750610a7b8a8261038d565b15610a925760008097509750505050505050610386565b60018497509750505050505050610386565b6001546040517fd21d79ee000000000000000000000000000000000000000000000000000000008152600481018390526000918291829182916001600160a01b039091169063d21d79ee90602401602060405180830381865afa158015610b0f573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610b33919061115d565b90506060610b46826101e442600161130b565b945090506000849003610b66576000806101949450945094505050610b7b565b6000610b7182610e71565b955060c893505050505b9193909250565b606080600080610b9688610250888a61114a565b9150915081610be7576040805160008082526020820190925290610bca565b6060815260200190600190039081610bb55790505b506040805160008152602081019091529094509250610e68915050565b6000610bf389896102f4565b909350905082610c46576040805160008082526020820190925290610c28565b6060815260200190600190039081610c135790505b506040805160008152602081019091529095509350610e6892505050565b60008060008867ffffffffffffffff811115610c6457610c646111af565b604051908082528060200260200182016040528015610c8d578160200160208202803683370190505b5090505b8883108015610cb457508482610ca886600161130b565b610cb2919061114a565b115b15610d18576000610cc98d61022a858861114a565b9050610cd58d8261038d565b610d055780828581518110610cec57610cec611337565b602090810291909101015283610d018161131e565b9450505b82610d0f8161131e565b93505050610c91565b60008367ffffffffffffffff811115610d3357610d336111af565b604051908082528060200260200182016040528015610d6657816020015b6060815260200190600190039081610d515790505b50905060008467ffffffffffffffff811115610d8457610d846111af565b604051908082528060200260200182016040528015610dad578160200160208202803683370190505b50905060005b85811015610e5b578381610dc860018961114a565b610dd2919061114a565b81518110610de257610de2611337565b6020026020010151828281518110610dfc57610dfc611337565b602002602001018181525050610e2b8f838381518110610e1e57610e1e611337565b6020026020010151610739565b838281518110610e3d57610e3d611337565b60200260200101819052508080610e539061131e565b915050610db3565b5090985096505050505050505b94509492505050565b6000805b8251811015610ec257828181518110610e9057610e90611337565b016020015160f81c610ea483610100611176565b610eae919061130b565b915080610eba8161131e565b915050610e75565b50919050565b6001600160a01b0381168114610edd57600080fd5b50565b600060208284031215610ef257600080fd5b8135610efd81610ec8565b9392505050565b60008060408385031215610f1757600080fd5b50508035926020909101359150565b60005b83811015610f41578181015183820152602001610f29565b50506000910152565b60008151808452610f62816020860160208601610f26565b601f01601f19169290920160200192915050565b604081526000610f896040830185610f4a565b90508260208301529392505050565b600060208284031215610faa57600080fd5b5035919050565b60208152600061041b6020830184610f4a565b60008060008060808587031215610fda57600080fd5b5050823594602084013594506040840135936060013592509050565b6000604082016040835280855180835260608501915060608160051b8601019250602080880160005b8381101561104d57605f1988870301855261103b868351610f4a565b9550938201939082019060010161101f565b50508584038187015286518085528782019482019350915060005b8281101561108457845184529381019392810192600101611068565b5091979650505050505050565b805180151581146110a157600080fd5b919050565b600080604083850312156110b957600080fd5b6110c283611091565b9150602083015190509250929050565b6000602082840312156110e457600080fd5b61041b82611091565b60408152600960408201527f53706f7450726963650000000000000000000000000000000000000000000000606082015260806020820152600061041b6080830184610f4a565b634e487b7160e01b600052601160045260246000fd5b8181038181111561041e5761041e611134565b60006020828403121561116f57600080fd5b5051919050565b808202811582820484141761041e5761041e611134565b6000826111aa57634e487b7160e01b600052601260045260246000fd5b500490565b634e487b7160e01b600052604160045260246000fd5b600082601f8301126111d657600080fd5b815167ffffffffffffffff808211156111f1576111f16111af565b604051601f8301601f19908116603f01168101908282118183101715611219576112196111af565b8160405283815286602085880101111561123257600080fd5b6105af846020830160208901610f26565b60008060006060848603121561125857600080fd5b61126184611091565b9250602084015167ffffffffffffffff81111561127d57600080fd5b611289868287016111c5565b925050604084015190509250925092565b6000602082840312156112ac57600080fd5b815167ffffffffffffffff8111156112c357600080fd5b6112cf848285016111c5565b949350505050565b6000602082840312156112e957600080fd5b8151610efd81610ec8565b60008161130357611303611134565b506000190190565b8082018082111561041e5761041e611134565b60006001820161133057611330611134565b5060010190565b634e487b7160e01b600052603260045260246000fdfea2646970667358221220c18bf256f6e2aa5fcf858d68699089d64f5a35e065833654314ce0748c862ea364736f6c63430008110033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100f55760003560e01c8063a792765f11610097578063e07c548611610066578063e07c54861461022f578063f66f49c314610242578063f78eea8314610255578063fcd4a5461461028357600080fd5b8063a792765f146101d6578063a95c372d146101e9578063c5958af9146101fc578063ce5e11bf1461021c57600080fd5b806344e87f91116100d357806344e87f911461016957806350d25bcd1461018c57806364ee3c6d146101a257806377b03e0d146101c357600080fd5b8063193b505b146100fa578063294490851461010f5780632af8aae01461013e575b600080fd5b61010d610108366004610ee0565b6102a4565b005b61012261011d366004610f04565b6102f4565b6040805192151583526020830191909152015b60405180910390f35b600154610151906001600160a01b031681565b6040516001600160a01b039091168152602001610135565b61017c610177366004610f04565b61038d565b6040519015158152602001610135565b610194610424565b604051908152602001610135565b6101b56101b0366004610f04565b6105b9565b604051610135929190610f76565b6101946101d1366004610f98565b610612565b6101b56101e4366004610f04565b610699565b600054610151906001600160a01b031681565b61020f61020a366004610f04565b610739565b6040516101359190610fb1565b61019461022a366004610f04565b6107cb565b61015161023d366004610f04565b610859565b610122610250366004610f04565b6108e7565b610268610263366004610f98565b610aa4565b60408051938452602084019290925290820152606001610135565b610296610291366004610fc4565b610b82565b604051610135929190610ff6565b6001546001600160a01b0316156102ba57600080fd5b600180547fffffffffffffffffffffffff0000000000000000000000000000000000000000166001600160a01b0392909216919091179055565b600080546040517f29449085000000000000000000000000000000000000000000000000000000008152600481018590526024810184905282916001600160a01b0316906329449085906044016040805180830381865afa15801561035d573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061038191906110a6565b915091505b9250929050565b600080546040517f44e87f9100000000000000000000000000000000000000000000000000000000815260048101859052602481018490526001600160a01b03909116906344e87f9190604401602060405180830381865afa1580156103f7573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061041b91906110d2565b90505b92915050565b60008060405160200161049c90604080825260039082018190527f706c73000000000000000000000000000000000000000000000000000000000060608301526080602083018190528201527f757364000000000000000000000000000000000000000000000000000000000060a082015260c00190565b60408051601f19818403018152908290526104b9916020016110ed565b60408051601f19818403018152919052805160208201209091506000806104e6836101e46104b04261114a565b915091508060000361050b57604051637c946ed760e01b815260040160405180910390fd5b62015180610519824261114a565b1115610551576040517f3baab38100000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b600082806020019051810190610567919061115d565b90506000670de0b6b3a7640000610582836305f5e100611176565b61058c919061118d565b9050806000036105af57604051637c946ed760e01b815260040160405180910390fd5b9695505050505050565b606060008060006105ca86866108e7565b91509150816105f15760006040518060200160405280600081525090935093505050610386565b6105fb86826107cb565b92506106078684610739565b935050509250929050565b600080546040517f77b03e0d000000000000000000000000000000000000000000000000000000008152600481018490526001600160a01b03909116906377b03e0d90602401602060405180830381865afa158015610675573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061041e919061115d565b600080546040517fa792765f0000000000000000000000000000000000000000000000000000000081526004810185905260248101849052606092916001600160a01b03169063a792765f90604401600060405180830381865afa158015610705573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f1916820160405261072d9190810190611243565b90969095509350505050565b6000546040517fc5958af900000000000000000000000000000000000000000000000000000000815260048101849052602481018390526060916001600160a01b03169063c5958af990604401600060405180830381865afa1580156107a3573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f1916820160405261041b919081019061129a565b600080546040517fce5e11bf00000000000000000000000000000000000000000000000000000000815260048101859052602481018490526001600160a01b039091169063ce5e11bf90604401602060405180830381865afa158015610835573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061041b919061115d565b600080546040517fe07c548600000000000000000000000000000000000000000000000000000000815260048101859052602481018490526001600160a01b039091169063e07c548690604401602060405180830381865afa1580156108c3573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061041b91906112d7565b60008060006108f585610612565b90508060000361090c576000809250925050610386565b80610916816112f4565b915060019050600080838161092b8a836107cb565b90508881116109465760008097509750505050505050610386565b6109508a846107cb565b90508881111561095f57600094505b8415610a0f576002610971848461130b565b61097b919061118d565b93506109878a856107cb565b9050888111156109c85760006109a28b61022a60018861114a565b90508981116109b457600095506109c2565b6109bf60018661114a565b92505b5061095f565b60006109d98b61022a87600161130b565b9050898111156109fc5760009550846109f18161131e565b9550508091506109c2565b610a0785600161130b565b93505061095f565b610a198a8261038d565b610a2f5760018497509750505050505050610386565b610a398a8261038d565b8015610a4457508584105b15610a675783610a538161131e565b945050610a608a856107cb565b9050610a2f565b8584148015610a7b5750610a7b8a8261038d565b15610a925760008097509750505050505050610386565b60018497509750505050505050610386565b6001546040517fd21d79ee000000000000000000000000000000000000000000000000000000008152600481018390526000918291829182916001600160a01b039091169063d21d79ee90602401602060405180830381865afa158015610b0f573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610b33919061115d565b90506060610b46826101e442600161130b565b945090506000849003610b66576000806101949450945094505050610b7b565b6000610b7182610e71565b955060c893505050505b9193909250565b606080600080610b9688610250888a61114a565b9150915081610be7576040805160008082526020820190925290610bca565b6060815260200190600190039081610bb55790505b506040805160008152602081019091529094509250610e68915050565b6000610bf389896102f4565b909350905082610c46576040805160008082526020820190925290610c28565b6060815260200190600190039081610c135790505b506040805160008152602081019091529095509350610e6892505050565b60008060008867ffffffffffffffff811115610c6457610c646111af565b604051908082528060200260200182016040528015610c8d578160200160208202803683370190505b5090505b8883108015610cb457508482610ca886600161130b565b610cb2919061114a565b115b15610d18576000610cc98d61022a858861114a565b9050610cd58d8261038d565b610d055780828581518110610cec57610cec611337565b602090810291909101015283610d018161131e565b9450505b82610d0f8161131e565b93505050610c91565b60008367ffffffffffffffff811115610d3357610d336111af565b604051908082528060200260200182016040528015610d6657816020015b6060815260200190600190039081610d515790505b50905060008467ffffffffffffffff811115610d8457610d846111af565b604051908082528060200260200182016040528015610dad578160200160208202803683370190505b50905060005b85811015610e5b578381610dc860018961114a565b610dd2919061114a565b81518110610de257610de2611337565b6020026020010151828281518110610dfc57610dfc611337565b602002602001018181525050610e2b8f838381518110610e1e57610e1e611337565b6020026020010151610739565b838281518110610e3d57610e3d611337565b60200260200101819052508080610e539061131e565b915050610db3565b5090985096505050505050505b94509492505050565b6000805b8251811015610ec257828181518110610e9057610e90611337565b016020015160f81c610ea483610100611176565b610eae919061130b565b915080610eba8161131e565b915050610e75565b50919050565b6001600160a01b0381168114610edd57600080fd5b50565b600060208284031215610ef257600080fd5b8135610efd81610ec8565b9392505050565b60008060408385031215610f1757600080fd5b50508035926020909101359150565b60005b83811015610f41578181015183820152602001610f29565b50506000910152565b60008151808452610f62816020860160208601610f26565b601f01601f19169290920160200192915050565b604081526000610f896040830185610f4a565b90508260208301529392505050565b600060208284031215610faa57600080fd5b5035919050565b60208152600061041b6020830184610f4a565b60008060008060808587031215610fda57600080fd5b5050823594602084013594506040840135936060013592509050565b6000604082016040835280855180835260608501915060608160051b8601019250602080880160005b8381101561104d57605f1988870301855261103b868351610f4a565b9550938201939082019060010161101f565b50508584038187015286518085528782019482019350915060005b8281101561108457845184529381019392810192600101611068565b5091979650505050505050565b805180151581146110a157600080fd5b919050565b600080604083850312156110b957600080fd5b6110c283611091565b9150602083015190509250929050565b6000602082840312156110e457600080fd5b61041b82611091565b60408152600960408201527f53706f7450726963650000000000000000000000000000000000000000000000606082015260806020820152600061041b6080830184610f4a565b634e487b7160e01b600052601160045260246000fd5b8181038181111561041e5761041e611134565b60006020828403121561116f57600080fd5b5051919050565b808202811582820484141761041e5761041e611134565b6000826111aa57634e487b7160e01b600052601260045260246000fd5b500490565b634e487b7160e01b600052604160045260246000fd5b600082601f8301126111d657600080fd5b815167ffffffffffffffff808211156111f1576111f16111af565b604051601f8301601f19908116603f01168101908282118183101715611219576112196111af565b8160405283815286602085880101111561123257600080fd5b6105af846020830160208901610f26565b60008060006060848603121561125857600080fd5b61126184611091565b9250602084015167ffffffffffffffff81111561127d57600080fd5b611289868287016111c5565b925050604084015190509250925092565b6000602082840312156112ac57600080fd5b815167ffffffffffffffff8111156112c357600080fd5b6112cf848285016111c5565b949350505050565b6000602082840312156112e957600080fd5b8151610efd81610ec8565b60008161130357611303611134565b506000190190565b8082018082111561041e5761041e611134565b60006001820161133057611330611134565b5060010190565b634e487b7160e01b600052603260045260246000fdfea2646970667358221220c18bf256f6e2aa5fcf858d68699089d64f5a35e065833654314ce0748c862ea364736f6c63430008110033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {
+      "getDataAfter(bytes32,uint256)": {
+        "details": "Retrieves the next value for the queryId after the specified timestamp",
+        "params": {
+          "_queryId": "is the queryId to look up the value for",
+          "_timestamp": "after which to search for next value"
+        },
+        "returns": {
+          "_timestampRetrieved": "the value's timestamp",
+          "_value": "the value retrieved"
+        }
+      },
+      "getDataBefore(bytes32,uint256)": {
+        "details": "Retrieves the latest value for the queryId before the specified timestamp",
+        "params": {
+          "_queryId": "is the queryId to look up the value for",
+          "_timestamp": "before which to search for latest value"
+        },
+        "returns": {
+          "_timestampRetrieved": "the value's timestamp",
+          "_value": "the value retrieved"
+        }
+      },
+      "getIndexForDataAfter(bytes32,uint256)": {
+        "details": "Retrieves latest array index of data before the specified timestamp for the queryId",
+        "params": {
+          "_queryId": "is the queryId to look up the index for",
+          "_timestamp": "is the timestamp before which to search for the latest index"
+        },
+        "returns": {
+          "_found": "whether the index was found",
+          "_index": "the latest index found before the specified timestamp"
+        }
+      },
+      "getIndexForDataBefore(bytes32,uint256)": {
+        "details": "Retrieves latest array index of data before the specified timestamp for the queryId",
+        "params": {
+          "_queryId": "is the queryId to look up the index for",
+          "_timestamp": "is the timestamp before which to search for the latest index"
+        },
+        "returns": {
+          "_found": "whether the index was found",
+          "_index": "the latest index found before the specified timestamp"
+        }
+      },
+      "getMultipleValuesBefore(bytes32,uint256,uint256,uint256)": {
+        "details": "Retrieves multiple uint256 values before the specified timestamp",
+        "params": {
+          "_maxAge": "the maximum number of seconds before the _timestamp to search for values",
+          "_maxCount": "the maximum number of values to return",
+          "_queryId": "the unique id of the data query",
+          "_timestamp": "the timestamp before which to search for values"
+        },
+        "returns": {
+          "_timestamps": "the timestamps of the values retrieved",
+          "_values": "the values retrieved, ordered from oldest to newest"
+        }
+      },
+      "getNewValueCountbyQueryId(bytes32)": {
+        "details": "Counts the number of values that have been submitted for the queryId",
+        "params": {
+          "_queryId": "the id to look up"
+        },
+        "returns": {
+          "_0": "uint256 count of the number of values received for the queryId"
+        }
+      },
+      "getReporterByTimestamp(bytes32,uint256)": {
+        "details": "Returns the address of the reporter who submitted a value for a data ID at a specific time",
+        "params": {
+          "_queryId": "is ID of the specific data feed",
+          "_timestamp": "is the timestamp to find a corresponding reporter for"
+        },
+        "returns": {
+          "_0": "address of the reporter who reported the value for the data ID at the given timestamp"
+        }
+      },
+      "getTimestampbyQueryIdandIndex(bytes32,uint256)": {
+        "details": "Gets the timestamp for the value based on their index",
+        "params": {
+          "_index": "is the value index to look up",
+          "_queryId": "is the id to look up"
+        },
+        "returns": {
+          "_0": "uint256 timestamp"
+        }
+      },
+      "isInDispute(bytes32,uint256)": {
+        "details": "Determines whether a value with a given queryId and timestamp has been disputed",
+        "params": {
+          "_queryId": "is the value id to look up",
+          "_timestamp": "is the timestamp of the value to look up"
+        },
+        "returns": {
+          "_0": "bool true if queryId/timestamp is under dispute"
+        }
+      },
+      "retrieveData(bytes32,uint256)": {
+        "details": "Retrieve value from oracle based on queryId/timestamp",
+        "params": {
+          "_queryId": "being requested",
+          "_timestamp": "to retrieve data/value from"
+        },
+        "returns": {
+          "_0": "bytes value for query/timestamp submitted"
+        }
+      },
+      "setIdMappingContract(address)": {
+        "details": "allows dev to set mapping contract for valueFor (EIP2362)",
+        "params": {
+          "_addy": "address of mapping contract"
+        }
+      },
+      "valueFor(bytes32)": {
+        "details": "Retrieve most recent int256 value from oracle based on queryId",
+        "params": {
+          "_id": "being requested"
+        },
+        "returns": {
+          "_statusCode": "200 if value found, 404 if not found",
+          "_timestamp": "timestamp of most recent value",
+          "_value": "most recent value submitted"
+        }
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 15301,
+        "contract": "contracts/fetchoracle/FetchFlexOracle.sol:FetchFlexOracle",
+        "label": "fetch",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_contract(IFetch)15242"
+      },
+      {
+        "astId": 15304,
+        "contract": "contracts/fetchoracle/FetchFlexOracle.sol:FetchFlexOracle",
+        "label": "idMappingContract",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_contract(IMappingContract)15290"
+      }
+    ],
+    "types": {
+      "t_contract(IFetch)15242": {
+        "encoding": "inplace",
+        "label": "contract IFetch",
+        "numberOfBytes": "20"
+      },
+      "t_contract(IMappingContract)15290": {
+        "encoding": "inplace",
+        "label": "contract IMappingContract",
+        "numberOfBytes": "20"
+      }
+    }
+  }
+}
