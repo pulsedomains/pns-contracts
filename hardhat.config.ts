@@ -55,7 +55,7 @@ const config: HardhatUserConfig = {
       tags: ['use_root'],
       chainId: 369,
       accounts: real_accounts,
-      gasPrice: 1000000000000000,
+      gasPrice: 2000000000000000,
     },
     testnet: {
       url: 'https://rpc.v4.testnet.pulsechain.com',

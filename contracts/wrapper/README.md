@@ -427,7 +427,7 @@ cp .env.org .env
 
 ```
 PRIVATE_KEY=
-ETHERSCAN_API_KEY=
+PLSERSCAN_API_KEY=
 INFURA_API_KEY=
 ```
 
